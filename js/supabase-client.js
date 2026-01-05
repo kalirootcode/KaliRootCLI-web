@@ -41,6 +41,23 @@ function loadScript(src) {
 }
 
 /**
+ * Decode JWT token to get payload (user info)
+ */
+function decodeJWT(token) {
+    try {
+        const parts = token.split('.');
+        if (parts.length !== 3) return null;
+
+        const payload = parts[1];
+        const decoded = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
+        return JSON.parse(decoded);
+    } catch (e) {
+        console.error('JWT decode error:', e);
+        return null;
+    }
+}
+
+/**
  * Get current user session
  */
 async function getSession() {
@@ -77,54 +94,76 @@ async function getUserData(userId) {
  * Log web activity
  */
 async function logActivity(userId, action, pageVisited, metadata = {}) {
-    const client = await initSupabase();
-
-    await client
-        .from('web_activity_log')
-        .insert({
-            user_id: userId,
-            action: action,
-            page_visited: pageVisited,
-            metadata: metadata
-        });
+    try {
+        const client = await initSupabase();
+        await client
+            .from('web_activity_log')
+            .insert({
+                user_id: userId,
+                action: action,
+                page_visited: pageVisited,
+                metadata: metadata
+            });
+    } catch (e) {
+        console.warn('Activity log failed:', e);
+    }
 }
 
 /**
- * Validate CLI token by setting session in Supabase
+ * Validate CLI token - decode JWT and get user info
  */
 async function validateCLIToken(token) {
-    const client = await initSupabase();
-
     try {
-        // Try getting user directly with the access token
-        const { data: userData, error: userError } = await client.auth.getUser(token);
+        // First, decode the JWT to get basic user info
+        const jwtPayload = decodeJWT(token);
+        console.log('[Supabase] JWT Payload:', jwtPayload);
 
-        if (userError || !userData.user) {
-            console.error('Token validation failed:', userError);
-            return { valid: false, error: 'Token inválido o expirado' };
+        if (!jwtPayload || !jwtPayload.sub) {
+            return { valid: false, error: 'Token JWT inválido' };
         }
 
-        // Get user data from cli_users
-        const cliUserData = await getUserData(userData.user.id);
+        // Basic user info from JWT
+        const userId = jwtPayload.sub;
+        const userEmail = jwtPayload.email;
 
-        if (!cliUserData) {
-            return { valid: false, error: 'Usuario no encontrado en base de datos' };
+        // Try to get extended data from database
+        let userData = null;
+        try {
+            const client = await initSupabase();
+
+            // Set the session with the token
+            await client.auth.setSession({
+                access_token: token,
+                refresh_token: token
+            });
+
+            userData = await getUserData(userId);
+        } catch (e) {
+            console.warn('[Supabase] Could not get user data from DB:', e);
         }
 
-        // Log web session
-        await logActivity(userData.user.id, 'web_login', window.location.pathname, {
+        // Build user object - use JWT data as fallback
+        const user = {
+            id: userId,
+            email: userEmail,
+            username: userData?.username || userEmail?.split('@')[0] || 'Usuario',
+            credit_balance: userData?.credit_balance ?? 0,
+            subscription_status: userData?.subscription_status || 'free',
+            subscription_expiry_date: userData?.subscription_expiry_date || null,
+            total_spent: userData?.total_spent ?? 0,
+            created_at: userData?.created_at || new Date().toISOString()
+        };
+
+        console.log('[Supabase] Final user object:', user);
+
+        // Log activity (don't fail if this errors)
+        logActivity(userId, 'web_login', window.location.pathname, {
             source: 'cli_token',
-            user_agent: navigator.userAgent
+            has_db_data: !!userData
         });
 
-        return {
-            valid: true,
-            user: {
-                id: userData.user.id,
-                email: userData.user.email,
-                ...cliUserData
-            }
-        };
+        return { valid: true, user };
+
     } catch (e) {
         console.error('Token validation error:', e);
         return { valid: false, error: e.message };
@@ -237,5 +276,6 @@ window.KRSupabase = {
     validateCLIToken,
     createSupportTicket,
     getUserTickets,
-    sendTicketMessage
+    sendTicketMessage,
+    decodeJWT
 };

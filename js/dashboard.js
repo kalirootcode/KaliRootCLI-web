@@ -4,11 +4,14 @@
  */
 
 document.addEventListener('DOMContentLoaded', async () => {
+    console.log('[Dashboard] Initializing...');
+
     // Protect this page
     const isAuthed = await window.KRAuth.protectPage();
+    console.log('[Dashboard] Auth result:', isAuthed);
 
     if (isAuthed) {
-        loadUserData();
+        await loadUserData();
     }
 });
 
@@ -17,48 +20,63 @@ document.addEventListener('DOMContentLoaded', async () => {
  */
 async function loadUserData() {
     const user = window.KRAuth.getCurrentUser();
+    console.log('[Dashboard] User data:', user);
 
     if (!user) {
-        console.error('No user data available');
+        console.error('[Dashboard] No user data available');
         return;
     }
 
-    // Update header
-    document.getElementById('user-name').textContent = user.username || user.email.split('@')[0];
-    document.getElementById('user-email').textContent = user.email;
+    try {
+        // Update header
+        const userName = user.username || (user.email ? user.email.split('@')[0] : 'Usuario');
+        document.getElementById('user-name').textContent = userName;
+        document.getElementById('user-email').textContent = user.email || '';
 
-    // Update badge
-    const badge = document.getElementById('user-badge');
-    const isPremium = window.KRAuth.isPremium();
+        // Update badge
+        const badge = document.getElementById('user-badge');
+        const isPremium = window.KRAuth.isPremium();
+        console.log('[Dashboard] Is Premium:', isPremium);
 
-    if (isPremium) {
-        badge.textContent = 'PREMIUM';
-        badge.classList.add('premium');
-    } else {
-        badge.textContent = 'FREE';
-    }
-
-    // Update stats
-    document.getElementById('stat-credits').textContent = user.credit_balance || 0;
-    document.getElementById('stat-days').textContent = calculateDaysLeft(user.subscription_expiry_date);
-    document.getElementById('stat-spent').textContent = `$${user.total_spent || 0}`;
-
-    // Hide upgrade button if premium
-    if (isPremium) {
-        const upgradeBtn = document.getElementById('upgrade-btn');
-        if (upgradeBtn) {
-            upgradeBtn.style.display = 'none';
+        if (isPremium) {
+            badge.textContent = 'PREMIUM';
+            badge.classList.add('premium');
+        } else {
+            badge.textContent = 'FREE';
         }
+
+        // Update stats
+        const credits = user.credit_balance ?? 0;
+        const totalSpent = user.total_spent ?? 0;
+
+        document.getElementById('stat-credits').textContent = credits;
+        document.getElementById('stat-days').textContent = calculateDaysLeft(user.subscription_expiry_date);
+        document.getElementById('stat-spent').textContent = `$${totalSpent}`;
+
+        console.log('[Dashboard] Stats - Credits:', credits, 'Spent:', totalSpent);
+
+        // Hide upgrade button if premium
+        if (isPremium) {
+            const upgradeBtn = document.getElementById('upgrade-btn');
+            if (upgradeBtn) {
+                upgradeBtn.style.display = 'none';
+            }
+        }
+
+        // Update account info
+        document.getElementById('account-email').textContent = user.email || '-';
+        document.getElementById('account-username').textContent = user.username || '-';
+        document.getElementById('account-plan').textContent = isPremium ? 'Premium' : 'Free';
+        document.getElementById('account-created').textContent = formatDate(user.created_at);
+
+        // Load query count
+        if (user.id) {
+            loadQueryCount(user.id);
+        }
+
+    } catch (e) {
+        console.error('[Dashboard] Error loading user data:', e);
     }
-
-    // Update account info
-    document.getElementById('account-email').textContent = user.email;
-    document.getElementById('account-username').textContent = user.username || '-';
-    document.getElementById('account-plan').textContent = isPremium ? 'Premium' : 'Free';
-    document.getElementById('account-created').textContent = formatDate(user.created_at);
-
-    // Load query count (from chat history if available)
-    loadQueryCount(user.id);
 }
 
 /**
@@ -96,6 +114,10 @@ function formatDate(dateString) {
 async function loadQueryCount(userId) {
     try {
         const client = await window.KRSupabase.init();
+        if (!client) {
+            console.error('[Dashboard] Supabase client not initialized');
+            return;
+        }
 
         const { count, error } = await client
             .from('cli_chat_history')
@@ -103,42 +125,12 @@ async function loadQueryCount(userId) {
             .eq('user_id', userId)
             .eq('role', 'user');
 
+        console.log('[Dashboard] Query count result:', count, error);
+
         if (!error && count !== null) {
             document.getElementById('stat-queries').textContent = count;
         }
     } catch (e) {
-        console.error('Error loading query count:', e);
+        console.error('[Dashboard] Error loading query count:', e);
     }
-}
-
-/**
- * Animate stat numbers on load
- */
-function animateStats() {
-    document.querySelectorAll('.stat-value').forEach(el => {
-        const value = el.textContent;
-
-        // Skip non-numeric values
-        if (value.startsWith('$')) {
-            return;
-        }
-
-        const target = parseInt(value) || 0;
-        animateNumber(el, target);
-    });
-}
-
-function animateNumber(element, target) {
-    let current = 0;
-    const duration = 1000;
-    const step = target / (duration / 16);
-
-    const timer = setInterval(() => {
-        current += step;
-        if (current >= target) {
-            clearInterval(timer);
-            current = target;
-        }
-        element.textContent = Math.floor(current);
-    }, 16);
 }

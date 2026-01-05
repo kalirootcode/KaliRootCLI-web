@@ -3,16 +3,11 @@
  * Initialize and export Supabase client for web platform
  */
 
-// Supabase configuration (same as CLI)
-const SUPABASE_URL = 'https://YOUR_PROJECT_ID.supabase.co';
-const SUPABASE_ANON_KEY = 'YOUR_ANON_KEY';
-
 // Check if Supabase JS is loaded
 let supabaseClient = null;
 
 /**
  * Initialize Supabase client
- * We use the CDN version for static hosting
  */
 async function initSupabase() {
     if (supabaseClient) return supabaseClient;
@@ -22,7 +17,13 @@ async function initSupabase() {
         await loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2');
     }
 
-    supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    // Get config from config.js
+    if (typeof CONFIG === 'undefined') {
+        console.error('CONFIG not loaded. Make sure config.js is included before this script.');
+        return null;
+    }
+
+    supabaseClient = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
     return supabaseClient;
 }
 
@@ -89,39 +90,45 @@ async function logActivity(userId, action, pageVisited, metadata = {}) {
 }
 
 /**
- * Create or update web session from CLI token
+ * Validate CLI token by setting session in Supabase
  */
 async function validateCLIToken(token) {
     const client = await initSupabase();
 
-    // Verify token with Supabase
-    const { data: { user }, error } = await client.auth.getUser(token);
+    try {
+        // Try getting user directly with the access token
+        const { data: userData, error: userError } = await client.auth.getUser(token);
 
-    if (error || !user) {
-        return { valid: false, error: 'Token inválido o expirado' };
-    }
-
-    // Get user data
-    const userData = await getUserData(user.id);
-
-    if (!userData) {
-        return { valid: false, error: 'Usuario no encontrado' };
-    }
-
-    // Log web session
-    await logActivity(user.id, 'web_login', window.location.pathname, {
-        source: 'cli_token',
-        user_agent: navigator.userAgent
-    });
-
-    return {
-        valid: true,
-        user: {
-            id: user.id,
-            email: user.email,
-            ...userData
+        if (userError || !userData.user) {
+            console.error('Token validation failed:', userError);
+            return { valid: false, error: 'Token inválido o expirado' };
         }
-    };
+
+        // Get user data from cli_users
+        const cliUserData = await getUserData(userData.user.id);
+
+        if (!cliUserData) {
+            return { valid: false, error: 'Usuario no encontrado en base de datos' };
+        }
+
+        // Log web session
+        await logActivity(userData.user.id, 'web_login', window.location.pathname, {
+            source: 'cli_token',
+            user_agent: navigator.userAgent
+        });
+
+        return {
+            valid: true,
+            user: {
+                id: userData.user.id,
+                email: userData.user.email,
+                ...cliUserData
+            }
+        };
+    } catch (e) {
+        console.error('Token validation error:', e);
+        return { valid: false, error: e.message };
+    }
 }
 
 /**
@@ -130,7 +137,6 @@ async function validateCLIToken(token) {
 async function createSupportTicket(userId, userEmail, subject, message) {
     const client = await initSupabase();
 
-    // Create ticket
     const { data: ticket, error: ticketError } = await client
         .from('support_tickets')
         .insert({
@@ -148,7 +154,6 @@ async function createSupportTicket(userId, userEmail, subject, message) {
         return { success: false, error: ticketError.message };
     }
 
-    // Add first message
     const { error: msgError } = await client
         .from('support_messages')
         .insert({
@@ -215,7 +220,6 @@ async function sendTicketMessage(ticketId, userId, message) {
         return { success: false, error: error.message };
     }
 
-    // Update ticket timestamp
     await client
         .from('support_tickets')
         .update({ updated_at: new Date().toISOString() })

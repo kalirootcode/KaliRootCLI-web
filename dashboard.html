@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Dashboard | KR-CLI DOMINION</title>
+
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@400;700;900&display=swap"
+        rel="stylesheet">
+</head>
+
+<body class="dashboard-page">
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <img src="assets/logo.png" alt="KR-CLI" class="logo-img">
+                <span class="logo-text">KR-CLI</span>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="#stats" class="nav-link">Mi Cuenta</a></li>
+                <li><a href="support.html" class="nav-link">Soporte</a></li>
+                <li><button onclick="window.KRAuth.logout()" class="nav-link logout-btn">Cerrar Sesión</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="dashboard-main">
+        <!-- User Header -->
+        <section class="dashboard-header">
+            <div class="container">
+                <div class="user-welcome">
+                    <div class="user-avatar" id="user-avatar">
+                        <span>👤</span>
+                    </div>
+                    <div class="user-info">
+                        <h1>Bienvenido, <span id="user-name">Usuario</span></h1>
+                        <p class="user-email" id="user-email">email@example.com</p>
+                        <div class="user-badge" id="user-badge">FREE</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Grid -->
+        <section class="dashboard-stats" id="stats">
+            <div class="container">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">💳</div>
+                        <div class="stat-value" id="stat-credits">0</div>
+                        <div class="stat-label">Créditos</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📊</div>
+                        <div class="stat-value" id="stat-queries">0</div>
+                        <div class="stat-label">Consultas AI</div>
+                    </div>
+                    <div class="stat-card premium-card" id="premium-card">
+                        <div class="stat-icon">👑</div>
+                        <div class="stat-value" id="stat-days">0</div>
+                        <div class="stat-label">Días Premium</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-value" id="stat-spent">$0</div>
+                        <div class="stat-label">Total Invertido</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Actions -->
+        <section class="dashboard-actions">
+            <div class="container">
+                <h2 class="section-title-sm">Acciones Rápidas</h2>
+                <div class="actions-grid">
+                    <a href="index.html#install" class="action-card">
+                        <span class="action-icon">📥</span>
+                        <span class="action-text">Actualizar CLI</span>
+                    </a>
+                    <a href="support.html" class="action-card">
+                        <span class="action-icon">💬</span>
+                        <span class="action-text">Soporte</span>
+                    </a>
+                    <a href="index.html#pricing" class="action-card upgrade-action" id="upgrade-btn">
+                        <span class="action-icon">⚡</span>
+                        <span class="action-text">Upgrade Premium</span>
+                    </a>
+                    <a href="https://github.com/kalirootcode/KaliRootCLI" target="_blank" class="action-card">
+                        <span class="action-icon">📖</span>
+                        <span class="action-text">Documentación</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Account Info -->
+        <section class="dashboard-account">
+            <div class="container">
+                <h2 class="section-title-sm">Información de Cuenta</h2>
+                <div class="account-card">
+                    <div class="account-row">
+                        <span class="account-label">Email</span>
+                        <span class="account-value" id="account-email">-</span>
+                    </div>
+                    <div class="account-row">
+                        <span class="account-label">Username</span>
+                        <span class="account-value" id="account-username">-</span>
+                    </div>
+                    <div class="account-row">
+                        <span class="account-label">Plan</span>
+                        <span class="account-value" id="account-plan">-</span>
+                    </div>
+                    <div class="account-row">
+                        <span class="account-label">Miembro desde</span>
+                        <span class="account-value" id="account-created">-</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>KR-CLI DOMINION © 2026 KaliRoot Code</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/supabase-client.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+
+</html>

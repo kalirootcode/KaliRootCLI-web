@@ -1,0 +1,382 @@
+/* ============================================
+   KR-CLI DOMINION - Responsive Styles
+   Mobile & Tablet Adaptations
+   ============================================ */
+
+/* ===== Tablet (max-width: 992px) ===== */
+@media screen and (max-width: 992px) {
+    :root {
+        --section-padding: 80px 0;
+    }
+
+    .title-main {
+        font-size: 3rem;
+        letter-spacing: 5px;
+    }
+
+    .title-sub {
+        font-size: 2rem;
+        letter-spacing: 10px;
+    }
+
+    .hero-stats {
+        gap: 40px;
+    }
+
+    .stat-number {
+        font-size: 2rem;
+    }
+
+    .section-title {
+        font-size: 2rem;
+    }
+
+    .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .pricing-card.featured {
+        transform: scale(1);
+    }
+
+    .gate-steps {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
+
+/* ===== Mobile Large (max-width: 768px) ===== */
+@media screen and (max-width: 768px) {
+
+    /* Navigation */
+    .nav-menu {
+        position: fixed;
+        top: 70px;
+        left: -100%;
+        width: 100%;
+        height: calc(100vh - 70px);
+        background: rgba(0, 0, 0, 0.98);
+        flex-direction: column;
+        justify-content: flex-start;
+        padding-top: 40px;
+        gap: 0;
+        transition: left 0.3s ease;
+    }
+
+    .nav-menu.active {
+        left: 0;
+    }
+
+    .nav-menu li {
+        width: 100%;
+    }
+
+    .nav-link {
+        display: block;
+        padding: 20px 30px;
+        border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+        font-size: 1rem;
+    }
+
+    .nav-link::after {
+        display: none;
+    }
+
+    .nav-cta {
+        margin: 20px 30px;
+        text-align: center;
+        display: block;
+    }
+
+    .nav-toggle {
+        display: flex;
+    }
+
+    .nav-toggle.active span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+    }
+
+    .nav-toggle.active span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .nav-toggle.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(5px, -5px);
+    }
+
+    /* Hero */
+    .hero {
+        padding-top: 100px;
+        min-height: 100vh;
+    }
+
+    .skull-logo {
+        width: 120px;
+    }
+
+    .title-main {
+        font-size: 2.5rem;
+        letter-spacing: 3px;
+    }
+
+    .title-sub {
+        font-size: 1.5rem;
+        letter-spacing: 8px;
+    }
+
+    .hero-tagline {
+        font-size: 1.1rem;
+    }
+
+    .hero-description {
+        font-size: 0.9rem;
+    }
+
+    .hero-cta {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .hero-stats {
+        flex-wrap: wrap;
+        gap: 30px;
+    }
+
+    .stat {
+        flex: 0 0 calc(50% - 15px);
+    }
+
+    .scroll-indicator {
+        display: none;
+    }
+
+    /* Sections */
+    .section-title {
+        font-size: 1.8rem;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .section-subtitle {
+        font-size: 1rem;
+        margin-bottom: 40px;
+    }
+
+    /* Features */
+    .features-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .feature-card {
+        padding: 30px 25px;
+    }
+
+    .feature-icon {
+        font-size: 2.5rem;
+    }
+
+    /* Tools */
+    .tools-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+    }
+
+    .tool-card {
+        padding: 20px 10px;
+    }
+
+    .tool-icon {
+        font-size: 1.5rem;
+    }
+
+    .tool-card span:last-child {
+        font-size: 0.75rem;
+    }
+
+    /* Terminal */
+    .install-terminal {
+        margin: 0 -10px 30px;
+        border-radius: 0;
+    }
+
+    .terminal-body {
+        padding: 20px 15px;
+    }
+
+    .terminal-line {
+        font-size: 0.85rem;
+    }
+
+    /* Pricing */
+    .pricing-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .pricing-card {
+        padding: 30px 25px;
+    }
+
+    .pricing-price .amount {
+        font-size: 3rem;
+    }
+
+    /* Auth Gate */
+    .gate-card {
+        padding: 40px 25px;
+    }
+
+    .gate-icon {
+        font-size: 3rem;
+    }
+
+    .gate-card h2 {
+        font-size: 1.5rem;
+    }
+
+    .gate-steps {
+        gap: 10px;
+    }
+
+    .step {
+        width: 100%;
+        justify-content: flex-start;
+        padding: 15px;
+        background: rgba(0, 255, 255, 0.05);
+        border-radius: 10px;
+    }
+
+    /* Footer */
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .footer-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+    }
+}
+
+/* ===== Mobile Small (max-width: 480px) ===== */
+@media screen and (max-width: 480px) {
+    :root {
+        --section-padding: 60px 0;
+    }
+
+    .container {
+        padding: 0 15px;
+    }
+
+    .title-main {
+        font-size: 2rem;
+    }
+
+    .title-sub {
+        font-size: 1.2rem;
+        letter-spacing: 5px;
+    }
+
+    .hero-tagline {
+        font-size: 1rem;
+    }
+
+    .btn {
+        padding: 12px 25px;
+        font-size: 0.85rem;
+    }
+
+    .stat-number {
+        font-size: 1.8rem;
+    }
+
+    .stat-label {
+        font-size: 0.8rem;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+    }
+
+    .tools-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .pricing-price .amount {
+        font-size: 2.5rem;
+    }
+
+    .pricing-features li {
+        font-size: 0.9rem;
+        padding: 10px 0;
+    }
+}
+
+/* ===== High DPI Displays ===== */
+@media (-webkit-min-device-pixel-ratio: 2),
+(min-resolution: 192dpi) {
+
+    .skull-logo,
+    .logo-img {
+        image-rendering: -webkit-optimize-contrast;
+    }
+}
+
+/* ===== Reduced Motion ===== */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .glitch::before,
+    .glitch::after,
+    .glitch-text::before,
+    .glitch-text::after {
+        display: none;
+    }
+
+    .skull-logo {
+        animation: none;
+    }
+
+    .scroll-indicator {
+        animation: none;
+    }
+}
+
+/* ===== Print Styles ===== */
+@media print {
+
+    .navbar,
+    .hero-bg-effects,
+    .scroll-indicator,
+    .btn {
+        display: none !important;
+    }
+
+    body {
+        background: white;
+        color: black;
+    }
+
+    .section {
+        padding: 30px 0;
+    }
+
+    a {
+        color: black;
+        text-decoration: underline;
+    }
+}

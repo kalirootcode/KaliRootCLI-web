@@ -1,0 +1,15 @@
+# KR-CLI Educational Platform - Backend API
+# Deployment configuration for Render.com
+
+# Build Command
+pip install -r requirements-web.txt
+
+# Start Command (choose one based on your needs)
+# Option 1: Run both APIs in one service (recommended for free tier)
+gunicorn --bind 0.0.0.0:$PORT --workers 2 --timeout 120 combined_api:app
+
+# Option 2: Run only News API
+# gunicorn --bind 0.0.0.0:$PORT --workers 2 news_aggregator:app
+
+# Option 3: Run only Education API
+# gunicorn --bind 0.0.0.0:$PORT --workers 2 education_api:app

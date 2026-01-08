@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Noticias | KR-CLI DOMINION</title>
+
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/shared.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@400;700;900&display=swap"
+        rel="stylesheet">
+
+    <style>
+        .news-page {
+            padding-top: 80px;
+            min-height: 100vh;
+        }
+
+        .news-hero {
+            padding: 60px 0 40px;
+            background: linear-gradient(180deg, rgba(168, 85, 247, 0.1) 0%, transparent 100%);
+            text-align: center;
+        }
+
+        .news-hero h1 {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .news-hero p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+        }
+
+        .news-controls {
+            padding: 30px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .news-filters {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+        }
+
+        .filter-btn:hover {
+            border-color: #06b6d4;
+            color: #06b6d4;
+        }
+
+        .filter-btn.active {
+            background: rgba(6, 182, 212, 0.2);
+            border-color: #06b6d4;
+            color: #06b6d4;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-input {
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: white;
+            width: 250px;
+        }
+
+        .refresh-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #00ff88, #00d4ff);
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .refresh-btn:hover {
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            padding: 40px 0;
+        }
+
+        .news-card {
+            background: rgba(10, 14, 39, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .news-card:hover {
+            transform: translateY(-5px);
+            border-color: #06b6d4;
+            box-shadow: 0 0 30px rgba(6, 182, 212, 0.3);
+        }
+
+        .news-category {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        .news-category.vulnerabilities {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid #ef4444;
+        }
+
+        .news-category.exploits {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+            border: 1px solid #fbbf24;
+        }
+
+        .news-category.tools {
+            background: rgba(6, 182, 212, 0.2);
+            color: #06b6d4;
+            border: 1px solid #06b6d4;
+        }
+
+        .news-category.breaches {
+            background: rgba(168, 85, 247, 0.2);
+            color: #a855f7;
+            border: 1px solid #a855f7;
+        }
+
+        .news-category.events {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+            border: 1px solid #00ff88;
+        }
+
+        .news-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #ffffff;
+            line-height: 1.4;
+        }
+
+        .news-summary {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .news-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.5);
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .news-source {
+            font-weight: 600;
+            color: #06b6d4;
+        }
+
+        .news-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 9999;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .news-modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .news-modal-content {
+            background: #0a0e27;
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 16px;
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 25px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: #8892b0;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
+        .modal-close:hover {
+            color: #00ff88;
+        }
+
+        .modal-title {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+
+        .modal-body {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.8;
+            margin-bottom: 25px;
+        }
+
+        .modal-link {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 20px;
+        }
+
+        .modal-link:hover {
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px 0;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px 0;
+            color: rgba(255, 255, 255, 0.6);
+        }
+    </style>
+</head>
+
+<body class="news-page">
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <img src="assets/logo.png" alt="KR-CLI" class="logo-img">
+                <span class="logo-text">KR-CLI</span>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="educacion.html" class="nav-link">🎓 Educación</a></li>
+                <li><a href="noticias.html" class="nav-link">📰 Noticias</a></li>
+                <li><a href="herramientas.html" class="nav-link">🛠️ Herramientas</a></li>
+                <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="news-hero">
+        <div class="container">
+            <h1>📰 Noticias de Ciberseguridad</h1>
+            <p>Últimas noticias, vulnerabilidades y exploits traducidos al español con IA</p>
+        </div>
+    </section>
+
+    <!-- Controls -->
+    <section class="news-controls">
+        <div class="container"
+            style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+            <div class="news-filters">
+                <button class="filter-btn active" data-category="all">Todas</button>
+                <button class="filter-btn" data-category="vulnerabilities">Vulnerabilidades</button>
+                <button class="filter-btn" data-category="exploits">Exploits</button>
+                <button class="filter-btn" data-category="tools">Herramientas</button>
+                <button class="filter-btn" data-category="breaches">Brechas</button>
+                <button class="filter-btn" data-category="events">Eventos</button>
+            </div>
+            <div class="search-box">
+                <input type="text" class="search-input" id="search-input" placeholder="Buscar noticias...">
+                <button class="refresh-btn" onclick="loadNews(true)">🔄 Actualizar</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- News Grid -->
+    <section class="container">
+        <div class="news-grid" id="news-grid">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p style="margin-top: 20px; color: rgba(255,255,255,0.6);">Cargando noticias...</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- News Modal -->
+    <div class="news-modal" id="news-modal">
+        <div class="news-modal-content" id="modal-content">
+            <!-- Content loaded dynamically -->
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>KR-CLI DOMINION © 2026 KaliRoot Code</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const API_URL = 'http://localhost:5001/api/news';
+        let allNews = [];
+        let currentFilter = 'all';
+        let currentSearch = '';
+
+        // Load news on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadNews();
+            setupFilters();
+            setupSearch();
+        });
+
+        async function loadNews(forceRefresh = false) {
+            const grid = document.getElementById('news-grid');
+            grid.innerHTML = '<div class="loading"><div class="spinner"></div><p style="margin-top: 20px; color: rgba(255,255,255,0.6);">Cargando noticias...</p></div>';
+
+            try {
+                const url = forceRefresh ? `${API_URL}?refresh=true` : API_URL;
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data.success && data.news.length > 0) {
+                    allNews = data.news;
+                    renderNews(allNews);
+                } else {
+                    grid.innerHTML = '<div class="no-results"><p>No hay noticias disponibles. Inicia el servidor de noticias.</p></div>';
+                }
+            } catch (error) {
+                console.error('Error loading news:', error);
+                grid.innerHTML = '<div class="no-results"><p>Error cargando noticias. Verifica que el servidor esté activo en el puerto 5001.</p></div>';
+            }
+        }
+
+        function renderNews(news) {
+            const grid = document.getElementById('news-grid');
+
+            if (news.length === 0) {
+                grid.innerHTML = '<div class="no-results"><p>No se encontraron noticias con los filtros seleccionados.</p></div>';
+                return;
+            }
+
+            grid.innerHTML = news.map(item => `
+                <div class="news-card" onclick="openNewsModal(${item.id})">
+                    <span class="news-category ${item.category}">${item.category}</span>
+                    <h3 class="news-title">${item.title}</h3>
+                    <p class="news-summary">${item.summary_es}</p>
+                    <div class="news-meta">
+                        <span class="news-source">${item.source}</span>
+                        <span>${item.date}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function setupFilters() {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentFilter = btn.dataset.category;
+                    applyFilters();
+                });
+            });
+        }
+
+        function setupSearch() {
+            const searchInput = document.getElementById('search-input');
+            searchInput.addEventListener('input', (e) => {
+                currentSearch = e.target.value.toLowerCase();
+                applyFilters();
+            });
+        }
+
+        function applyFilters() {
+            let filtered = allNews;
+
+            // Apply category filter
+            if (currentFilter !== 'all') {
+                filtered = filtered.filter(news => news.category === currentFilter);
+            }
+
+            // Apply search filter
+            if (currentSearch) {
+                filtered = filtered.filter(news =>
+                    news.title.toLowerCase().includes(currentSearch) ||
+                    news.summary_es.toLowerCase().includes(currentSearch)
+                );
+            }
+
+            renderNews(filtered);
+        }
+
+        function openNewsModal(newsId) {
+            const news = allNews.find(n => n.id === newsId);
+            if (!news) return;
+
+            const modal = document.getElementById('news-modal');
+            const content = document.getElementById('modal-content');
+
+            content.innerHTML = `
+                <div class="modal-header">
+                    <div>
+                        <span class="news-category ${news.category}">${news.category}</span>
+                        <h2 class="modal-title">${news.title}</h2>
+                        <div class="news-meta" style="border: none; padding: 0; margin-top: 10px;">
+                            <span class="news-source">${news.source}</span>
+                            <span>${news.date}</span>
+                        </div>
+                    </div>
+                    <button class="modal-close" onclick="closeNewsModal()">×</button>
+                </div>
+                
+                <div class="modal-body">
+                    <h3 style="color: #06b6d4; margin-bottom: 15px;">📝 Resumen en Español</h3>
+                    <p>${news.summary_es}</p>
+                    
+                    <h3 style="color: #06b6d4; margin: 25px 0 15px;">🌐 English Summary</h3>
+                    <p>${news.summary_en}</p>
+                    
+                    <h3 style="color: #06b6d4; margin: 25px 0 15px;">📄 Contenido Original</h3>
+                    <p style="font-size: 0.9rem; color: rgba(255,255,255,0.6);">${news.original_body}</p>
+                </div>
+                
+                <a href="${news.url}" target="_blank" class="modal-link">🔗 Ver Noticia Original</a>
+            `;
+
+            modal.classList.add('active');
+        }
+
+        function closeNewsModal() {
+            document.getElementById('news-modal').classList.remove('active');
+        }
+
+        // Close modal on outside click
+        document.getElementById('news-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'news-modal') {
+                closeNewsModal();
+            }
+        });
+    </script>
+</body>
+
+</html>

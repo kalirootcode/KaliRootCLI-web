@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Herramientas | KR-CLI DOMINION</title>
+
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/shared.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@400;700;900&display=swap"
+        rel="stylesheet">
+
+    <style>
+        .tools-page {
+            padding-top: 80px;
+            min-height: 100vh;
+        }
+
+        .tools-hero {
+            padding: 60px 0 40px;
+            background: linear-gradient(180deg, rgba(0, 255, 136, 0.1) 0%, transparent 100%);
+            text-align: center;
+        }
+
+        .tools-hero h1 {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .tools-hero p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+        }
+
+        .tools-controls {
+            padding: 30px 0;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .category-btn:hover {
+            border-color: #00ff88;
+            color: #00ff88;
+        }
+
+        .category-btn.active {
+            background: rgba(0, 255, 136, 0.2);
+            border-color: #00ff88;
+            color: #00ff88;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            padding: 40px 0;
+        }
+
+        .tool-card {
+            background: rgba(10, 14, 39, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #00ff88, #00d4ff);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            border-color: #00ff88;
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
+        }
+
+        .tool-card:hover::before {
+            opacity: 1;
+        }
+
+        .tool-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .tool-icon {
+            font-size: 2.5rem;
+        }
+
+        .tool-name {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            margin: 0;
+        }
+
+        .tool-category {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-top: 5px;
+        }
+
+        .tool-category.reconnaissance {
+            background: rgba(6, 182, 212, 0.2);
+            color: #06b6d4;
+        }
+
+        .tool-category.exploitation {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .tool-category.post-exploitation {
+            background: rgba(168, 85, 247, 0.2);
+            color: #a855f7;
+        }
+
+        .tool-category.forensics {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+        }
+
+        .tool-category.utilities {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+        }
+
+        .tool-description {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .tool-usage {
+            background: rgba(0, 0, 0, 0.3);
+            border-left: 3px solid #00ff88;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .tool-usage h4 {
+            font-size: 0.9rem;
+            color: #00ff88;
+            margin-bottom: 10px;
+        }
+
+        .tool-usage code {
+            font-family: var(--font-mono);
+            color: #06b6d4;
+            font-size: 0.85rem;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .tool-links {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .tool-link {
+            padding: 8px 16px;
+            background: rgba(6, 182, 212, 0.1);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            border-radius: 8px;
+            color: #06b6d4;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+
+        .tool-link:hover {
+            background: rgba(6, 182, 212, 0.2);
+            border-color: #06b6d4;
+        }
+
+        .premium-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 5px 12px;
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: white;
+        }
+    </style>
+</head>
+
+<body class="tools-page">
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <img src="assets/logo.png" alt="KR-CLI" class="logo-img">
+                <span class="logo-text">KR-CLI</span>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="educacion.html" class="nav-link">🎓 Educación</a></li>
+                <li><a href="noticias.html" class="nav-link">📰 Noticias</a></li>
+                <li><a href="herramientas.html" class="nav-link">🛠️ Herramientas</a></li>
+                <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="tools-hero">
+        <div class="container">
+            <h1>🛠️ Arsenal de Herramientas</h1>
+            <p>14 módulos especializados para operaciones de ciberseguridad avanzadas</p>
+        </div>
+    </section>
+
+    <!-- Category Filters -->
+    <section class="tools-controls">
+        <div class="container" style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+            <button class="category-btn active" data-category="all">Todas</button>
+            <button class="category-btn" data-category="reconnaissance">Reconocimiento</button>
+            <button class="category-btn" data-category="exploitation">Explotación</button>
+            <button class="category-btn" data-category="post-exploitation">Post-Explotación</button>
+            <button class="category-btn" data-category="forensics">Forense</button>
+            <button class="category-btn" data-category="utilities">Utilidades</button>
+        </div>
+    </section>
+
+    <!-- Tools Grid -->
+    <section class="container">
+        <div class="tools-grid" id="tools-grid">
+            <!-- Tools will be loaded here -->
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>KR-CLI DOMINION © 2026 KaliRoot Code</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const TOOLS = [
+            {
+                id: 'port-scanner',
+                name: 'Port Scanner',
+                icon: '🔍',
+                category: 'reconnaissance',
+                description: 'Escaneo avanzado de puertos con detección de servicios y versiones. Utiliza Nmap y técnicas de evasión.',
+                usage: [
+                    'kr-cli "escanea puertos de 192.168.1.1"',
+                    'kr-cli "detecta servicios en red local"',
+                    'kr-cli "escaneo sigiloso de 10.0.0.1"'
+                ],
+                docs: 'https://nmap.org/book/',
+                premium: true
+            },
+            {
+                id: 'cve-lookup',
+                name: 'CVE Lookup',
+                icon: '🛡️',
+                category: 'reconnaissance',
+                description: 'Búsqueda y análisis de vulnerabilidades CVE en tiempo real. Incluye exploits disponibles y parches.',
+                usage: [
+                    'kr-cli "busca CVE-2024-1234"',
+                    'kr-cli "vulnerabilidades de Apache 2.4"',
+                    'kr-cli "exploits para Windows Server"'
+                ],
+                docs: 'https://cve.mitre.org/',
+                premium: true
+            },
+            {
+                id: 'osint',
+                name: 'OSINT Tools',
+                icon: '🦅',
+                category: 'reconnaissance',
+                description: 'Recopilación de inteligencia de fuentes abiertas. Incluye búsqueda de subdominios, emails, y metadatos.',
+                usage: [
+                    'kr-cli "busca información de example.com"',
+                    'kr-cli "encuentra subdominios de target.com"',
+                    'kr-cli "recopila emails de empresa.com"'
+                ],
+                docs: 'https://osintframework.com/',
+                premium: true
+            },
+            {
+                id: 'metasploit',
+                name: 'Metasploit Integration',
+                icon: '⚡',
+                category: 'exploitation',
+                description: 'Integración con Metasploit Framework para explotación automatizada de vulnerabilidades.',
+                usage: [
+                    'kr-cli "genera payload reverse shell"',
+                    'kr-cli "explota SMB en 192.168.1.10"',
+                    'kr-cli "busca exploits para Apache"'
+                ],
+                docs: 'https://docs.metasploit.com/',
+                premium: true
+            },
+            {
+                id: 'web-exploits',
+                name: 'Web Exploitation',
+                icon: '🌐',
+                category: 'exploitation',
+                description: 'Herramientas para explotación web: SQLi, XSS, RCE, LFI/RFI, y más.',
+                usage: [
+                    'kr-cli "prueba SQL injection en login.php"',
+                    'kr-cli "detecta XSS en formulario"',
+                    'kr-cli "busca RCE en aplicación web"'
+                ],
+                docs: 'https://owasp.org/',
+                premium: true
+            },
+            {
+                id: 'password-tools',
+                name: 'Password Cracking',
+                icon: '🔑',
+                category: 'exploitation',
+                description: 'Suite de herramientas para cracking de contraseñas: Hashcat, John, y generadores de wordlists.',
+                usage: [
+                    'kr-cli "crackea hash MD5"',
+                    'kr-cli "genera wordlist personalizada"',
+                    'kr-cli "ataque de fuerza bruta SSH"'
+                ],
+                docs: 'https://hashcat.net/wiki/',
+                premium: true
+            },
+            {
+                id: 'privilege-escalation',
+                name: 'Privilege Escalation',
+                icon: '⬆️',
+                category: 'post-exploitation',
+                description: 'Técnicas de escalación de privilegios para Linux y Windows. Incluye exploits locales.',
+                usage: [
+                    'kr-cli "busca vectores de escalación"',
+                    'kr-cli "explota SUID en Linux"',
+                    'kr-cli "escalación Windows UAC bypass"'
+                ],
+                docs: 'https://github.com/swisskyrepo/PayloadsAllTheThings',
+                premium: true
+            },
+            {
+                id: 'persistence',
+                name: 'Persistence Mechanisms',
+                icon: '🎯',
+                category: 'post-exploitation',
+                description: 'Técnicas de persistencia y backdoors para mantener acceso en sistemas comprometidos.',
+                usage: [
+                    'kr-cli "crea backdoor persistente"',
+                    'kr-cli "instala rootkit"',
+                    'kr-cli "configura reverse shell persistente"'
+                ],
+                docs: 'https://attack.mitre.org/tactics/TA0003/',
+                premium: true
+            },
+            {
+                id: 'pivoting',
+                name: 'Pivoting & Tunneling',
+                icon: '🔄',
+                category: 'post-exploitation',
+                description: 'Herramientas para pivoting, port forwarding, y movimiento lateral en redes.',
+                usage: [
+                    'kr-cli "configura pivoting a red interna"',
+                    'kr-cli "crea túnel SSH"',
+                    'kr-cli "escanea red interna desde pivot"'
+                ],
+                docs: 'https://book.hacktricks.xyz/generic-methodologies-and-resources/tunneling-and-port-forwarding',
+                premium: true
+            },
+            {
+                id: 'forensics',
+                name: 'Digital Forensics',
+                icon: '🕵️',
+                category: 'forensics',
+                description: 'Análisis forense de sistemas, memoria, y artefactos digitales.',
+                usage: [
+                    'kr-cli "analiza dump de memoria"',
+                    'kr-cli "extrae artefactos de disco"',
+                    'kr-cli "recupera archivos eliminados"'
+                ],
+                docs: 'https://www.sleuthkit.org/autopsy/',
+                premium: true
+            },
+            {
+                id: 'anonymity',
+                name: 'Anonymity Tools',
+                icon: '🎭',
+                category: 'utilities',
+                description: 'Herramientas para anonimato: Tor, VPN, MAC spoofing, y limpieza de metadatos.',
+                usage: [
+                    'kr-cli "activa Tor"',
+                    'kr-cli "cambia MAC address"',
+                    'kr-cli "limpia metadatos de imagen"'
+                ],
+                docs: 'https://www.torproject.org/',
+                premium: true
+            },
+            {
+                id: 'wifi-audit',
+                name: 'WiFi Auditing',
+                icon: '📡',
+                category: 'reconnaissance',
+                description: 'Auditoría de redes WiFi: captura de handshakes, cracking WPA/WPA2, evil twin.',
+                usage: [
+                    'kr-cli "escanea redes WiFi"',
+                    'kr-cli "captura handshake WPA2"',
+                    'kr-cli "crackea contraseña WiFi"'
+                ],
+                docs: 'https://www.aircrack-ng.org/',
+                premium: true
+            },
+            {
+                id: 'social-engineering',
+                name: 'Social Engineering',
+                icon: '🎣',
+                category: 'reconnaissance',
+                description: 'Toolkit de ingeniería social: phishing, pretexting, y creación de payloads.',
+                usage: [
+                    'kr-cli "crea página de phishing"',
+                    'kr-cli "genera email de pretexting"',
+                    'kr-cli "crea USB malicioso"'
+                ],
+                docs: 'https://www.social-engineer.org/',
+                premium: true
+            },
+            {
+                id: 'gdrive',
+                name: 'GDrive Integration',
+                icon: '📥',
+                category: 'utilities',
+                description: 'Integración con Google Drive para almacenamiento de resultados y reportes.',
+                usage: [
+                    'kr-cli "sube reporte a Drive"',
+                    'kr-cli "descarga wordlist de Drive"',
+                    'kr-cli "sincroniza resultados"'
+                ],
+                docs: 'https://developers.google.com/drive',
+                premium: true
+            }
+        ];
+
+        let currentCategory = 'all';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTools(TOOLS);
+            setupFilters();
+        });
+
+        function renderTools(tools) {
+            const grid = document.getElementById('tools-grid');
+
+            grid.innerHTML = tools.map(tool => `
+                <div class="tool-card">
+                    ${tool.premium ? '<span class="premium-badge">PREMIUM</span>' : ''}
+                    <div class="tool-header">
+                        <span class="tool-icon">${tool.icon}</span>
+                        <div>
+                            <h3 class="tool-name">${tool.name}</h3>
+                            <span class="tool-category ${tool.category}">${tool.category}</span>
+                        </div>
+                    </div>
+                    <p class="tool-description">${tool.description}</p>
+                    <div class="tool-usage">
+                        <h4>💻 Ejemplos de Uso</h4>
+                        ${tool.usage.map(cmd => `<code>${cmd}</code>`).join('')}
+                    </div>
+                    <div class="tool-links">
+                        <a href="${tool.docs}" target="_blank" class="tool-link">📖 Documentación</a>
+                        <a href="educacion.html" class="tool-link">🎓 Aprender</a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function setupFilters() {
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentCategory = btn.dataset.category;
+                    applyFilter();
+                });
+            });
+        }
+
+        function applyFilter() {
+            const filtered = currentCategory === 'all'
+                ? TOOLS
+                : TOOLS.filter(tool => tool.category === currentCategory);
+
+            renderTools(filtered);
+        }
+    </script>
+</body>
+
+</html>

@@ -134,3 +134,68 @@ async function loadQueryCount(userId) {
         console.error('[Dashboard] Error loading query count:', e);
     }
 }
+
+/**
+ * Load latest news for dashboard
+ */
+async function loadLatestNews() {
+    const newsGrid = document.getElementById('news-grid');
+    
+    try {
+        const response = await fetch('http://localhost:5001/api/news');
+        const data = await response.json();
+        
+        if (data.success && data.news.length > 0) {
+            // Show only first 3 news
+            const latestNews = data.news.slice(0, 3);
+            
+            newsGrid.innerHTML = latestNews.map(news => `
+                <div class="news-card" onclick="window.location.href='noticias.html'">
+                    <span class="news-category ${news.category}">${news.category}</span>
+                    <h3 class="news-title">${news.title}</h3>
+                    <p class="news-summary">${news.summary_es.substring(0, 120)}...</p>
+                    <div class="news-meta">
+                        <span class="news-source">${news.source}</span>
+                        <span class="news-date">${news.date}</span>
+                    </div>
+                </div>
+            `).join('');
+        } else {
+            newsGrid.innerHTML = '<p style="text-align: center; color: rgba(255,255,255,0.6);">No hay noticias disponibles. Inicia el servidor de noticias.</p>';
+        }
+    } catch (error) {
+        console.error('[Dashboard] Error loading news:', error);
+        newsGrid.innerHTML = '<p style="text-align: center; color: rgba(255,255,255,0.6);">Error cargando noticias. Verifica que el servidor esté activo.</p>';
+    }
+}
+
+/**
+ * Load educational progress
+ */
+async function loadEducationalProgress() {
+    // Get progress from localStorage
+    const progress = JSON.parse(localStorage.getItem('kr_education_progress') || '{}');
+    
+    const coursesCompleted = Object.keys(progress.courses || {}).filter(c => progress.courses[c] === 100).length;
+    const labsCompleted = Object.keys(progress.labs || {}).filter(l => progress.labs[l]).length;
+    const totalProgress = calculateTotalProgress(progress);
+    
+    document.getElementById('courses-completed').textContent = `${coursesCompleted}/4`;
+    document.getElementById('labs-completed').textContent = `${labsCompleted}/15`;
+    document.getElementById('total-progress').textContent = `${totalProgress}%`;
+    document.getElementById('education-progress-bar').style.width = `${totalProgress}%`;
+}
+
+function calculateTotalProgress(progress) {
+    if (!progress.courses) return 0;
+    const courses = Object.values(progress.courses);
+    if (courses.length === 0) return 0;
+    const sum = courses.reduce((a, b) => a + b, 0);
+    return Math.round(sum / courses.length);
+}
+
+// Load news and progress when page loads
+if (document.getElementById('news-grid')) {
+    loadLatestNews();
+    loadEducationalProgress();
+}

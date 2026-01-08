@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/animations.css">
     <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/shared.css">
     <link rel="stylesheet" href="css/dashboard.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link
@@ -27,6 +28,9 @@
                 <span class="logo-text">KR-CLI</span>
             </a>
             <ul class="nav-menu">
+                <li><a href="educacion.html" class="nav-link">🎓 Educación</a></li>
+                <li><a href="noticias.html" class="nav-link">📰 Noticias</a></li>
+                <li><a href="herramientas.html" class="nav-link">🛠️ Herramientas</a></li>
                 <li><a href="#stats" class="nav-link">Mi Cuenta</a></li>
                 <li><a href="support.html" class="nav-link">Soporte</a></li>
                 <li><button onclick="window.KRAuth.logout()" class="nav-link logout-btn">Cerrar Sesión</button></li>
@@ -76,6 +80,46 @@
                         <div class="stat-label">Total Invertido</div>
                     </div>
                 </div>
+            </div>
+        </section>
+
+        <!-- Educational Progress -->
+        <section class="dashboard-education">
+            <div class="container">
+                <h2 class="section-title-sm">🎓 Tu Progreso Educativo</h2>
+                <div class="education-overview glass-card">
+                    <div class="progress-stats">
+                        <div class="progress-item">
+                            <span class="progress-label">Cursos Completados</span>
+                            <span class="progress-value" id="courses-completed">0/4</span>
+                        </div>
+                        <div class="progress-item">
+                            <span class="progress-label">Laboratorios Realizados</span>
+                            <span class="progress-value" id="labs-completed">0/15</span>
+                        </div>
+                        <div class="progress-item">
+                            <span class="progress-label">Progreso Total</span>
+                            <span class="progress-value" id="total-progress">0%</span>
+                        </div>
+                    </div>
+                    <div class="progress-container" style="margin-top: 20px;">
+                        <div class="progress-bar" id="education-progress-bar" style="width: 0%"></div>
+                    </div>
+                    <a href="educacion.html" class="btn btn-outline" style="margin-top: 20px;">Ver Cursos</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Latest News -->
+        <section class="dashboard-news">
+            <div class="container">
+                <h2 class="section-title-sm">📰 Últimas Noticias de Ciberseguridad</h2>
+                <div class="news-grid" id="news-grid">
+                    <div class="skeleton" style="height: 150px;"></div>
+                    <div class="skeleton" style="height: 150px;"></div>
+                    <div class="skeleton" style="height: 150px;"></div>
+                </div>
+                <a href="noticias.html" class="btn btn-outline" style="margin-top: 20px;">Ver Todas las Noticias</a>
             </div>
         </section>
 

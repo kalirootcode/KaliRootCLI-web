@@ -140,15 +140,17 @@ async function loadQueryCount(userId) {
  */
 async function loadLatestNews() {
     const newsGrid = document.getElementById('news-grid');
-    
+
     try {
-        const response = await fetch('http://localhost:5001/api/news');
+        // Use dynamic config - defaults to production URL
+        const newsApiUrl = (window.KR_API_CONFIG ? window.KR_API_CONFIG.NEWS_API : 'https://kalirootcli.onrender.com') + '/api/news';
+        const response = await fetch(newsApiUrl);
         const data = await response.json();
-        
+
         if (data.success && data.news.length > 0) {
             // Show only first 3 news
             const latestNews = data.news.slice(0, 3);
-            
+
             newsGrid.innerHTML = latestNews.map(news => `
                 <div class="news-card" onclick="window.location.href='noticias.html'">
                     <span class="news-category ${news.category}">${news.category}</span>
@@ -175,11 +177,11 @@ async function loadLatestNews() {
 async function loadEducationalProgress() {
     // Get progress from localStorage
     const progress = JSON.parse(localStorage.getItem('kr_education_progress') || '{}');
-    
+
     const coursesCompleted = Object.keys(progress.courses || {}).filter(c => progress.courses[c] === 100).length;
     const labsCompleted = Object.keys(progress.labs || {}).filter(l => progress.labs[l]).length;
     const totalProgress = calculateTotalProgress(progress);
-    
+
     document.getElementById('courses-completed').textContent = `${coursesCompleted}/4`;
     document.getElementById('labs-completed').textContent = `${labsCompleted}/15`;
     document.getElementById('total-progress').textContent = `${totalProgress}%`;

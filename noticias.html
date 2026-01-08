@@ -359,8 +359,10 @@
         </div>
     </footer>
 
+    <script src="js/api-config.js"></script>
     <script>
-        const API_URL = 'http://localhost:5001/api/news';
+        // Use dynamic config - defaults to production URL
+        const API_URL = (window.KR_API_CONFIG ? window.KR_API_CONFIG.NEWS_API : 'https://kalirootcli.onrender.com') + '/api/news';
         let allNews = [];
         let currentFilter = 'all';
         let currentSearch = '';

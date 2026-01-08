@@ -29,3 +29,34 @@ window.KR_API_CONFIG = API_CONFIG[ENV];
 console.log(`[API Config] Running in ${ENV} mode`);
 console.log(`[API Config] News API: ${window.KR_API_CONFIG.NEWS_API}`);
 console.log(`[API Config] Education API: ${window.KR_API_CONFIG.EDUCATION_API}`);
+
+// Mobile Navigation Toggle
+document.addEventListener('DOMContentLoaded', function() {
+    const navToggle = document.getElementById('nav-toggle') || document.querySelector('.nav-toggle');
+    const navMenu = document.getElementById('nav-menu') || document.querySelector('.nav-menu');
+    
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            navToggle.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+        
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                navToggle.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!navToggle.contains(e.target) && !navMenu.contains(e.target)) {
+                navToggle.classList.remove('active');
+                navMenu.classList.remove('active');
+            }
+        });
+    }
+    
+    console.log('[Mobile] Navigation toggle initialized');
+});

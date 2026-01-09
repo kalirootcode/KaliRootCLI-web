@@ -243,7 +243,8 @@
         .hero-logo {
             width: 150px;
             height: 150px;
-            margin-bottom: 30px;
+            margin: 0 auto 30px auto;
+            display: block;
             animation: float 3s ease-in-out infinite;
             filter: drop-shadow(0 0 30px rgba(0, 255, 136, 0.5));
         }
@@ -266,6 +267,7 @@
             font-weight: 900;
             margin-bottom: 10px;
             text-shadow: 0 0 50px rgba(0, 255, 136, 0.5);
+            text-align: center;
         }
 
         .hero-title-main {
@@ -273,6 +275,109 @@
             background: linear-gradient(135deg, var(--neon-green), var(--neon-cyan));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: glitch-text 3s infinite;
+            position: relative;
+        }
+
+        .hero-title-main::before,
+        .hero-title-main::after {
+            content: 'KR-CLI DOMINION';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--neon-green), var(--neon-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-title-main::before {
+            animation: glitch-1 2s infinite linear alternate-reverse;
+            clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+        }
+
+        .hero-title-main::after {
+            animation: glitch-2 3s infinite linear alternate-reverse;
+            clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+        }
+
+        @keyframes glitch-text {
+
+            0%,
+            90%,
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+            92% {
+                opacity: 0.8;
+                transform: translateX(-2px);
+            }
+
+            94% {
+                opacity: 1;
+                transform: translateX(2px);
+            }
+
+            96% {
+                opacity: 0.9;
+                transform: translateX(0);
+                text-shadow: 2px 0 #00ff88, -2px 0 #00d4ff;
+            }
+
+            98% {
+                opacity: 1;
+                transform: translateX(1px);
+                text-shadow: none;
+            }
+        }
+
+        @keyframes glitch-1 {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            20% {
+                transform: translateX(-3px);
+            }
+
+            40% {
+                transform: translateX(3px);
+            }
+
+            60% {
+                transform: translateX(-1px);
+            }
+
+            80% {
+                transform: translateX(2px);
+            }
+        }
+
+        @keyframes glitch-2 {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(2px);
+            }
+
+            50% {
+                transform: translateX(-3px);
+            }
+
+            75% {
+                transform: translateX(1px);
+            }
         }
 
         .hero-title-sub {
@@ -280,6 +385,39 @@
             font-size: 2rem;
             color: rgba(255, 255, 255, 0.9);
             letter-spacing: 15px;
+            animation: flicker 4s infinite;
+        }
+
+        @keyframes flicker {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.95;
+            }
+
+            52% {
+                opacity: 0.8;
+            }
+
+            54% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            92% {
+                opacity: 0.7;
+            }
+
+            94% {
+                opacity: 1;
+            }
         }
 
         .hero-tagline {

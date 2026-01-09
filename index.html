@@ -780,6 +780,11 @@
             font-weight: bold;
         }
 
+        .pricing-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
         .pricing-btn {
             width: 100%;
             padding: 15px;
@@ -788,6 +793,126 @@
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s;
+        }
+
+        /* Premium Box */
+        .premium-box {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(0, 255, 136, 0.1));
+            border: 2px solid var(--neon-purple);
+            border-radius: 24px;
+            overflow: hidden;
+            max-width: 900px;
+            margin: 0 auto;
+            animation: premium-glow 3s infinite;
+        }
+
+        @keyframes premium-glow {
+
+            0%,
+            100% {
+                box-shadow: 0 0 30px rgba(168, 85, 247, 0.3);
+            }
+
+            50% {
+                box-shadow: 0 0 60px rgba(168, 85, 247, 0.5), 0 0 100px rgba(0, 255, 136, 0.2);
+            }
+        }
+
+        .premium-header {
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-green));
+            padding: 30px;
+            text-align: center;
+        }
+
+        .premium-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .premium-header h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: #000;
+            margin-bottom: 10px;
+        }
+
+        .premium-header p {
+            color: rgba(0, 0, 0, 0.8);
+            font-size: 1rem;
+        }
+
+        .premium-content {
+            padding: 40px;
+        }
+
+        .premium-price {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .premium-amount {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            font-weight: 900;
+            color: var(--neon-green);
+        }
+
+        .premium-period {
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .premium-features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .premium-feature {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            border-left: 3px solid var(--neon-purple);
+        }
+
+        .pf-icon {
+            font-size: 1.8rem;
+        }
+
+        .premium-feature strong {
+            display: block;
+            color: var(--neon-green);
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+
+        .premium-feature p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.85rem;
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .premium-features {
+                grid-template-columns: 1fr;
+            }
+
+            .premium-header h3 {
+                font-size: 1.3rem;
+            }
+
+            .premium-amount {
+                font-size: 3rem;
+            }
         }
 
         /* ==================== INSTALL ==================== */
@@ -1198,7 +1323,8 @@
                     <div class="arch-benefit">
                         <h4>🎛️ Dashboard Interactivo</h4>
                         <p>Menú visual con todas las herramientas, gestión de créditos, reportes, y más. Ejecuta
-                            <code>kr-clidn</code>.</p>
+                            <code>kr-clidn</code>.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -1284,55 +1410,117 @@
     <!-- Pricing -->
     <section class="section" id="pricing">
         <div class="container">
-            <h2 class="section-title">💎 PLANES Y PRECIOS</h2>
-            <p class="section-subtitle">Elige el poder que necesitas</p>
-            <div class="pricing-grid">
+            <h2 class="section-title">💎 PLANES Y PAQUETES</h2>
+            <p class="section-subtitle">Elige el poder que necesitas. Pago en USDT (Cripto)</p>
+
+            <!-- Credit Packages -->
+            <h3
+                style="text-align: center; color: var(--neon-cyan); margin-bottom: 40px; font-family: 'Orbitron', sans-serif;">
+                📦 PAQUETES DE CRÉDITOS</h3>
+            <div class="pricing-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 60px;">
                 <div class="pricing-card">
-                    <h3 class="pricing-name">FREE</h3>
-                    <div class="pricing-price">
-                        <span class="pricing-amount">$0</span>
-                        <span class="pricing-period">/ siempre</span>
-                    </div>
-                    <ul class="pricing-features">
-                        <li>5 créditos al registrarte</li>
-                        <li>Acceso al dashboard</li>
-                        <li>Herramientas básicas</li>
-                        <li>IA modelo estándar</li>
-                        <li>Soporte por email</li>
-                    </ul>
-                    <a href="acceso.html" class="btn btn-secondary pricing-btn">Empezar Gratis</a>
-                </div>
-                <div class="pricing-card featured">
-                    <h3 class="pricing-name">PREMIUM</h3>
-                    <div class="pricing-price">
-                        <span class="pricing-amount">$20</span>
-                        <span class="pricing-period">/ mes</span>
-                    </div>
-                    <ul class="pricing-features">
-                        <li>500 créditos de bono</li>
-                        <li>Acceso ilimitado a herramientas</li>
-                        <li>14 módulos premium</li>
-                        <li>IA modelo Llama 3.3 70B</li>
-                        <li>Reportes PDF ilimitados</li>
-                        <li>Acceso web completo</li>
-                        <li>Soporte prioritario</li>
-                    </ul>
-                    <a href="acceso.html" class="btn btn-primary pricing-btn">Obtener Premium</a>
-                </div>
-                <div class="pricing-card">
-                    <h3 class="pricing-name">CRÉDITOS</h3>
+                    <div class="pricing-icon">💳</div>
+                    <h3 class="pricing-name">STARTER</h3>
                     <div class="pricing-price">
                         <span class="pricing-amount">$10</span>
-                        <span class="pricing-period">/ 500 créditos</span>
+                        <span class="pricing-period">USD (USDT)</span>
                     </div>
                     <ul class="pricing-features">
-                        <li>Pack de 500 créditos</li>
-                        <li>Sin vencimiento</li>
-                        <li>Recarga cuando quieras</li>
-                        <li>Pago en cripto</li>
-                        <li>Activación inmediata</li>
+                        <li>500 créditos para consultas AI</li>
+                        <li>Válidos por 30 días</li>
+                        <li>Ideal para iniciarse</li>
+                        <li>Tu primer paso en ciberseguridad</li>
+                        <li>Pago inmediato con cripto</li>
                     </ul>
-                    <a href="acceso.html" class="btn btn-secondary pricing-btn">Comprar Créditos</a>
+                    <a href="acceso.html" class="btn btn-secondary pricing-btn">Comprar Starter</a>
+                </div>
+                <div class="pricing-card" style="border-color: var(--neon-cyan);">
+                    <div class="pricing-icon">⚡</div>
+                    <h3 class="pricing-name">HACKER PRO</h3>
+                    <div class="pricing-price">
+                        <span class="pricing-amount">$20</span>
+                        <span class="pricing-period">USD (USDT)</span>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>1200 créditos para consultas AI</li>
+                        <li>Válidos por 30 días</li>
+                        <li>Para estudiantes serios</li>
+                        <li>Profundiza sin límites</li>
+                        <li>Mejor relación calidad-precio</li>
+                    </ul>
+                    <a href="acceso.html" class="btn btn-secondary pricing-btn"
+                        style="border-color: var(--neon-cyan); color: var(--neon-cyan);">Comprar Hacker Pro</a>
+                </div>
+                <div class="pricing-card" style="border-color: var(--neon-purple);">
+                    <div class="pricing-icon">💎</div>
+                    <h3 class="pricing-name">ELITE</h3>
+                    <div class="pricing-price">
+                        <span class="pricing-amount">$35</span>
+                        <span class="pricing-period">USD (USDT)</span>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>2500 créditos para consultas AI</li>
+                        <li>Válidos por 30 días</li>
+                        <li>Potencia máxima</li>
+                        <li>Para operaciones intensivas</li>
+                        <li>El pack más grande</li>
+                    </ul>
+                    <a href="acceso.html" class="btn btn-secondary pricing-btn"
+                        style="border-color: var(--neon-purple); color: var(--neon-purple);">Comprar Elite</a>
+                </div>
+            </div>
+
+            <!-- Premium Subscription -->
+            <div class="premium-box">
+                <div class="premium-header">
+                    <span class="premium-badge">👑 RECOMENDADO</span>
+                    <h3>DOMINION ELITE ARCHITECTURE</h3>
+                    <p>Desbloquea el verdadero poder de la Inteligencia Artificial Ofensiva</p>
+                </div>
+                <div class="premium-content">
+                    <div class="premium-price">
+                        <span class="premium-amount">$20</span>
+                        <span class="premium-period">/mes</span>
+                    </div>
+                    <div class="premium-features">
+                        <div class="premium-feature">
+                            <span class="pf-icon">⚡</span>
+                            <div>
+                                <strong>1200 CRÉDITOS MENSUALES</strong>
+                                <p>Recarga automática cada mes</p>
+                            </div>
+                        </div>
+                        <div class="premium-feature">
+                            <span class="pf-icon">🧠</span>
+                            <div>
+                                <strong>MODELO 70B NEURAL</strong>
+                                <p>Razonamiento superior y generación de scripts complejos</p>
+                            </div>
+                        </div>
+                        <div class="premium-feature">
+                            <span class="pf-icon">🛠️</span>
+                            <div>
+                                <strong>SUITE DE HERRAMIENTAS</strong>
+                                <p>Port Scanner, CVE Lookup & Auto-Exploit Planning</p>
+                            </div>
+                        </div>
+                        <div class="premium-feature">
+                            <span class="pf-icon">🤖</span>
+                            <div>
+                                <strong>MODO AGENTE AUTÓNOMO</strong>
+                                <p>Crea proyectos y estructuras completas con un comando</p>
+                            </div>
+                        </div>
+                        <div class="premium-feature">
+                            <span class="pf-icon">💾</span>
+                            <div>
+                                <strong>MEMORIA INFINITA</strong>
+                                <p>Historial de chats ilimitado y persistente</p>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="acceso.html" class="btn btn-primary"
+                        style="width: 100%; margin-top: 30px; font-size: 1.1rem;">👑 Obtener Premium Ahora</a>
                 </div>
             </div>
         </div>

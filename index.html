@@ -8,50 +8,1029 @@
         content="KR-CLI DOMINION - La Suite de Ciberseguridad Definitiva Impulsada por IA. Transforma tu terminal en un Centro de Operaciones de Seguridad Ofensiva.">
     <meta name="keywords" content="ciberseguridad, pentesting, hacking, CLI, IA, KaliRoot, seguridad, ethical hacking">
     <meta name="author" content="KaliRoot Code">
-    <meta name="robots" content="index, follow">
 
-    <!-- Open Graph -->
     <meta property="og:title" content="KR-CLI DOMINION - Ciberseguridad con IA">
     <meta property="og:description" content="La Suite de Ciberseguridad Definitiva Impulsada por IA">
     <meta property="og:image" content="assets/og-image.png">
     <meta property="og:url" content="https://kr-clidn.com">
-    <meta property="og:type" content="website">
 
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="KR-CLI DOMINION">
-    <meta name="twitter:description" content="Tu Copiloto de Ciberseguridad">
-
-    <title>KR-CLI DOMINION | Suite de Ciberseguridad con IA</title>
+    <title>KR-CLI DOMINION | El Poder está en tus Manos</title>
 
     <link rel="icon" type="image/png" href="assets/favicon.png">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/animations.css">
     <link rel="stylesheet" href="css/responsive.css">
-
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link
         href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@400;700;900&display=swap"
         rel="stylesheet">
+
+    <style>
+        :root {
+            --neon-green: #00ff88;
+            --neon-cyan: #00d4ff;
+            --neon-purple: #a855f7;
+            --neon-red: #ef4444;
+            --bg-dark: #0a0e27;
+            --bg-darker: #050811;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg-darker);
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+
+        /* Matrix Background */
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            background:
+                radial-gradient(ellipse at 20% 20%, rgba(0, 255, 136, 0.05) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(168, 85, 247, 0.05) 0%, transparent 50%),
+                linear-gradient(180deg, var(--bg-darker) 0%, var(--bg-dark) 100%);
+        }
+
+        .matrix-rain {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Ctext x='0' y='15' fill='%2300ff88' font-family='monospace' font-size='12'%3E01%3C/text%3E%3Ctext x='20' y='35' fill='%2300ff88' font-family='monospace' font-size='12'%3E10%3C/text%3E%3Ctext x='40' y='55' fill='%2300ff88' font-family='monospace' font-size='12'%3E11%3C/text%3E%3C/svg%3E");
+            animation: matrix-scroll 20s linear infinite;
+        }
+
+        @keyframes matrix-scroll {
+            from {
+                transform: translateY(-100%);
+            }
+
+            to {
+                transform: translateY(100%);
+            }
+        }
+
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 15px 0;
+            background: rgba(5, 8, 17, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 255, 136, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            width: 45px;
+            height: 45px;
+            filter: drop-shadow(0 0 10px rgba(0, 255, 136, 0.5));
+        }
+
+        .logo-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--neon-green), var(--neon-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: var(--neon-green);
+        }
+
+        .nav-cta {
+            padding: 10px 25px;
+            background: linear-gradient(135deg, var(--neon-green), var(--neon-cyan));
+            color: #000 !important;
+            border-radius: 25px;
+            font-weight: 700;
+        }
+
+        .nav-cta:hover {
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .nav-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .nav-toggle span {
+            width: 25px;
+            height: 2px;
+            background: var(--neon-green);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px;
+        }
+
+        /* Section Base */
+        .section {
+            padding: 100px 0;
+            position: relative;
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #fff, var(--neon-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1.1rem;
+            margin-bottom: 60px;
+        }
+
+        /* ==================== HERO ==================== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding-top: 80px;
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 10;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid var(--neon-red);
+            border-radius: 25px;
+            color: var(--neon-red);
+            font-size: 0.8rem;
+            margin-bottom: 30px;
+            animation: pulse-glow 2s infinite;
+        }
+
+        @keyframes pulse-glow {
+
+            0%,
+            100% {
+                box-shadow: 0 0 5px rgba(239, 68, 68, 0.3);
+            }
+
+            50% {
+                box-shadow: 0 0 20px rgba(239, 68, 68, 0.6);
+            }
+        }
+
+        .hero-logo {
+            width: 150px;
+            height: 150px;
+            margin-bottom: 30px;
+            animation: float 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 30px rgba(0, 255, 136, 0.5));
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        .hero-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 10px;
+            text-shadow: 0 0 50px rgba(0, 255, 136, 0.5);
+        }
+
+        .hero-title-main {
+            display: block;
+            background: linear-gradient(135deg, var(--neon-green), var(--neon-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-title-sub {
+            display: block;
+            font-size: 2rem;
+            color: rgba(255, 255, 255, 0.9);
+            letter-spacing: 15px;
+        }
+
+        .hero-tagline {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 40px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-tagline strong {
+            color: var(--neon-green);
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 50px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 35px;
+            border-radius: 50px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--neon-green), var(--neon-cyan));
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 40px rgba(0, 255, 136, 0.6);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--neon-purple);
+            color: var(--neon-purple);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(168, 85, 247, 0.1);
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.4);
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--neon-green);
+            display: block;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.85rem;
+        }
+
+        /* ==================== THREAT ALERT ==================== */
+        .threat-section {
+            background: linear-gradient(180deg,
+                    rgba(239, 68, 68, 0.1) 0%,
+                    transparent 50%,
+                    rgba(168, 85, 247, 0.1) 100%);
+            border-top: 1px solid rgba(239, 68, 68, 0.2);
+            border-bottom: 1px solid rgba(168, 85, 247, 0.2);
+        }
+
+        .threat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+        }
+
+        .threat-card {
+            background: rgba(10, 14, 39, 0.8);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .threat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--neon-red);
+            box-shadow: 0 0 30px rgba(239, 68, 68, 0.3);
+        }
+
+        .threat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .threat-title {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            color: var(--neon-red);
+        }
+
+        .threat-stat {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        /* ==================== VIDEO + EXPLANATION ==================== */
+        .demo-section {
+            background: linear-gradient(180deg, transparent, rgba(0, 212, 255, 0.05), transparent);
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .demo-video {
+            position: relative;
+            aspect-ratio: 9/16;
+            max-width: 350px;
+            margin: 0 auto;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 3px solid var(--neon-cyan);
+            box-shadow: 0 0 50px rgba(0, 212, 255, 0.3);
+        }
+
+        .demo-video-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, var(--bg-dark), var(--bg-darker));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .demo-video-placeholder .play-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: var(--neon-cyan);
+        }
+
+        .demo-content h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 25px;
+            color: #fff;
+        }
+
+        .demo-content p {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .demo-content strong {
+            color: var(--neon-green);
+        }
+
+        .demo-features {
+            list-style: none;
+            margin-top: 30px;
+        }
+
+        .demo-features li {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .demo-features li span:first-child {
+            font-size: 1.3rem;
+        }
+
+        /* ==================== ARCHITECTURE ==================== */
+        .arch-section {
+            background: radial-gradient(ellipse at center, rgba(168, 85, 247, 0.1) 0%, transparent 70%);
+        }
+
+        .arch-diagram {
+            background: rgba(10, 14, 39, 0.9);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 20px;
+            padding: 50px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .arch-diagram::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--neon-purple), var(--neon-cyan), var(--neon-green));
+        }
+
+        .arch-flow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .arch-node {
+            flex: 1;
+            min-width: 200px;
+            text-align: center;
+            padding: 30px 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+        }
+
+        .arch-node:hover {
+            border-color: var(--neon-green);
+            box-shadow: 0 0 25px rgba(0, 255, 136, 0.2);
+        }
+
+        .arch-node-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .arch-node-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            margin-bottom: 10px;
+            color: var(--neon-cyan);
+        }
+
+        .arch-node-desc {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .arch-arrow {
+            font-size: 2rem;
+            color: var(--neon-green);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 0.5;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .arch-benefits {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin-top: 50px;
+        }
+
+        .arch-benefit {
+            background: rgba(0, 255, 136, 0.05);
+            border-left: 3px solid var(--neon-green);
+            padding: 20px;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .arch-benefit h4 {
+            color: var(--neon-green);
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .arch-benefit p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* ==================== FEATURES ==================== */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: rgba(10, 14, 39, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 35px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--neon-green), var(--neon-cyan));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--neon-green);
+            box-shadow: 0 20px 40px rgba(0, 255, 136, 0.15);
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .feature-desc {
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.6;
+            font-size: 0.9rem;
+        }
+
+        /* ==================== WEB PLATFORM ==================== */
+        .platform-section {
+            background: linear-gradient(180deg, transparent, rgba(0, 255, 136, 0.05), transparent);
+        }
+
+        .platform-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+        }
+
+        .platform-card {
+            background: rgba(10, 14, 39, 0.9);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .platform-card:hover {
+            border-color: var(--neon-green);
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .platform-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .platform-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            margin-bottom: 10px;
+            color: var(--neon-green);
+        }
+
+        .platform-desc {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.85rem;
+        }
+
+        /* ==================== PRICING ==================== */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .pricing-card {
+            background: rgba(10, 14, 39, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .pricing-card.featured {
+            border-color: var(--neon-green);
+            transform: scale(1.05);
+            box-shadow: 0 0 50px rgba(0, 255, 136, 0.2);
+        }
+
+        .pricing-card.featured::before {
+            content: '⭐ RECOMENDADO';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 8px 20px;
+            background: linear-gradient(135deg, var(--neon-green), var(--neon-cyan));
+            color: #000;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border-radius: 20px;
+        }
+
+        .pricing-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .pricing-price {
+            margin: 25px 0;
+        }
+
+        .pricing-amount {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--neon-green);
+        }
+
+        .pricing-period {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .pricing-features li {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pricing-features li::before {
+            content: '✓';
+            color: var(--neon-green);
+            font-weight: bold;
+        }
+
+        .pricing-btn {
+            width: 100%;
+            padding: 15px;
+            border-radius: 12px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        /* ==================== INSTALL ==================== */
+        .install-section {
+            background: radial-gradient(ellipse at center, rgba(0, 212, 255, 0.1) 0%, transparent 70%);
+        }
+
+        .install-terminal {
+            background: #000;
+            border: 1px solid var(--neon-green);
+            border-radius: 16px;
+            max-width: 800px;
+            margin: 0 auto;
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(0, 255, 136, 0.2);
+        }
+
+        .terminal-header {
+            background: rgba(0, 255, 136, 0.1);
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .terminal-dot.red {
+            background: #ef4444;
+        }
+
+        .terminal-dot.yellow {
+            background: #fbbf24;
+        }
+
+        .terminal-dot.green {
+            background: #00ff88;
+        }
+
+        .terminal-body {
+            padding: 30px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .terminal-line {
+            margin-bottom: 15px;
+            color: var(--neon-green);
+        }
+
+        .terminal-prompt {
+            color: var(--neon-cyan);
+        }
+
+        .terminal-command {
+            color: #fff;
+        }
+
+        /* ==================== QUOTE ==================== */
+        .quote-section {
+            text-align: center;
+            padding: 80px 0;
+            background: linear-gradient(180deg,
+                    rgba(168, 85, 247, 0.1) 0%,
+                    transparent 100%);
+        }
+
+        .quote-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            max-width: 900px;
+            margin: 0 auto 30px;
+            line-height: 1.4;
+            background: linear-gradient(135deg, var(--neon-green), var(--neon-cyan), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .quote-author {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 1.1rem;
+        }
+
+        /* ==================== FOOTER ==================== */
+        .footer {
+            background: var(--bg-darker);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 60px 0 30px;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-logo img {
+            width: 40px;
+            height: 40px;
+        }
+
+        .footer-logo span {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            color: var(--neon-green);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--neon-green);
+        }
+
+        .footer-copy {
+            width: 100%;
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 30px;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.85rem;
+        }
+
+        /* ==================== RESPONSIVE ==================== */
+        @media (max-width: 992px) {
+
+            .demo-grid,
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .threat-grid,
+            .features-grid,
+            .platform-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .arch-benefits {
+                grid-template-columns: 1fr;
+            }
+
+            .arch-flow {
+                flex-direction: column;
+            }
+
+            .arch-arrow {
+                transform: rotate(90deg);
+            }
+
+            .hero-title {
+                font-size: 3rem;
+            }
+
+            .hero-title-sub {
+                font-size: 1.5rem;
+                letter-spacing: 10px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+
+            .nav-toggle {
+                display: flex;
+            }
+
+            .threat-grid,
+            .features-grid,
+            .platform-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .hero-stats {
+                flex-direction: column;
+                gap: 30px;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .quote-text {
+                font-size: 1.5rem;
+            }
+
+            .pricing-card.featured {
+                transform: none;
+            }
+        }
+    </style>
 </head>
 
 <body>
+    <div class="matrix-bg">
+        <div class="matrix-rain"></div>
+    </div>
+
     <!-- Navbar -->
-    <nav class="navbar" id="navbar">
+    <nav class="navbar">
         <div class="nav-container">
             <a href="#" class="nav-logo">
                 <img src="assets/logo.png" alt="KR-CLI" class="logo-img">
                 <span class="logo-text">KR-CLI</span>
             </a>
-            <ul class="nav-menu" id="nav-menu">
+            <ul class="nav-menu">
+                <li><a href="#threats" class="nav-link">Amenazas</a></li>
                 <li><a href="#features" class="nav-link">Características</a></li>
-                <li><a href="#tools" class="nav-link">Suite Premium</a></li>
-                <li><a href="#install" class="nav-link">Instalación</a></li>
+                <li><a href="#architecture" class="nav-link">Arquitectura</a></li>
                 <li><a href="#pricing" class="nav-link">Precios</a></li>
-                <li><a href="acceso.html" class="nav-link nav-cta" id="dashboard-link">🚀 Acceder</a></li>
+                <li><a href="acceso.html" class="nav-link nav-cta">🚀 Acceder</a></li>
             </ul>
-            <button class="nav-toggle" id="nav-toggle">
+            <button class="nav-toggle">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -59,260 +1038,349 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
+    <!-- Hero -->
     <section class="hero" id="hero">
-        <div class="hero-bg-effects">
-            <div class="grid-overlay"></div>
-            <div class="particles" id="particles"></div>
-        </div>
         <div class="hero-content">
-            <div class="hero-skull glitch-container">
-                <img src="assets/logo.png" alt="KR-CLI Skull" class="skull-logo glitch">
-            </div>
+            <div class="hero-badge">⚠️ +2.365 ATAQUES HOY EN LATINOAMÉRICA</div>
+            <img src="assets/logo.png" alt="KR-CLI" class="hero-logo">
             <h1 class="hero-title">
-                <span class="title-main">KR-CLI</span>
-                <span class="title-sub glitch-text" data-text="DOMINION">DOMINION</span>
+                <span class="hero-title-main">KR-CLI DOMINION</span>
+                <span class="hero-title-sub">EL PODER ESTÁ EN TUS MANOS</span>
             </h1>
-            <p class="hero-tagline">La Suite de Ciberseguridad Definitiva Impulsada por IA</p>
-            <p class="hero-description">
-                Transforma tu terminal en un <strong>Centro de Operaciones de Seguridad Ofensiva</strong>.
-                Automatiza, analiza y domina con el poder de la Inteligencia Artificial.
+            <p class="hero-tagline">
+                Tu <strong>Centro de Operaciones de Ciberseguridad</strong> directamente en la terminal.<br>
+                El conocimiento es poder. Domina el arte del hacking ético con IA.
             </p>
             <div class="hero-cta">
-                <a href="#install" class="btn btn-primary">
-                    <span class="btn-icon">⚡</span>
-                    Instalar Ahora
-                </a>
-                <a href="#features" class="btn btn-secondary">
-                    <span class="btn-icon">🔍</span>
-                    Explorar
-                </a>
+                <a href="#install" class="btn btn-primary">⚡ Instalar Ahora</a>
+                <a href="#demo" class="btn btn-secondary">▶ Ver Demo</a>
             </div>
             <div class="hero-stats">
                 <div class="stat">
-                    <span class="stat-number" data-count="14">0</span>
+                    <span class="stat-number">14+</span>
                     <span class="stat-label">Herramientas</span>
                 </div>
                 <div class="stat">
-                    <span class="stat-number" data-count="1000">0</span>
+                    <span class="stat-number">1500+</span>
                     <span class="stat-label">Usuarios</span>
                 </div>
                 <div class="stat">
-                    <span class="stat-number" data-count="24">0</span>
-                    <span class="stat-label">7/24 IA</span>
+                    <span class="stat-number">24/7</span>
+                    <span class="stat-label">IA Activa</span>
                 </div>
             </div>
         </div>
-        <div class="scroll-indicator">
-            <span>Scroll</span>
-            <div class="mouse"></div>
+    </section>
+
+    <!-- Threat Alert -->
+    <section class="section threat-section" id="threats">
+        <div class="container">
+            <h2 class="section-title">🔴 AMENAZAS EN TIEMPO REAL</h2>
+            <p class="section-subtitle">El cibercrimen no descansa. ¿Estás preparado para defenderte?</p>
+            <div class="threat-grid">
+                <div class="threat-card">
+                    <div class="threat-icon">🦠</div>
+                    <h3 class="threat-title">Ransomware</h3>
+                    <div class="threat-stat">+340%</div>
+                    <p style="color: rgba(255,255,255,0.5); font-size: 0.8rem;">Aumento en 2025</p>
+                </div>
+                <div class="threat-card">
+                    <div class="threat-icon">🎣</div>
+                    <h3 class="threat-title">Phishing</h3>
+                    <div class="threat-stat">3.4B</div>
+                    <p style="color: rgba(255,255,255,0.5); font-size: 0.8rem;">Emails diarios</p>
+                </div>
+                <div class="threat-card">
+                    <div class="threat-icon">💀</div>
+                    <h3 class="threat-title">Zero-Days</h3>
+                    <div class="threat-stat">97</div>
+                    <p style="color: rgba(255,255,255,0.5); font-size: 0.8rem;">Explotados en 2025</p>
+                </div>
+                <div class="threat-card">
+                    <div class="threat-icon">💰</div>
+                    <h3 class="threat-title">Pérdidas</h3>
+                    <div class="threat-stat">$10.5T</div>
+                    <p style="color: rgba(255,255,255,0.5); font-size: 0.8rem;">Proyectado 2026</p>
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- Features Section -->
-    <section class="section features" id="features">
+    <!-- Demo Section -->
+    <section class="section demo-section" id="demo">
         <div class="container">
-            <h2 class="section-title">
-                <span class="title-icon">🧠</span>
-                ¿Qué es KR-CLI?
-            </h2>
-            <p class="section-subtitle">No es solo una herramienta, es tu <strong>Copiloto de Ciberseguridad</strong>
-            </p>
+            <div class="demo-grid">
+                <div class="demo-video">
+                    <div class="demo-video-placeholder">
+                        <span class="play-icon">▶</span>
+                        <p>Video Demo</p>
+                        <p style="font-size: 0.8rem;">Formato Reels</p>
+                    </div>
+                </div>
+                <div class="demo-content">
+                    <h2>¿Cómo funciona KR-CLI DOMINION?</h2>
+                    <p>
+                        <strong>KR-CLI</strong> es tu asistente de ciberseguridad impulsado por IA que vive directamente
+                        en tu terminal.
+                        No necesitas interfaces complicadas ni herramientas de terceros.
+                    </p>
+                    <p>
+                        Ejecuta comandos de seguridad con lenguaje natural. La IA interpreta lo que necesitas,
+                        genera el comando correcto, lo explica, y te muestra los resultados analizados.
+                    </p>
+                    <p>
+                        Desde <strong>escaneos de puertos</strong> hasta <strong>explotación de
+                            vulnerabilidades</strong>,
+                        desde <strong>OSINT</strong> hasta <strong>post-explotación</strong>. Todo en un solo lugar.
+                    </p>
+                    <ul class="demo-features">
+                        <li><span>🎯</span> Ejecuta comandos en lenguaje natural</li>
+                        <li><span>🤖</span> IA que analiza y explica resultados</li>
+                        <li><span>📊</span> Reportes PDF automáticos</li>
+                        <li><span>🔄</span> Modo autónomo para tareas repetitivas</li>
+                        <li><span>🎓</span> Aprende mientras ejecutas</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
 
+    <!-- Architecture -->
+    <section class="section arch-section" id="architecture">
+        <div class="container">
+            <h2 class="section-title">⚙️ ARQUITECTURA DEL SISTEMA</h2>
+            <p class="section-subtitle">Diseñado para hackers, por hackers</p>
+
+            <div class="arch-diagram">
+                <div class="arch-flow">
+                    <div class="arch-node">
+                        <div class="arch-node-icon">👤</div>
+                        <div class="arch-node-title">TÚ</div>
+                        <div class="arch-node-desc">Escribe en lenguaje natural</div>
+                    </div>
+                    <span class="arch-arrow">→</span>
+                    <div class="arch-node">
+                        <div class="arch-node-icon">🖥️</div>
+                        <div class="arch-node-title">KR-CLI</div>
+                        <div class="arch-node-desc">CLI Wrapper + Dashboard</div>
+                    </div>
+                    <span class="arch-arrow">→</span>
+                    <div class="arch-node">
+                        <div class="arch-node-icon">🤖</div>
+                        <div class="arch-node-title">IA GROQ</div>
+                        <div class="arch-node-desc">Procesa y genera comandos</div>
+                    </div>
+                    <span class="arch-arrow">→</span>
+                    <div class="arch-node">
+                        <div class="arch-node-icon">⚡</div>
+                        <div class="arch-node-title">EJECUCIÓN</div>
+                        <div class="arch-node-desc">Nmap, SQLMap, Metasploit...</div>
+                    </div>
+                    <span class="arch-arrow">→</span>
+                    <div class="arch-node">
+                        <div class="arch-node-icon">📊</div>
+                        <div class="arch-node-title">ANÁLISIS</div>
+                        <div class="arch-node-desc">Resultados + Reporte PDF</div>
+                    </div>
+                </div>
+
+                <div class="arch-benefits">
+                    <div class="arch-benefit">
+                        <h4>💻 Poder en la Terminal</h4>
+                        <p>Sin interfaces pesadas. Todo el control desde tu línea de comandos favorita. Rápido,
+                            eficiente, profesional.</p>
+                    </div>
+                    <div class="arch-benefit">
+                        <h4>🔗 CLI Wrapper (kr-cli)</h4>
+                        <p>Ejecuta comandos directamente: <code>kr-cli "escanea puertos de 192.168.1.1"</code>. Simple y
+                            poderoso.</p>
+                    </div>
+                    <div class="arch-benefit">
+                        <h4>🎛️ Dashboard Interactivo</h4>
+                        <p>Menú visual con todas las herramientas, gestión de créditos, reportes, y más. Ejecuta
+                            <code>kr-clidn</code>.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="section" id="features">
+        <div class="container">
+            <h2 class="section-title">🛠️ ARSENAL DE HERRAMIENTAS</h2>
+            <p class="section-subtitle">14 módulos especializados para operaciones ofensivas</p>
             <div class="features-grid">
                 <div class="feature-card">
-                    <div class="feature-icon">💬</div>
-                    <h3>Modo Consulta</h3>
-                    <p>Tu mentor de seguridad. Explica vulnerabilidades, sugiere comandos y te ayuda a aprender.</p>
-                    <span class="feature-tag">FREE</span>
+                    <div class="feature-icon">🔍</div>
+                    <h3 class="feature-title">Port Scanner</h3>
+                    <p class="feature-desc">Escaneo avanzado con Nmap. Detección de servicios, versiones y
+                        vulnerabilidades asociadas.</p>
                 </div>
-                <div class="feature-card featured">
-                    <div class="feature-icon">⚔️</div>
-                    <h3>Modo Operativo</h3>
-                    <p>Tu socio de ataque. Genera scripts automáticos, planifica auditorías y accede a 14 herramientas.
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h3 class="feature-title">CVE Lookup</h3>
+                    <p class="feature-desc">Búsqueda en tiempo real de vulnerabilidades. Información de exploits
+                        disponibles y parches.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🦅</div>
+                    <h3 class="feature-title">OSINT Tools</h3>
+                    <p class="feature-desc">Recopilación de inteligencia. Subdominios, emails, metadatos. Todo desde
+                        fuentes públicas.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💉</div>
+                    <h3 class="feature-title">Web Exploitation</h3>
+                    <p class="feature-desc">SQLi, XSS, RCE. Detección y explotación automática de vulnerabilidades web.
                     </p>
-                    <span class="feature-tag premium">PREMIUM</span>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">🌐</div>
-                    <h3>Búsqueda Web</h3>
-                    <p>La IA busca CVEs, exploits y noticias de seguridad en tiempo real desde tu terminal.</p>
-                    <span class="feature-tag">AI-POWERED</span>
+                    <div class="feature-icon">🔑</div>
+                    <h3 class="feature-title">Password Cracking</h3>
+                    <p class="feature-desc">Hashcat, John. Generación de wordlists personalizadas. Ataques de fuerza
+                        bruta.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">🤖</div>
-                    <h3>Agente Autónomo</h3>
-                    <p>Crea proyectos, scaffolding de pentesting y scripts con simples comandos naturales.</p>
-                    <span class="feature-tag">SMART</span>
+                    <div class="feature-icon">⬆️</div>
+                    <h3 class="feature-title">Privilege Escalation</h3>
+                    <p class="feature-desc">Vectores de escalación en Linux y Windows. Exploits locales y bypass de
+                        controles.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Tools Section -->
-    <section class="section tools" id="tools">
+    <!-- Web Platform -->
+    <section class="section platform-section" id="platform">
         <div class="container">
-            <h2 class="section-title">
-                <span class="title-icon">🔧</span>
-                Suite Premium
-            </h2>
-            <p class="section-subtitle">14 módulos especializados para operaciones avanzadas</p>
-
-            <div class="tools-grid">
-                <div class="tool-card"><span class="tool-icon">🔍</span><span>Port Scanner</span></div>
-                <div class="tool-card"><span class="tool-icon">💯</span><span>Top 100 Repos</span></div>
-                <div class="tool-card"><span class="tool-icon">🛡️</span><span>CVE Lookup</span></div>
-                <div class="tool-card"><span class="tool-icon">📥</span><span>GDrive</span></div>
-                <div class="tool-card"><span class="tool-icon">🧠</span><span>Hacking Labs</span></div>
-                <div class="tool-card"><span class="tool-icon">🕵️</span><span>Forensics</span></div>
-                <div class="tool-card"><span class="tool-icon">⚡</span><span>Metasploit</span></div>
-                <div class="tool-card"><span class="tool-icon">📱</span><span>Termux</span></div>
-                <div class="tool-card"><span class="tool-icon">🎭</span><span>Anonymity</span></div>
-                <div class="tool-card"><span class="tool-icon">🦅</span><span>OSINT</span></div>
-                <div class="tool-card"><span class="tool-icon">📡</span><span>WiFi Audit</span></div>
-                <div class="tool-card"><span class="tool-icon">🔑</span><span>Password</span></div>
-                <div class="tool-card"><span class="tool-icon">🎣</span><span>Social Eng</span></div>
-                <div class="tool-card"><span class="tool-icon">🎭</span><span>Fsociety</span></div>
+            <h2 class="section-title">🌐 PLATAFORMA WEB EXCLUSIVA</h2>
+            <p class="section-subtitle">Acceso solo para usuarios registrados de KR-CLI</p>
+            <div class="platform-grid">
+                <div class="platform-card">
+                    <div class="platform-icon">🎓</div>
+                    <h3 class="platform-title">Academia</h3>
+                    <p class="platform-desc">4 cursos de hacking ético con laboratorios prácticos paso a paso.</p>
+                </div>
+                <div class="platform-card">
+                    <div class="platform-icon">🧪</div>
+                    <h3 class="platform-title">Laboratorios</h3>
+                    <p class="platform-desc">15+ labs interactivos con comandos reales y explicaciones detalladas.</p>
+                </div>
+                <div class="platform-card">
+                    <div class="platform-icon">📰</div>
+                    <h3 class="platform-title">Noticias</h3>
+                    <p class="platform-desc">Feed de ciberseguridad con resúmenes en español generados por IA.</p>
+                </div>
+                <div class="platform-card">
+                    <div class="platform-icon">🛠️</div>
+                    <h3 class="platform-title">Herramientas</h3>
+                    <p class="platform-desc">Guías de uso de 14 herramientas premium con ejemplos prácticos.</p>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Installation Section -->
-    <section class="section install" id="install">
+    <!-- Pricing -->
+    <section class="section" id="pricing">
         <div class="container">
-            <h2 class="section-title">
-                <span class="title-icon">🚀</span>
-                Instalación
-            </h2>
-            <p class="section-subtitle">Compatible con Kali Linux, Parrot OS, Ubuntu y Termux</p>
+            <h2 class="section-title">💎 PLANES Y PRECIOS</h2>
+            <p class="section-subtitle">Elige el poder que necesitas</p>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3 class="pricing-name">FREE</h3>
+                    <div class="pricing-price">
+                        <span class="pricing-amount">$0</span>
+                        <span class="pricing-period">/ siempre</span>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>5 créditos al registrarte</li>
+                        <li>Acceso al dashboard</li>
+                        <li>Herramientas básicas</li>
+                        <li>IA modelo estándar</li>
+                        <li>Soporte por email</li>
+                    </ul>
+                    <a href="acceso.html" class="btn btn-secondary pricing-btn">Empezar Gratis</a>
+                </div>
+                <div class="pricing-card featured">
+                    <h3 class="pricing-name">PREMIUM</h3>
+                    <div class="pricing-price">
+                        <span class="pricing-amount">$20</span>
+                        <span class="pricing-period">/ mes</span>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>500 créditos de bono</li>
+                        <li>Acceso ilimitado a herramientas</li>
+                        <li>14 módulos premium</li>
+                        <li>IA modelo Llama 3.3 70B</li>
+                        <li>Reportes PDF ilimitados</li>
+                        <li>Acceso web completo</li>
+                        <li>Soporte prioritario</li>
+                    </ul>
+                    <a href="acceso.html" class="btn btn-primary pricing-btn">Obtener Premium</a>
+                </div>
+                <div class="pricing-card">
+                    <h3 class="pricing-name">CRÉDITOS</h3>
+                    <div class="pricing-price">
+                        <span class="pricing-amount">$10</span>
+                        <span class="pricing-period">/ 500 créditos</span>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>Pack de 500 créditos</li>
+                        <li>Sin vencimiento</li>
+                        <li>Recarga cuando quieras</li>
+                        <li>Pago en cripto</li>
+                        <li>Activación inmediata</li>
+                    </ul>
+                    <a href="acceso.html" class="btn btn-secondary pricing-btn">Comprar Créditos</a>
+                </div>
+            </div>
+        </div>
+    </section>
 
+    <!-- Install -->
+    <section class="section install-section" id="install">
+        <div class="container">
+            <h2 class="section-title">⚡ INSTALACIÓN</h2>
+            <p class="section-subtitle">Un solo comando y estás dentro</p>
             <div class="install-terminal">
                 <div class="terminal-header">
                     <span class="terminal-dot red"></span>
                     <span class="terminal-dot yellow"></span>
                     <span class="terminal-dot green"></span>
-                    <span class="terminal-title">terminal</span>
                 </div>
                 <div class="terminal-body">
                     <div class="terminal-line">
-                        <span class="terminal-prompt">$</span>
-                        <span class="terminal-text">pip install kr-cli-dominion</span>
-                        <span class="cursor"></span>
-                    </div>
-                    <div class="terminal-line output">
-                        <span class="terminal-text success">✓ Successfully installed kr-cli-dominion-5.3.46</span>
+                        <span class="terminal-prompt">┌──(kali㉿root)-[~]</span>
                     </div>
                     <div class="terminal-line">
-                        <span class="terminal-prompt">$</span>
-                        <span class="terminal-text">kr-cli</span>
+                        <span class="terminal-prompt">└─$ </span>
+                        <span class="terminal-command">pip install kr-cli-dominion</span>
                     </div>
-                    <div class="terminal-line output">
-                        <span class="terminal-text info">🔥 Iniciando KR-CLI DOMINION...</span>
+                    <div class="terminal-line" style="color: rgba(255,255,255,0.5);">
+                        Installing kr-cli-dominion-6.0.0...
                     </div>
-                </div>
-            </div>
-
-            <div class="install-note">
-                <p>⚠️ <strong>Importante:</strong> Después de instalar, regístrate con tu email para activar los
-                    créditos gratuitos.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Pricing Section -->
-    <section class="section pricing" id="pricing">
-        <div class="container">
-            <h2 class="section-title">
-                <span class="title-icon">💎</span>
-                Planes
-            </h2>
-            <p class="section-subtitle">Maximiza tu potencial con nuestros paquetes</p>
-
-            <div class="pricing-grid">
-                <div class="pricing-card">
-                    <div class="pricing-header">
-                        <h3>Free</h3>
-                        <div class="pricing-price">
-                            <span class="currency">$</span>
-                            <span class="amount">0</span>
-                        </div>
+                    <div class="terminal-line" style="color: var(--neon-green);">
+                        ✓ Successfully installed kr-cli-dominion
                     </div>
-                    <ul class="pricing-features">
-                        <li>✓ Modo Consulta</li>
-                        <li>✓ 5 créditos iniciales</li>
-                        <li>✓ Búsqueda web básica</li>
-                        <li>✗ Herramientas Premium</li>
-                        <li>✗ Generación de scripts</li>
-                    </ul>
-                    <a href="#install" class="btn btn-outline">Empezar Gratis</a>
-                </div>
-
-                <div class="pricing-card featured">
-                    <div class="pricing-badge">POPULAR</div>
-                    <div class="pricing-header">
-                        <h3>Premium</h3>
-                        <div class="pricing-price">
-                            <span class="currency">$</span>
-                            <span class="amount">20</span>
-                            <span class="period">/mes</span>
-                        </div>
+                    <div class="terminal-line">
+                        <span class="terminal-prompt">└─$ </span>
+                        <span class="terminal-command">kr-clidn</span>
                     </div>
-                    <ul class="pricing-features">
-                        <li>✓ Modo Operativo</li>
-                        <li>✓ Créditos ilimitados</li>
-                        <li>✓ 14 Herramientas</li>
-                        <li>✓ IA Superior (Llama 70B)</li>
-                        <li>✓ Soporte VIP</li>
-                    </ul>
-                    <a href="#install" class="btn btn-primary">Activar Premium</a>
-                </div>
-
-                <div class="pricing-card">
-                    <div class="pricing-header">
-                        <h3>Créditos</h3>
-                        <div class="pricing-price">
-                            <span class="currency">$</span>
-                            <span class="amount">10</span>
-                            <span class="period">+</span>
-                        </div>
+                    <div class="terminal-line" style="color: var(--neon-cyan);">
+                        🚀 Iniciando KR-CLI DOMINION...
                     </div>
-                    <ul class="pricing-features">
-                        <li>500 créditos - $10</li>
-                        <li>1200 créditos - $20</li>
-                        <li>2500 créditos - $35</li>
-                        <li>✓ Pago en USDT</li>
-                        <li>✓ Activación inmediata</li>
-                    </ul>
-                    <a href="#install" class="btn btn-outline">Comprar Créditos</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Auth Gate Section -->
-    <section class="section auth-gate" id="auth-gate">
+    <!-- Quote -->
+    <section class="quote-section">
         <div class="container">
-            <div class="gate-card">
-                <div class="gate-icon">🔐</div>
-                <h2>Acceso Exclusivo</h2>
-                <p>Para acceder al Dashboard completo, debes estar <strong>logueado desde la terminal</strong> de
-                    KR-CLI.</p>
-                <div class="gate-steps">
-                    <div class="step">
-                        <span class="step-number">1</span>
-                        <span>Instala KR-CLI</span>
-                    </div>
-                    <div class="step">
-                        <span class="step-number">2</span>
-                        <span>Regístrate con tu email</span>
-                    </div>
-                    <div class="step">
-                        <span class="step-number">3</span>
-                        <span>Selecciona "Web H4ck3r"</span>
-                    </div>
-                </div>
-                <a href="#install" class="btn btn-primary">Comenzar</a>
-            </div>
+            <p class="quote-text">"EL CONOCIMIENTO ES PODER.<br>EL PODER ESTÁ EN TUS MANOS."</p>
+            <p class="quote-author">— KR-CLI DOMINION</p>
+            <a href="acceso.html" class="btn btn-primary" style="margin-top: 40px;">🚀 Comenzar Ahora</a>
         </div>
     </section>
 
@@ -320,25 +1388,20 @@
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
-                <div class="footer-brand">
-                    <img src="assets/logo.png" alt="KR-CLI" class="footer-logo">
+                <div class="footer-logo">
+                    <img src="assets/logo.png" alt="KR-CLI">
                     <span>KR-CLI DOMINION</span>
                 </div>
                 <div class="footer-links">
+                    <a href="https://pypi.org/project/kr-cli-dominion/" target="_blank">PyPI</a>
                     <a href="https://github.com/kalirootcode/KaliRootCLI" target="_blank">GitHub</a>
                     <a href="mailto:kalirootcode@proton.me">Contacto</a>
-                    <a href="support.html">Soporte</a>
                 </div>
             </div>
-            <div class="footer-bottom">
-                <p>Hecho para hackers, por hackers. © 2026 KaliRoot Code</p>
-            </div>
+            <p class="footer-copy">© 2026 KaliRoot Code. Todos los derechos reservados. Uso educativo únicamente.</p>
         </div>
     </footer>
 
-    <script src="js/config.js"></script>
-    <script src="js/supabase-client.js"></script>
-    <script src="js/auth.js"></script>
     <script src="js/main.js"></script>
 </body>
 

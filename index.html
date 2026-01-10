@@ -1192,11 +1192,23 @@
         }
 
         /* ==================== RESPONSIVE ==================== */
+        /* ==================== RESPONSIVE - TABLETS ==================== */
         @media (max-width: 992px) {
+            .container {
+                padding: 0 20px;
+            }
 
-            .demo-grid,
-            .pricing-grid {
+            .section {
+                padding: 60px 0;
+            }
+
+            .demo-grid {
                 grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .demo-video {
+                max-width: 280px;
             }
 
             .threat-grid,
@@ -1217,55 +1229,410 @@
                 transform: rotate(90deg);
             }
 
+            .arch-node {
+                min-width: 100%;
+            }
+
             .hero-title {
                 font-size: 3rem;
             }
 
             .hero-title-sub {
-                font-size: 1.5rem;
-                letter-spacing: 10px;
+                font-size: 1.3rem;
+                letter-spacing: 8px;
+            }
+
+            .pricing-grid {
+                grid-template-columns: 1fr !important;
+                gap: 25px;
+            }
+
+            .premium-features {
+                grid-template-columns: 1fr;
+            }
+
+            .premium-header h3 {
+                font-size: 1.4rem;
+            }
+
+            .premium-amount {
+                font-size: 3rem;
             }
         }
 
+        /* ==================== RESPONSIVE - MOBILE ==================== */
         @media (max-width: 768px) {
+
+            /* Mobile Menu */
             .nav-menu {
-                display: none;
+                position: fixed;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: #000000;
+                flex-direction: column;
+                padding: 20px;
+                gap: 0;
+                border-bottom: 1px solid rgba(0, 255, 136, 0.2);
+                transform: translateY(-150%);
+                opacity: 0;
+                transition: all 0.3s ease;
+                z-index: 999;
+            }
+
+            .nav-menu.active {
+                transform: translateY(0);
+                opacity: 1;
+            }
+
+            .nav-menu li {
+                width: 100%;
+                text-align: center;
+            }
+
+            .nav-menu .nav-link {
+                display: block;
+                padding: 15px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                font-size: 1rem;
+            }
+
+            .nav-menu .nav-cta {
+                margin-top: 10px;
+                border-radius: 10px;
             }
 
             .nav-toggle {
                 display: flex;
+                flex-direction: column;
+                gap: 5px;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 5px;
             }
 
-            .threat-grid,
-            .features-grid,
-            .platform-grid {
-                grid-template-columns: 1fr;
+            .nav-toggle span {
+                width: 25px;
+                height: 3px;
+                background: var(--neon-green);
+                border-radius: 2px;
+                transition: all 0.3s;
+            }
+
+            .nav-toggle.active span:nth-child(1) {
+                transform: rotate(45deg) translate(5px, 5px);
+            }
+
+            .nav-toggle.active span:nth-child(2) {
+                opacity: 0;
+            }
+
+            .nav-toggle.active span:nth-child(3) {
+                transform: rotate(-45deg) translate(7px, -6px);
+            }
+
+            /* Hero Mobile */
+            .hero {
+                padding-top: 100px;
+                min-height: auto;
+                padding-bottom: 60px;
+            }
+
+            .hero-badge {
+                font-size: 0.65rem;
+                padding: 6px 12px;
+            }
+
+            .hero-logo {
+                width: 100px;
+                height: 100px;
             }
 
             .hero-title {
-                font-size: 2.5rem;
+                font-size: 2rem;
+            }
+
+            .hero-title-main::before,
+            .hero-title-main::after {
+                display: none;
+            }
+
+            .hero-title-sub {
+                font-size: 0.9rem;
+                letter-spacing: 5px;
+            }
+
+            .hero-tagline {
+                font-size: 1rem;
+                padding: 0 10px;
             }
 
             .hero-cta {
                 flex-direction: column;
                 align-items: center;
+                gap: 15px;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 280px;
+                justify-content: center;
             }
 
             .hero-stats {
-                flex-direction: column;
-                gap: 30px;
+                flex-direction: row;
+                gap: 20px;
+                flex-wrap: wrap;
+                justify-content: center;
             }
 
-            .section-title {
+            .stat-number {
                 font-size: 1.8rem;
             }
 
-            .quote-text {
+            .stat-label {
+                font-size: 0.75rem;
+            }
+
+            /* Sections Mobile */
+            .section {
+                padding: 50px 0;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+                margin-bottom: 10px;
+            }
+
+            .section-subtitle {
+                font-size: 0.9rem;
+                margin-bottom: 30px;
+            }
+
+            /* Threat Cards */
+            .threat-grid,
+            .features-grid,
+            .platform-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .threat-card,
+            .feature-card,
+            .platform-card {
+                padding: 20px;
+            }
+
+            .threat-icon,
+            .feature-icon,
+            .platform-icon {
+                font-size: 2rem;
+            }
+
+            .threat-stat {
+                font-size: 1.2rem;
+            }
+
+            /* Demo Section */
+            .demo-grid {
+                gap: 30px;
+            }
+
+            .demo-video {
+                max-width: 250px;
+            }
+
+            .demo-content h2 {
+                font-size: 1.5rem;
+                text-align: center;
+            }
+
+            .demo-content p {
+                font-size: 0.9rem;
+            }
+
+            .demo-features li {
+                font-size: 0.85rem;
+                padding: 10px 0;
+            }
+
+            /* Architecture */
+            .arch-diagram {
+                padding: 25px 15px;
+            }
+
+            .arch-node {
+                padding: 20px 15px;
+            }
+
+            .arch-node-icon {
+                font-size: 2rem;
+            }
+
+            .arch-node-title {
+                font-size: 0.85rem;
+            }
+
+            .arch-arrow {
                 font-size: 1.5rem;
             }
 
-            .pricing-card.featured {
-                transform: none;
+            .arch-benefit {
+                padding: 15px;
+            }
+
+            .arch-benefit h4 {
+                font-size: 0.9rem;
+            }
+
+            /* Pricing */
+            .pricing-card {
+                padding: 25px 20px;
+            }
+
+            .pricing-icon {
+                font-size: 2rem;
+            }
+
+            .pricing-name {
+                font-size: 1.1rem;
+            }
+
+            .pricing-amount {
+                font-size: 2.5rem;
+            }
+
+            .pricing-features li {
+                font-size: 0.85rem;
+                padding: 10px 0;
+            }
+
+            .premium-box {
+                border-radius: 16px;
+            }
+
+            .premium-header {
+                padding: 20px;
+            }
+
+            .premium-header h3 {
+                font-size: 1.1rem;
+            }
+
+            .premium-content {
+                padding: 25px 15px;
+            }
+
+            .premium-amount {
+                font-size: 2.5rem;
+            }
+
+            .premium-feature {
+                padding: 12px;
+            }
+
+            .pf-icon {
+                font-size: 1.4rem;
+            }
+
+            .premium-feature strong {
+                font-size: 0.8rem;
+            }
+
+            .premium-feature p {
+                font-size: 0.75rem;
+            }
+
+            /* Install Terminal */
+            .install-terminal {
+                border-radius: 12px;
+            }
+
+            .terminal-body {
+                padding: 20px 15px;
+                font-size: 0.8rem;
+            }
+
+            .terminal-line {
+                margin-bottom: 10px;
+                word-break: break-all;
+            }
+
+            /* Quote */
+            .quote-section {
+                padding: 50px 0;
+            }
+
+            .quote-text {
+                font-size: 1.3rem;
+                padding: 0 10px;
+            }
+
+            .quote-author {
+                font-size: 0.9rem;
+            }
+
+            /* Footer */
+            .footer {
+                padding: 40px 0 20px;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 20px;
+            }
+
+            .footer-copy {
+                font-size: 0.75rem;
+            }
+        }
+
+        /* ==================== RESPONSIVE - SMALL MOBILE ==================== */
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 15px;
+            }
+
+            .hero-title {
+                font-size: 1.6rem;
+            }
+
+            .hero-title-sub {
+                font-size: 0.75rem;
+                letter-spacing: 3px;
+            }
+
+            .hero-logo {
+                width: 80px;
+                height: 80px;
+            }
+
+            .section-title {
+                font-size: 1.3rem;
+            }
+
+            .btn {
+                padding: 12px 25px;
+                font-size: 0.9rem;
+            }
+
+            .pricing-amount {
+                font-size: 2rem;
+            }
+
+            .premium-amount {
+                font-size: 2rem;
+            }
+
+            .quote-text {
+                font-size: 1.1rem;
             }
         }
     </style>
@@ -1283,14 +1650,14 @@
                 <img src="assets/logo.png" alt="KR-CLI" class="logo-img">
                 <span class="logo-text">KR-CLI</span>
             </a>
-            <ul class="nav-menu">
+            <ul class="nav-menu" id="nav-menu">
                 <li><a href="#threats" class="nav-link">Amenazas</a></li>
                 <li><a href="#features" class="nav-link">Características</a></li>
                 <li><a href="#architecture" class="nav-link">Arquitectura</a></li>
                 <li><a href="#pricing" class="nav-link">Precios</a></li>
                 <li><a href="acceso.html" class="nav-link nav-cta">🚀 Acceder</a></li>
             </ul>
-            <button class="nav-toggle">
+            <button class="nav-toggle" id="nav-toggle">
                 <span></span>
                 <span></span>
                 <span></span>

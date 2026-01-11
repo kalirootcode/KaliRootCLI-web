@@ -85,15 +85,14 @@ function updateUserUI(user) {
 
     // Update stats
     const credits = user.credit_balance ?? 0;
-    const totalSpent = user.total_spent ?? 0;
     const daysLeft = calculateDaysLeft(user.subscription_expiry_date);
 
     document.getElementById('stat-credits').textContent = formatNumber(credits);
     document.getElementById('stat-queries').textContent = '...';
     document.getElementById('stat-days').textContent = daysLeft;
-    document.getElementById('stat-spent').textContent = `$${formatNumber(totalSpent)}`;
+    document.getElementById('stat-courses').textContent = '...';
 
-    console.log('[Dashboard] Stats - Credits:', credits, 'Days:', daysLeft, 'Spent:', totalSpent);
+    console.log('[Dashboard] Stats - Credits:', credits, 'Days:', daysLeft);
 
     // Hide upgrade button if premium
     const upgradeBtn = document.getElementById('upgrade-btn');
@@ -107,9 +106,10 @@ function updateUserUI(user) {
     document.getElementById('account-plan').textContent = isPremium ? 'Premium' : 'Free';
     document.getElementById('account-created').textContent = formatDate(user.created_at);
 
-    // Load query count async
+    // Load query count and courses count async
     if (user.id) {
         loadQueryCount(user.id);
+        loadCoursesCount();
     }
 }
 
@@ -197,6 +197,26 @@ async function loadQueryCount(userId) {
     } catch (e) {
         console.error('[Dashboard] Error loading query count:', e);
         document.getElementById('stat-queries').textContent = '0';
+    }
+}
+
+/**
+ * Load available courses count
+ */
+async function loadCoursesCount() {
+    try {
+        const apiUrl = (window.KR_API_CONFIG ? window.KR_API_CONFIG.EDUCATION_API : 'https://kalirootcli.onrender.com') + '/api/education/ai-courses';
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+
+        if (data.success && data.courses) {
+            document.getElementById('stat-courses').textContent = data.courses.length;
+        } else {
+            document.getElementById('stat-courses').textContent = '0';
+        }
+    } catch (e) {
+        console.error('[Dashboard] Error loading courses count:', e);
+        document.getElementById('stat-courses').textContent = '0';
     }
 }
 

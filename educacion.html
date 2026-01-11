@@ -16,6 +16,8 @@
     <link
         href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@400;700;900&display=swap"
         rel="stylesheet">
+    <!-- Font Awesome for professional icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
         .education-page {
@@ -44,87 +46,231 @@
             padding: 40px 0;
         }
 
+        /* Category Filter Bar */
+        .category-filter {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+            padding: 15px;
+            background: rgba(10, 14, 39, 0.5);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .category-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: transparent;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .category-btn:hover,
+        .category-btn.active {
+            background: var(--cat-color, rgba(6, 182, 212, 0.2));
+            border-color: var(--cat-color, #06b6d4);
+            color: #fff;
+        }
+
+        /* 5-Column Grid */
         .courses-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
             margin-bottom: 40px;
         }
 
+        @media (max-width: 1400px) {
+            .courses-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (max-width: 1100px) {
+            .courses-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 800px) {
+            .courses-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 500px) {
+            .courses-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Compact Course Cards */
         .course-card {
-            background: rgba(10, 14, 39, 0.7);
+            background: rgba(10, 14, 39, 0.8);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 30px;
+            border-radius: 12px;
+            padding: 15px;
             transition: all 0.3s ease;
             cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            border-top: 3px solid var(--cat-color, #06b6d4);
         }
 
         .course-card:hover {
-            transform: translateY(-5px);
-            border-color: #06b6d4;
-            box-shadow: 0 0 30px rgba(6, 182, 212, 0.3);
+            transform: translateY(-3px);
+            border-color: var(--cat-color, #06b6d4);
+            box-shadow: 0 0 20px rgba(var(--cat-rgb, 6, 182, 212), 0.3);
         }
 
-        .course-card.beginner {
-            border-left: 4px solid #00ff88;
-        }
-
-        .course-card.intermediate {
-            border-left: 4px solid #fbbf24;
-        }
-
-        .course-card.advanced {
-            border-left: 4px solid #ef4444;
-        }
-
-        .course-card.expert {
-            border-left: 4px solid #a855f7;
-        }
-
-        .ai-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, #fbbf24, #f59e0b);
-            color: #000;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
+        /* Category Badge */
+        .category-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.65rem;
             font-weight: 600;
-            margin-bottom: 15px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            background: rgba(var(--cat-rgb, 6, 182, 212), 0.2);
+            color: var(--cat-color, #06b6d4);
+            border: 1px solid var(--cat-color, #06b6d4);
         }
 
-        .course-card.isAI {
-            display: flex;
-            flex-direction: column;
+        /* Category Colors */
+        .cat-reconnaissance {
+            --cat-color: #3b82f6;
+            --cat-rgb: 59, 130, 246;
         }
 
-        .course-card .course-content {
+        .cat-resource-development {
+            --cat-color: #8b5cf6;
+            --cat-rgb: 139, 92, 246;
+        }
+
+        .cat-initial-access {
+            --cat-color: #ef4444;
+            --cat-rgb: 239, 68, 68;
+        }
+
+        .cat-execution {
+            --cat-color: #f59e0b;
+            --cat-rgb: 245, 158, 11;
+        }
+
+        .cat-persistence {
+            --cat-color: #10b981;
+            --cat-rgb: 16, 185, 129;
+        }
+
+        .cat-privilege-escalation {
+            --cat-color: #ec4899;
+            --cat-rgb: 236, 72, 153;
+        }
+
+        .cat-defense-evasion {
+            --cat-color: #6366f1;
+            --cat-rgb: 99, 102, 241;
+        }
+
+        .cat-credential-access {
+            --cat-color: #14b8a6;
+            --cat-rgb: 20, 184, 166;
+        }
+
+        .cat-discovery {
+            --cat-color: #84cc16;
+            --cat-rgb: 132, 204, 22;
+        }
+
+        .cat-lateral-movement {
+            --cat-color: #f97316;
+            --cat-rgb: 249, 115, 22;
+        }
+
+        .cat-collection {
+            --cat-color: #06b6d4;
+            --cat-rgb: 6, 182, 212;
+        }
+
+        .cat-exfiltration {
+            --cat-color: #dc2626;
+            --cat-rgb: 220, 38, 38;
+        }
+
+        .cat-forensics {
+            --cat-color: #0ea5e9;
+            --cat-rgb: 14, 165, 233;
+        }
+
+        .cat-web-security {
+            --cat-color: #a855f7;
+            --cat-rgb: 168, 85, 247;
+        }
+
+        .cat-malware-analysis {
+            --cat-color: #be123c;
+            --cat-rgb: 190, 18, 60;
+        }
+
+        .course-icon {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+        }
+
+        .course-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            line-height: 1.3;
+            color: #fff;
+        }
+
+        .course-description {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.4;
+            margin-bottom: 10px;
             flex: 1;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
         .course-meta-row {
             display: flex;
-            gap: 20px;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.85rem;
-            margin-bottom: 15px;
+            gap: 10px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.7rem;
+            margin-bottom: 10px;
         }
 
         .view-course-btn {
-            background: linear-gradient(135deg, #00ff88, #00d4ff);
+            background: linear-gradient(135deg, var(--cat-color, #00ff88), rgba(var(--cat-rgb, 0, 255, 136), 0.7));
             color: #000;
-            padding: 12px 20px;
-            border-radius: 8px;
+            padding: 8px 12px;
+            border-radius: 6px;
             text-align: center;
             font-family: var(--font-display);
             font-weight: 600;
-            margin-top: 15px;
+            font-size: 0.75rem;
+            margin-top: auto;
             transition: box-shadow 0.3s;
         }
 
         .course-card:hover .view-course-btn {
-            box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+            box-shadow: 0 0 15px rgba(var(--cat-rgb, 0, 255, 136), 0.5);
         }
 
         .course-header {
@@ -499,9 +645,27 @@
             await loadAllCourses();
         }
 
+        // Course categories
+        const CATEGORIES = {
+            'reconnaissance': { name: 'Reconocimiento', icon: 'fa-search' },
+            'resource-development': { name: 'Desarrollo de Recursos', icon: 'fa-tools' },
+            'initial-access': { name: 'Acceso Inicial', icon: 'fa-door-open' },
+            'execution': { name: 'Ejecución', icon: 'fa-play' },
+            'persistence': { name: 'Persistencia', icon: 'fa-anchor' },
+            'privilege-escalation': { name: 'Escalada', icon: 'fa-arrow-up' },
+            'defense-evasion': { name: 'Evasión', icon: 'fa-eye-slash' },
+            'credential-access': { name: 'Credenciales', icon: 'fa-key' },
+            'discovery': { name: 'Descubrimiento', icon: 'fa-binoculars' },
+            'lateral-movement': { name: 'Mov. Lateral', icon: 'fa-arrows-alt-h' },
+            'collection': { name: 'Recolección', icon: 'fa-database' },
+            'exfiltration': { name: 'Exfiltración', icon: 'fa-upload' },
+            'forensics': { name: 'Forense', icon: 'fa-microscope' },
+            'web-security': { name: 'Web Security', icon: 'fa-globe' },
+            'malware-analysis': { name: 'Malware', icon: 'fa-virus' }
+        };
+
         function renderCourses(courses) {
             const grid = document.getElementById('courses-grid');
-            const progress = JSON.parse(localStorage.getItem('kr_education_progress') || '{"courses": {}, "labs": {}}');
 
             if (courses.length === 0) {
                 grid.innerHTML = '<p style="text-align: center; color: rgba(255,255,255,0.6);">No hay cursos disponibles.</p>';
@@ -509,66 +673,25 @@
             }
 
             grid.innerHTML = courses.map(course => {
-                const courseProgress = progress.courses[course.id] || 0;
+                const category = course.category || 'reconnaissance';
+                const catInfo = CATEGORIES[category] || CATEGORIES['reconnaissance'];
+                const catClass = `cat-${category}`;
 
-                // AI-generated course - clickable card linking to individual page
-                if (course.isAI) {
-                    return `
-                        <a href="curso.html?slug=${course.slug}" class="course-card ${course.difficulty}" style="text-decoration: none; display: flex; flex-direction: column;">
-                            <div class="ai-badge">👑 Premium</div>
-                            <div class="course-content" style="flex: 1;">
-                                <div class="course-header">
-                                    <span class="course-icon">${course.icon || '📚'}</span>
-                                    <div>
-                                        <h3 class="course-title">${course.title}</h3>
-                                        <span class="course-difficulty ${course.difficulty}">${course.difficulty}</span>
-                                    </div>
-                                </div>
-                                <p class="course-description">${course.description || ''}</p>
-                                <div class="course-meta-row">
-                                    <span>⏱️ ${course.duration || '2-4 horas'}</span>
-                                    <span>👁️ ${course.total_views || 0} vistas</span>
-                                </div>
-                            </div>
-                            <div class="view-course-btn">Ver Curso Completo →</div>
-                        </a>
-                    `;
-                }
-
-                // Static course with lab modals
                 return `
-                    <div class="course-card ${course.difficulty}">
-                        <div class="course-header">
-                            <span class="course-icon">${course.icon}</span>
-                            <div>
-                                <h3 class="course-title">${course.title}</h3>
-                                <span class="course-difficulty ${course.difficulty}">${course.difficulty}</span>
-                            </div>
+                    <a href="curso.html?slug=${course.slug}" class="course-card ${catClass}" style="text-decoration: none;">
+                        <div class="category-badge">
+                            <i class="fas ${catInfo.icon}"></i>
+                            ${catInfo.name}
                         </div>
-                        <p class="course-description">${course.description}</p>
-                        <div class="course-progress">
-                            <div class="course-progress-label">
-                                <span>Progreso</span>
-                                <span>${courseProgress}%</span>
-                            </div>
-                            <div class="progress-container">
-                                <div class="progress-bar" style="width: ${courseProgress}%"></div>
-                            </div>
+                        <div class="course-icon">${course.icon || '📚'}</div>
+                        <h3 class="course-title">${course.title}</h3>
+                        <p class="course-description">${course.description || ''}</p>
+                        <div class="course-meta-row">
+                            <span><i class="fas fa-clock"></i> ${course.duration || '2-4h'}</span>
+                            <span><i class="fas fa-eye"></i> ${course.total_views || 0}</span>
                         </div>
-                        <div class="course-modules">
-                            ${course.modules ? course.modules.map(module => `
-                                <div class="module-item">
-                                    <span class="module-name">${module.title}</span>
-                                    <span class="module-labs">${module.labs ? module.labs.length : 0} labs</span>
-                                </div>
-                                ${module.labs ? module.labs.map(labId => `
-                                    <button onclick="loadLab('${labId}')" style="width: 100%; padding: 8px; background: rgba(6, 182, 212, 0.1); border: 1px solid rgba(6, 182, 212, 0.3); border-radius: 6px; color: #06b6d4; cursor: pointer; margin-bottom: 5px; font-size: 0.85rem;">
-                                        📝 ${labId.replace('lab_', '').replace(/_/g, ' ').toUpperCase()}
-                                    </button>
-                                `).join('') : ''}
-                            `).join('') : ''}
-                        </div>
-                    </div>
+                        <div class="view-course-btn">Ver Curso →</div>
+                    </a>
                 `;
             }).join('');
         }

@@ -1,6 +1,6 @@
 /**
  * KR-CLI DOMINION - Dashboard JavaScript
- * User dashboard logic and data display
+ * User dashboard logic and data display with session sync
  */
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -14,8 +14,111 @@ document.addEventListener('DOMContentLoaded', async () => {
         await loadUserData();
         loadLatestNews();
         loadEducationalProgress();
+
+        // Check session every 30 seconds
+        setInterval(checkSession, 30000);
     }
 });
+
+/**
+ * Check if session is still valid
+ */
+async function checkSession() {
+    const user = window.KRAuth.getCurrentUser();
+    if (!user || !user.id) {
+        showSessionExpired();
+        return;
+    }
+
+    try {
+        const client = await window.KRSupabase.init();
+        if (!client) {
+            showSessionExpired();
+            return;
+        }
+
+        // Try to verify user still exists and has valid session
+        const { data, error } = await client
+            .from('cli_users')
+            .select('id, subscription_status')
+            .eq('id', user.id)
+            .single();
+
+        if (error || !data) {
+            console.warn('[Dashboard] Session validation failed:', error);
+            showSessionExpired();
+        }
+    } catch (e) {
+        console.error('[Dashboard] Session check error:', e);
+    }
+}
+
+/**
+ * Show session expired message
+ */
+function showSessionExpired() {
+    // Clear session
+    sessionStorage.removeItem('kr_user');
+
+    // Show overlay message
+    const overlay = document.createElement('div');
+    overlay.id = 'session-expired-overlay';
+    overlay.innerHTML = `
+        <div style="
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            padding: 20px;
+        ">
+            <div style="
+                background: #0d0d0d;
+                border: 2px solid #ef4444;
+                border-radius: 20px;
+                padding: 50px 40px;
+                max-width: 500px;
+                text-align: center;
+                box-shadow: 0 0 50px rgba(239, 68, 68, 0.3);
+            ">
+                <div style="font-size: 4rem; margin-bottom: 20px;">🔐</div>
+                <h2 style="font-family: 'Orbitron', sans-serif; font-size: 1.5rem; margin-bottom: 15px; color: #ef4444;">
+                    Sesión Expirada
+                </h2>
+                <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 30px; line-height: 1.6;">
+                    Tu sesión ha expirado o fue cerrada.<br>
+                    <strong style="color: #00FFFF;">Inicia sesión desde KR-CLI</strong> para acceder a la web.
+                </p>
+                <div style="
+                    background: #0a0a0a;
+                    border-radius: 10px;
+                    padding: 20px;
+                    font-family: 'JetBrains Mono', monospace;
+                    text-align: left;
+                    margin-bottom: 30px;
+                ">
+                    <span style="color: #00FFFF;">$</span> kr-clidn<br>
+                    <span style="color: rgba(255,255,255,0.6);">> Opción 15: Web H4ck3r</span>
+                </div>
+                <a href="index.html" style="
+                    display: inline-block;
+                    padding: 12px 30px;
+                    background: linear-gradient(135deg, #0066FF, #00FFFF);
+                    color: #000;
+                    border-radius: 5px;
+                    font-family: 'Orbitron', sans-serif;
+                    font-weight: 600;
+                    text-decoration: none;
+                ">
+                    ← Volver al Inicio
+                </a>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+}
 
 /**
  * Load and display user data - fetch fresh from database
@@ -26,8 +129,11 @@ async function loadUserData() {
 
     if (!cachedUser || !cachedUser.id) {
         console.error('[Dashboard] No user data available');
+        showSessionExpired();
         return;
     }
+
+    let user = cachedUser;
 
     try {
         // Fetch fresh data from database
@@ -41,56 +147,65 @@ async function loadUserData() {
 
             if (!error && freshData) {
                 console.log('[Dashboard] Fresh user data:', freshData);
-                // Merge fresh data with cached user
-                Object.assign(cachedUser, freshData);
-                // Update sessionStorage
-                sessionStorage.setItem('kr_user', JSON.stringify(cachedUser));
+                user = { ...cachedUser, ...freshData };
+                sessionStorage.setItem('kr_user', JSON.stringify(user));
             } else {
                 console.warn('[Dashboard] Could not fetch fresh data:', error);
             }
         }
-
-        // Update UI with user data
-        updateUserUI(cachedUser);
-
     } catch (e) {
         console.error('[Dashboard] Error loading user data:', e);
-        // Still update UI with cached data
-        updateUserUI(cachedUser);
     }
+
+    // Update UI with user data
+    updateUserUI(user);
 }
 
 /**
  * Update UI with user data
  */
 function updateUserUI(user) {
+    console.log('[Dashboard] Updating UI with user:', user);
+
     // Update header
     const userName = user.username || (user.email ? user.email.split('@')[0] : 'Usuario');
-    document.getElementById('user-name').textContent = userName;
-    document.getElementById('user-email').textContent = user.email || '';
+    const userNameEl = document.getElementById('user-name');
+    const userEmailEl = document.getElementById('user-email');
 
-    // Determine if premium
+    if (userNameEl) userNameEl.textContent = userName;
+    if (userEmailEl) userEmailEl.textContent = user.email || '';
+
+    // Determine if premium - more flexible check
     const isPremium = checkIsPremium(user);
-    console.log('[Dashboard] Is Premium:', isPremium, 'Status:', user.subscription_status, 'Expiry:', user.subscription_expiry_date);
+    console.log('[Dashboard] Is Premium:', isPremium);
+    console.log('[Dashboard] subscription_status:', user.subscription_status);
+    console.log('[Dashboard] subscription_expiry_date:', user.subscription_expiry_date);
 
     // Update badge
     const badge = document.getElementById('user-badge');
-    if (isPremium) {
-        badge.textContent = 'PREMIUM';
-        badge.classList.add('premium');
-    } else {
-        badge.textContent = 'FREE';
-        badge.classList.remove('premium');
+    if (badge) {
+        if (isPremium) {
+            badge.textContent = 'PREMIUM';
+            badge.classList.add('premium');
+        } else {
+            badge.textContent = 'FREE';
+            badge.classList.remove('premium');
+        }
     }
 
     // Update stats
     const credits = user.credit_balance ?? 0;
     const daysLeft = calculateDaysLeft(user.subscription_expiry_date);
 
-    document.getElementById('stat-credits').textContent = formatNumber(credits);
-    document.getElementById('stat-queries').textContent = '...';
-    document.getElementById('stat-days').textContent = daysLeft;
-    document.getElementById('stat-courses').textContent = '...';
+    const creditsEl = document.getElementById('stat-credits');
+    const queriesEl = document.getElementById('stat-queries');
+    const daysEl = document.getElementById('stat-days');
+    const coursesEl = document.getElementById('stat-courses');
+
+    if (creditsEl) creditsEl.textContent = formatNumber(credits);
+    if (queriesEl) queriesEl.textContent = '...';
+    if (daysEl) daysEl.textContent = daysLeft;
+    if (coursesEl) coursesEl.textContent = '...';
 
     console.log('[Dashboard] Stats - Credits:', credits, 'Days:', daysLeft);
 
@@ -101,12 +216,17 @@ function updateUserUI(user) {
     }
 
     // Update account info
-    document.getElementById('account-email').textContent = user.email || '-';
-    document.getElementById('account-username').textContent = user.username || '-';
-    document.getElementById('account-plan').textContent = isPremium ? 'Premium' : 'Free';
-    document.getElementById('account-created').textContent = formatDate(user.created_at);
+    const accountEmailEl = document.getElementById('account-email');
+    const accountUsernameEl = document.getElementById('account-username');
+    const accountPlanEl = document.getElementById('account-plan');
+    const accountCreatedEl = document.getElementById('account-created');
 
-    // Load query count and courses count async
+    if (accountEmailEl) accountEmailEl.textContent = user.email || '-';
+    if (accountUsernameEl) accountUsernameEl.textContent = user.username || '-';
+    if (accountPlanEl) accountPlanEl.textContent = isPremium ? 'Premium' : 'Free';
+    if (accountCreatedEl) accountCreatedEl.textContent = formatDate(user.created_at);
+
+    // Load async stats
     if (user.id) {
         loadQueryCount(user.id);
         loadCoursesCount();
@@ -114,19 +234,20 @@ function updateUserUI(user) {
 }
 
 /**
- * Check if user is premium (more flexible check)
+ * Check if user is premium (flexible check)
  */
 function checkIsPremium(user) {
     if (!user) return false;
 
-    // Check subscription_status
+    // Check subscription_status - accept multiple values
     const status = (user.subscription_status || '').toLowerCase();
-    const isPremiumStatus = status === 'premium' || status === 'active';
+    const isPremiumStatus = status === 'premium' || status === 'active' || status === 'pro';
 
-    // Check expiry date
+    // If no expiry date set, just use status
     const expiryDate = user.subscription_expiry_date;
     if (!expiryDate) return isPremiumStatus;
 
+    // Check if not expired
     const isNotExpired = new Date(expiryDate) > new Date();
 
     return isPremiumStatus && isNotExpired;
@@ -173,11 +294,13 @@ function formatDate(dateString) {
  * Load user's query count
  */
 async function loadQueryCount(userId) {
+    const queriesEl = document.getElementById('stat-queries');
+    if (!queriesEl) return;
+
     try {
         const client = await window.KRSupabase.init();
         if (!client) {
-            console.error('[Dashboard] Supabase client not initialized');
-            document.getElementById('stat-queries').textContent = '0';
+            queriesEl.textContent = '0';
             return;
         }
 
@@ -190,13 +313,13 @@ async function loadQueryCount(userId) {
         console.log('[Dashboard] Query count result:', count, error);
 
         if (!error && count !== null) {
-            document.getElementById('stat-queries').textContent = formatNumber(count);
+            queriesEl.textContent = formatNumber(count);
         } else {
-            document.getElementById('stat-queries').textContent = '0';
+            queriesEl.textContent = '0';
         }
     } catch (e) {
         console.error('[Dashboard] Error loading query count:', e);
-        document.getElementById('stat-queries').textContent = '0';
+        queriesEl.textContent = '0';
     }
 }
 
@@ -204,19 +327,22 @@ async function loadQueryCount(userId) {
  * Load available courses count
  */
 async function loadCoursesCount() {
+    const coursesEl = document.getElementById('stat-courses');
+    if (!coursesEl) return;
+
     try {
         const apiUrl = (window.KR_API_CONFIG ? window.KR_API_CONFIG.EDUCATION_API : 'https://kalirootcli.onrender.com') + '/api/education/ai-courses';
         const response = await fetch(apiUrl);
         const data = await response.json();
 
         if (data.success && data.courses) {
-            document.getElementById('stat-courses').textContent = data.courses.length;
+            coursesEl.textContent = data.courses.length;
         } else {
-            document.getElementById('stat-courses').textContent = '0';
+            coursesEl.textContent = '0';
         }
     } catch (e) {
         console.error('[Dashboard] Error loading courses count:', e);
-        document.getElementById('stat-courses').textContent = '0';
+        coursesEl.textContent = '0';
     }
 }
 
@@ -265,10 +391,15 @@ async function loadEducationalProgress() {
     const labsCompleted = Object.keys(progress.labs || {}).filter(l => progress.labs[l]).length;
     const totalProgress = calculateTotalProgress(progress);
 
-    document.getElementById('courses-completed').textContent = `${coursesCompleted}/4`;
-    document.getElementById('labs-completed').textContent = `${labsCompleted}/15`;
-    document.getElementById('total-progress').textContent = `${totalProgress}%`;
-    document.getElementById('education-progress-bar').style.width = `${totalProgress}%`;
+    const coursesCompletedEl = document.getElementById('courses-completed');
+    const labsCompletedEl = document.getElementById('labs-completed');
+    const totalProgressEl = document.getElementById('total-progress');
+    const progressBarEl = document.getElementById('education-progress-bar');
+
+    if (coursesCompletedEl) coursesCompletedEl.textContent = `${coursesCompleted}/4`;
+    if (labsCompletedEl) labsCompletedEl.textContent = `${labsCompleted}/15`;
+    if (totalProgressEl) totalProgressEl.textContent = `${totalProgress}%`;
+    if (progressBarEl) progressBarEl.style.width = `${totalProgress}%`;
 }
 
 function calculateTotalProgress(progress) {

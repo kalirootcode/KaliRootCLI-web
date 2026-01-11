@@ -11,26 +11,56 @@
 /* User Header */
 .dashboard-header {
     padding: 60px 0 40px;
-    background: linear-gradient(180deg, rgba(0, 102, 255, 0.1) 0%, transparent 100%);
+    background: linear-gradient(180deg, rgba(0, 102, 255, 0.15) 0%, rgba(0, 255, 255, 0.05) 50%, transparent 100%);
     border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.dashboard-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(0, 102, 255, 0.1) 0%, transparent 70%);
+    pointer-events: none;
 }
 
 .user-welcome {
     display: flex;
     align-items: center;
     gap: 25px;
+    position: relative;
+    z-index: 1;
 }
 
 .user-avatar {
-    width: 80px;
-    height: 80px;
-    background: var(--gradient-primary);
+    width: 90px;
+    height: 90px;
+    background: linear-gradient(135deg, #0066FF, #00FFFF);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 2rem;
-    box-shadow: var(--shadow-glow);
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.4), inset 0 0 20px rgba(0, 0, 0, 0.2);
+    animation: pulse-glow 3s ease-in-out infinite;
+    border: 3px solid rgba(0, 255, 255, 0.5);
+}
+
+@keyframes pulse-glow {
+
+    0%,
+    100% {
+        box-shadow: 0 0 30px rgba(0, 255, 255, 0.4), inset 0 0 20px rgba(0, 0, 0, 0.2);
+    }
+
+    50% {
+        box-shadow: 0 0 50px rgba(0, 255, 255, 0.6), inset 0 0 20px rgba(0, 0, 0, 0.2);
+    }
 }
 
 .user-info h1 {

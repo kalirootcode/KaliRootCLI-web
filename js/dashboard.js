@@ -12,71 +12,124 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (isAuthed) {
         await loadUserData();
+        loadLatestNews();
+        loadEducationalProgress();
     }
 });
 
 /**
- * Load and display user data
+ * Load and display user data - fetch fresh from database
  */
 async function loadUserData() {
-    const user = window.KRAuth.getCurrentUser();
-    console.log('[Dashboard] User data:', user);
+    const cachedUser = window.KRAuth.getCurrentUser();
+    console.log('[Dashboard] Cached user:', cachedUser);
 
-    if (!user) {
+    if (!cachedUser || !cachedUser.id) {
         console.error('[Dashboard] No user data available');
         return;
     }
 
     try {
-        // Update header
-        const userName = user.username || (user.email ? user.email.split('@')[0] : 'Usuario');
-        document.getElementById('user-name').textContent = userName;
-        document.getElementById('user-email').textContent = user.email || '';
+        // Fetch fresh data from database
+        const client = await window.KRSupabase.init();
+        if (client) {
+            const { data: freshData, error } = await client
+                .from('cli_users')
+                .select('*')
+                .eq('id', cachedUser.id)
+                .single();
 
-        // Update badge
-        const badge = document.getElementById('user-badge');
-        const isPremium = window.KRAuth.isPremium();
-        console.log('[Dashboard] Is Premium:', isPremium);
-
-        if (isPremium) {
-            badge.textContent = 'PREMIUM';
-            badge.classList.add('premium');
-        } else {
-            badge.textContent = 'FREE';
-        }
-
-        // Update stats
-        const credits = user.credit_balance ?? 0;
-        const totalSpent = user.total_spent ?? 0;
-
-        document.getElementById('stat-credits').textContent = credits;
-        document.getElementById('stat-days').textContent = calculateDaysLeft(user.subscription_expiry_date);
-        document.getElementById('stat-spent').textContent = `$${totalSpent}`;
-
-        console.log('[Dashboard] Stats - Credits:', credits, 'Spent:', totalSpent);
-
-        // Hide upgrade button if premium
-        if (isPremium) {
-            const upgradeBtn = document.getElementById('upgrade-btn');
-            if (upgradeBtn) {
-                upgradeBtn.style.display = 'none';
+            if (!error && freshData) {
+                console.log('[Dashboard] Fresh user data:', freshData);
+                // Merge fresh data with cached user
+                Object.assign(cachedUser, freshData);
+                // Update sessionStorage
+                sessionStorage.setItem('kr_user', JSON.stringify(cachedUser));
+            } else {
+                console.warn('[Dashboard] Could not fetch fresh data:', error);
             }
         }
 
-        // Update account info
-        document.getElementById('account-email').textContent = user.email || '-';
-        document.getElementById('account-username').textContent = user.username || '-';
-        document.getElementById('account-plan').textContent = isPremium ? 'Premium' : 'Free';
-        document.getElementById('account-created').textContent = formatDate(user.created_at);
-
-        // Load query count
-        if (user.id) {
-            loadQueryCount(user.id);
-        }
+        // Update UI with user data
+        updateUserUI(cachedUser);
 
     } catch (e) {
         console.error('[Dashboard] Error loading user data:', e);
+        // Still update UI with cached data
+        updateUserUI(cachedUser);
     }
+}
+
+/**
+ * Update UI with user data
+ */
+function updateUserUI(user) {
+    // Update header
+    const userName = user.username || (user.email ? user.email.split('@')[0] : 'Usuario');
+    document.getElementById('user-name').textContent = userName;
+    document.getElementById('user-email').textContent = user.email || '';
+
+    // Determine if premium
+    const isPremium = checkIsPremium(user);
+    console.log('[Dashboard] Is Premium:', isPremium, 'Status:', user.subscription_status, 'Expiry:', user.subscription_expiry_date);
+
+    // Update badge
+    const badge = document.getElementById('user-badge');
+    if (isPremium) {
+        badge.textContent = 'PREMIUM';
+        badge.classList.add('premium');
+    } else {
+        badge.textContent = 'FREE';
+        badge.classList.remove('premium');
+    }
+
+    // Update stats
+    const credits = user.credit_balance ?? 0;
+    const totalSpent = user.total_spent ?? 0;
+    const daysLeft = calculateDaysLeft(user.subscription_expiry_date);
+
+    document.getElementById('stat-credits').textContent = formatNumber(credits);
+    document.getElementById('stat-queries').textContent = '...';
+    document.getElementById('stat-days').textContent = daysLeft;
+    document.getElementById('stat-spent').textContent = `$${formatNumber(totalSpent)}`;
+
+    console.log('[Dashboard] Stats - Credits:', credits, 'Days:', daysLeft, 'Spent:', totalSpent);
+
+    // Hide upgrade button if premium
+    const upgradeBtn = document.getElementById('upgrade-btn');
+    if (upgradeBtn) {
+        upgradeBtn.style.display = isPremium ? 'none' : 'flex';
+    }
+
+    // Update account info
+    document.getElementById('account-email').textContent = user.email || '-';
+    document.getElementById('account-username').textContent = user.username || '-';
+    document.getElementById('account-plan').textContent = isPremium ? 'Premium' : 'Free';
+    document.getElementById('account-created').textContent = formatDate(user.created_at);
+
+    // Load query count async
+    if (user.id) {
+        loadQueryCount(user.id);
+    }
+}
+
+/**
+ * Check if user is premium (more flexible check)
+ */
+function checkIsPremium(user) {
+    if (!user) return false;
+
+    // Check subscription_status
+    const status = (user.subscription_status || '').toLowerCase();
+    const isPremiumStatus = status === 'premium' || status === 'active';
+
+    // Check expiry date
+    const expiryDate = user.subscription_expiry_date;
+    if (!expiryDate) return isPremiumStatus;
+
+    const isNotExpired = new Date(expiryDate) > new Date();
+
+    return isPremiumStatus && isNotExpired;
 }
 
 /**
@@ -92,6 +145,14 @@ function calculateDaysLeft(expiryDate) {
     if (diff <= 0) return 0;
 
     return Math.ceil(diff / (1000 * 60 * 60 * 24));
+}
+
+/**
+ * Format number with thousands separator
+ */
+function formatNumber(num) {
+    if (num === null || num === undefined) return '0';
+    return num.toLocaleString('es-ES');
 }
 
 /**
@@ -116,6 +177,7 @@ async function loadQueryCount(userId) {
         const client = await window.KRSupabase.init();
         if (!client) {
             console.error('[Dashboard] Supabase client not initialized');
+            document.getElementById('stat-queries').textContent = '0';
             return;
         }
 
@@ -128,10 +190,13 @@ async function loadQueryCount(userId) {
         console.log('[Dashboard] Query count result:', count, error);
 
         if (!error && count !== null) {
-            document.getElementById('stat-queries').textContent = count;
+            document.getElementById('stat-queries').textContent = formatNumber(count);
+        } else {
+            document.getElementById('stat-queries').textContent = '0';
         }
     } catch (e) {
         console.error('[Dashboard] Error loading query count:', e);
+        document.getElementById('stat-queries').textContent = '0';
     }
 }
 
@@ -140,15 +205,14 @@ async function loadQueryCount(userId) {
  */
 async function loadLatestNews() {
     const newsGrid = document.getElementById('news-grid');
+    if (!newsGrid) return;
 
     try {
-        // Use dynamic config - defaults to production URL
         const newsApiUrl = (window.KR_API_CONFIG ? window.KR_API_CONFIG.NEWS_API : 'https://kalirootcli.onrender.com') + '/api/news';
         const response = await fetch(newsApiUrl);
         const data = await response.json();
 
         if (data.success && data.news.length > 0) {
-            // Show only first 3 news
             const latestNews = data.news.slice(0, 3);
 
             newsGrid.innerHTML = latestNews.map(news => `
@@ -163,11 +227,11 @@ async function loadLatestNews() {
                 </div>
             `).join('');
         } else {
-            newsGrid.innerHTML = '<p style="text-align: center; color: rgba(255,255,255,0.6);">No hay noticias disponibles. Inicia el servidor de noticias.</p>';
+            newsGrid.innerHTML = '<p style="text-align: center; color: rgba(255,255,255,0.6);">No hay noticias disponibles.</p>';
         }
     } catch (error) {
         console.error('[Dashboard] Error loading news:', error);
-        newsGrid.innerHTML = '<p style="text-align: center; color: rgba(255,255,255,0.6);">Error cargando noticias. Verifica que el servidor esté activo.</p>';
+        newsGrid.innerHTML = '<p style="text-align: center; color: rgba(255,255,255,0.6);">Error cargando noticias.</p>';
     }
 }
 
@@ -175,7 +239,6 @@ async function loadLatestNews() {
  * Load educational progress
  */
 async function loadEducationalProgress() {
-    // Get progress from localStorage
     const progress = JSON.parse(localStorage.getItem('kr_education_progress') || '{}');
 
     const coursesCompleted = Object.keys(progress.courses || {}).filter(c => progress.courses[c] === 100).length;
@@ -196,8 +259,7 @@ function calculateTotalProgress(progress) {
     return Math.round(sum / courses.length);
 }
 
-// Load news and progress when page loads
-if (document.getElementById('news-grid')) {
-    loadLatestNews();
-    loadEducationalProgress();
-}
+// Mobile nav toggle
+document.getElementById('nav-toggle')?.addEventListener('click', () => {
+    document.getElementById('nav-menu')?.classList.toggle('active');
+});

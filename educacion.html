@@ -85,13 +85,22 @@
 
         .ai-badge {
             display: inline-block;
-            background: linear-gradient(135deg, #a855f7, #06b6d4);
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
             color: #000;
             padding: 4px 12px;
             border-radius: 20px;
             font-size: 0.75rem;
             font-weight: 600;
             margin-bottom: 15px;
+        }
+
+        .course-card.isAI {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .course-card .course-content {
+            flex: 1;
         }
 
         .course-meta-row {
@@ -505,19 +514,21 @@
                 // AI-generated course - clickable card linking to individual page
                 if (course.isAI) {
                     return `
-                        <a href="curso.html?slug=${course.slug}" class="course-card ${course.difficulty}" style="text-decoration: none; display: block;">
-                            <div class="ai-badge">🤖 Generado por IA</div>
-                            <div class="course-header">
-                                <span class="course-icon">${course.icon || '📚'}</span>
-                                <div>
-                                    <h3 class="course-title">${course.title}</h3>
-                                    <span class="course-difficulty ${course.difficulty}">${course.difficulty}</span>
+                        <a href="curso.html?slug=${course.slug}" class="course-card ${course.difficulty}" style="text-decoration: none; display: flex; flex-direction: column;">
+                            <div class="ai-badge">👑 Premium</div>
+                            <div class="course-content" style="flex: 1;">
+                                <div class="course-header">
+                                    <span class="course-icon">${course.icon || '📚'}</span>
+                                    <div>
+                                        <h3 class="course-title">${course.title}</h3>
+                                        <span class="course-difficulty ${course.difficulty}">${course.difficulty}</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <p class="course-description">${course.description || ''}</p>
-                            <div class="course-meta-row">
-                                <span>⏱️ ${course.duration || '2-4 horas'}</span>
-                                <span>👁️ ${course.total_views || 0} vistas</span>
+                                <p class="course-description">${course.description || ''}</p>
+                                <div class="course-meta-row">
+                                    <span>⏱️ ${course.duration || '2-4 horas'}</span>
+                                    <span>👁️ ${course.total_views || 0} vistas</span>
+                                </div>
                             </div>
                             <div class="view-course-btn">Ver Curso Completo →</div>
                         </a>

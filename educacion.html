@@ -79,6 +79,45 @@
             border-left: 4px solid #ef4444;
         }
 
+        .course-card.expert {
+            border-left: 4px solid #a855f7;
+        }
+
+        .ai-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #a855f7, #06b6d4);
+            color: #000;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .course-meta-row {
+            display: flex;
+            gap: 20px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+        }
+
+        .view-course-btn {
+            background: linear-gradient(135deg, #00ff88, #00d4ff);
+            color: #000;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-family: var(--font-display);
+            font-weight: 600;
+            margin-top: 15px;
+            transition: box-shadow 0.3s;
+        }
+
+        .course-card:hover .view-course-btn {
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+
         .course-header {
             display: flex;
             align-items: center;
@@ -417,36 +456,75 @@
         // Use dynamic config - defaults to production URL
         const API_URL = (window.KR_API_CONFIG ? window.KR_API_CONFIG.EDUCATION_API : 'https://kalirootcli.onrender.com') + '/api/education';
         let currentCourses = [];
+        let aiCourses = [];
         let currentLab = null;
 
         // Load courses on page load
         document.addEventListener('DOMContentLoaded', () => {
-            loadCourses();
+            loadAllCourses();
         });
 
-        async function loadCourses() {
+        async function loadAllCourses() {
+            const grid = document.getElementById('courses-grid');
+            grid.innerHTML = '<p style="text-align: center; color: rgba(255,255,255,0.6);">Cargando cursos...</p>';
+
             try {
-                const response = await fetch(`${API_URL}/courses`);
+                // Load ONLY published AI courses from the admin panel
+                const response = await fetch(`${API_URL}/ai-courses`);
                 const data = await response.json();
 
-                if (data.success) {
-                    currentCourses = data.courses;
-                    renderCourses(data.courses);
+                if (data.success && data.courses) {
+                    // Mark all as AI courses for proper rendering
+                    aiCourses = data.courses.map(c => ({ ...c, isAI: true }));
+                    renderCourses(aiCourses);
+                } else {
+                    grid.innerHTML = '<p style="text-align: center; color: rgba(255,255,255,0.6);">No hay cursos publicados aún. Los cursos aparecerán aquí cuando el admin los publique.</p>';
                 }
             } catch (error) {
                 console.error('Error loading courses:', error);
-                document.getElementById('courses-grid').innerHTML =
-                    '<p style="text-align: center; color: rgba(255,255,255,0.6);">Error cargando cursos. Verifica que el servidor esté activo.</p>';
+                grid.innerHTML = '<p style="text-align: center; color: rgba(255,255,255,0.6);">Error cargando cursos. Verifica que el servidor esté activo.</p>';
             }
+        }
+
+        async function loadCourses() {
+            await loadAllCourses();
         }
 
         function renderCourses(courses) {
             const grid = document.getElementById('courses-grid');
             const progress = JSON.parse(localStorage.getItem('kr_education_progress') || '{"courses": {}, "labs": {}}');
 
+            if (courses.length === 0) {
+                grid.innerHTML = '<p style="text-align: center; color: rgba(255,255,255,0.6);">No hay cursos disponibles.</p>';
+                return;
+            }
+
             grid.innerHTML = courses.map(course => {
                 const courseProgress = progress.courses[course.id] || 0;
 
+                // AI-generated course - clickable card linking to individual page
+                if (course.isAI) {
+                    return `
+                        <a href="curso.html?slug=${course.slug}" class="course-card ${course.difficulty}" style="text-decoration: none; display: block;">
+                            <div class="ai-badge">🤖 Generado por IA</div>
+                            <div class="course-header">
+                                <span class="course-icon">${course.icon || '📚'}</span>
+                                <div>
+                                    <h3 class="course-title">${course.title}</h3>
+                                    <span class="course-difficulty ${course.difficulty}">${course.difficulty}</span>
+                                </div>
+                            </div>
+                            <p class="course-description">${course.description || ''}</p>
+                            <div class="course-meta-row">
+                                <span>⏱️ ${course.duration || '2-4 horas'}</span>
+                                <span>👁️ ${course.total_views || 0} vistas</span>
+                            </div>
+                            <div class="view-course-btn">Ver Curso Completo →</div>
+                        </a>
+                    `;
+                }
+
+                // Static course with lab modals
                 return `
                     <div class="course-card ${course.difficulty}">
                         <div class="course-header">
@@ -467,17 +545,17 @@
                             </div>
                         </div>
                         <div class="course-modules">
-                            ${course.modules.map(module => `
+                            ${course.modules ? course.modules.map(module => `
                                 <div class="module-item">
                                     <span class="module-name">${module.title}</span>
-                                    <span class="module-labs">${module.labs.length} labs</span>
+                                    <span class="module-labs">${module.labs ? module.labs.length : 0} labs</span>
                                 </div>
-                                ${module.labs.map(labId => `
+                                ${module.labs ? module.labs.map(labId => `
                                     <button onclick="loadLab('${labId}')" style="width: 100%; padding: 8px; background: rgba(6, 182, 212, 0.1); border: 1px solid rgba(6, 182, 212, 0.3); border-radius: 6px; color: #06b6d4; cursor: pointer; margin-bottom: 5px; font-size: 0.85rem;">
                                         📝 ${labId.replace('lab_', '').replace(/_/g, ' ').toUpperCase()}
                                     </button>
-                                `).join('')}
-                            `).join('')}
+                                `).join('') : ''}
+                            `).join('') : ''}
                         </div>
                     </div>
                 `;

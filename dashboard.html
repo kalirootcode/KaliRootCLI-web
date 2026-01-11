@@ -17,6 +17,8 @@
     <link
         href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@400;700;900&display=swap"
         rel="stylesheet">
+    <!-- Font Awesome for professional icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
 <body class="dashboard-page">
@@ -28,12 +30,13 @@
                 <span class="logo-text">KR-CLI</span>
             </a>
             <ul class="nav-menu" id="nav-menu">
-                <li><a href="educacion.html" class="nav-link">🎓 Educación</a></li>
-                <li><a href="noticias.html" class="nav-link">📰 Noticias</a></li>
-                <li><a href="herramientas.html" class="nav-link">🛠️ Herramientas</a></li>
-                <li><a href="#stats" class="nav-link">Mi Cuenta</a></li>
-                <li><a href="support.html" class="nav-link">Soporte</a></li>
-                <li><button onclick="window.KRAuth.logout()" class="nav-link logout-btn">Cerrar Sesión</button></li>
+                <li><a href="educacion.html" class="nav-link"><i class="fas fa-graduation-cap"></i> Educación</a></li>
+                <li><a href="noticias.html" class="nav-link"><i class="fas fa-newspaper"></i> Noticias</a></li>
+                <li><a href="herramientas.html" class="nav-link"><i class="fas fa-tools"></i> Herramientas</a></li>
+                <li><a href="#stats" class="nav-link"><i class="fas fa-user-circle"></i> Mi Cuenta</a></li>
+                <li><a href="support.html" class="nav-link"><i class="fas fa-headset"></i> Soporte</a></li>
+                <li><button onclick="window.KRAuth.logout()" class="nav-link logout-btn"><i
+                            class="fas fa-sign-out-alt"></i> Cerrar Sesión</button></li>
             </ul>
             <button class="nav-toggle" id="nav-toggle">
                 <span></span>
@@ -49,7 +52,7 @@
             <div class="container">
                 <div class="user-welcome">
                     <div class="user-avatar" id="user-avatar">
-                        <span>👤</span>
+                        <i class="fas fa-skull"></i>
                     </div>
                     <div class="user-info">
                         <h1>Bienvenido, <span id="user-name">Usuario</span></h1>
@@ -65,22 +68,22 @@
             <div class="container">
                 <div class="stats-grid">
                     <div class="stat-card">
-                        <div class="stat-icon">💳</div>
+                        <div class="stat-icon"><i class="fas fa-coins"></i></div>
                         <div class="stat-value" id="stat-credits">0</div>
                         <div class="stat-label">Créditos</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-icon">📊</div>
+                        <div class="stat-icon"><i class="fas fa-robot"></i></div>
                         <div class="stat-value" id="stat-queries">0</div>
                         <div class="stat-label">Consultas AI</div>
                     </div>
                     <div class="stat-card premium-card" id="premium-card">
-                        <div class="stat-icon">👑</div>
+                        <div class="stat-icon"><i class="fas fa-crown"></i></div>
                         <div class="stat-value" id="stat-days">0</div>
                         <div class="stat-label">Días Premium</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-icon">💰</div>
+                        <div class="stat-icon"><i class="fas fa-dollar-sign"></i></div>
                         <div class="stat-value" id="stat-spent">$0</div>
                         <div class="stat-label">Total Invertido</div>
                     </div>
@@ -91,7 +94,7 @@
         <!-- Educational Progress -->
         <section class="dashboard-education">
             <div class="container">
-                <h2 class="section-title-sm">🎓 Tu Progreso Educativo</h2>
+                <h2 class="section-title-sm"><i class="fas fa-book-open"></i> Tu Progreso Educativo</h2>
                 <div class="education-overview glass-card">
                     <div class="progress-stats">
                         <div class="progress-item">
@@ -110,7 +113,8 @@
                     <div class="progress-container" style="margin-top: 20px;">
                         <div class="progress-bar" id="education-progress-bar" style="width: 0%"></div>
                     </div>
-                    <a href="educacion.html" class="btn btn-outline" style="margin-top: 20px;">Ver Cursos</a>
+                    <a href="educacion.html" class="btn btn-outline" style="margin-top: 20px;"><i
+                            class="fas fa-arrow-right"></i> Ver Cursos</a>
                 </div>
             </div>
         </section>
@@ -118,35 +122,36 @@
         <!-- Latest News -->
         <section class="dashboard-news">
             <div class="container">
-                <h2 class="section-title-sm">📰 Últimas Noticias de Ciberseguridad</h2>
+                <h2 class="section-title-sm"><i class="fas fa-shield-virus"></i> Últimas Noticias de Ciberseguridad</h2>
                 <div class="news-grid" id="news-grid">
                     <div class="skeleton" style="height: 150px;"></div>
                     <div class="skeleton" style="height: 150px;"></div>
                     <div class="skeleton" style="height: 150px;"></div>
                 </div>
-                <a href="noticias.html" class="btn btn-outline" style="margin-top: 20px;">Ver Todas las Noticias</a>
+                <a href="noticias.html" class="btn btn-outline" style="margin-top: 20px;"><i
+                        class="fas fa-arrow-right"></i> Ver Todas las Noticias</a>
             </div>
         </section>
 
         <!-- Quick Actions -->
         <section class="dashboard-actions">
             <div class="container">
-                <h2 class="section-title-sm">Acciones Rápidas</h2>
+                <h2 class="section-title-sm"><i class="fas fa-bolt"></i> Acciones Rápidas</h2>
                 <div class="actions-grid">
                     <a href="index.html#install" class="action-card">
-                        <span class="action-icon">📥</span>
+                        <span class="action-icon"><i class="fas fa-download"></i></span>
                         <span class="action-text">Actualizar CLI</span>
                     </a>
                     <a href="support.html" class="action-card">
-                        <span class="action-icon">💬</span>
+                        <span class="action-icon"><i class="fas fa-comments"></i></span>
                         <span class="action-text">Soporte</span>
                     </a>
                     <a href="index.html#pricing" class="action-card upgrade-action" id="upgrade-btn">
-                        <span class="action-icon">⚡</span>
+                        <span class="action-icon"><i class="fas fa-rocket"></i></span>
                         <span class="action-text">Upgrade Premium</span>
                     </a>
                     <a href="https://github.com/kalirootcode/KaliRootCLI" target="_blank" class="action-card">
-                        <span class="action-icon">📖</span>
+                        <span class="action-icon"><i class="fab fa-github"></i></span>
                         <span class="action-text">Documentación</span>
                     </a>
                 </div>
@@ -156,22 +161,22 @@
         <!-- Account Info -->
         <section class="dashboard-account">
             <div class="container">
-                <h2 class="section-title-sm">Información de Cuenta</h2>
+                <h2 class="section-title-sm"><i class="fas fa-id-card"></i> Información de Cuenta</h2>
                 <div class="account-card">
                     <div class="account-row">
-                        <span class="account-label">Email</span>
+                        <span class="account-label"><i class="fas fa-envelope"></i> Email</span>
                         <span class="account-value" id="account-email">-</span>
                     </div>
                     <div class="account-row">
-                        <span class="account-label">Username</span>
+                        <span class="account-label"><i class="fas fa-user"></i> Username</span>
                         <span class="account-value" id="account-username">-</span>
                     </div>
                     <div class="account-row">
-                        <span class="account-label">Plan</span>
+                        <span class="account-label"><i class="fas fa-gem"></i> Plan</span>
                         <span class="account-value" id="account-plan">-</span>
                     </div>
                     <div class="account-row">
-                        <span class="account-label">Miembro desde</span>
+                        <span class="account-label"><i class="fas fa-calendar-alt"></i> Miembro desde</span>
                         <span class="account-value" id="account-created">-</span>
                     </div>
                 </div>

@@ -100,7 +100,7 @@ function showSessionExpired() {
                     margin-bottom: 30px;
                 ">
                     <span style="color: #00FFFF;">$</span> kr-clidn<br>
-                    <span style="color: rgba(255,255,255,0.6);">> Opción 15: Web H4ck3r</span>
+                    <span style="color: rgba(255,255,255,0.6);">> Opción 2: Web H4ck3r</span>
                 </div>
                 <a href="index.html" style="
                     display: inline-block;

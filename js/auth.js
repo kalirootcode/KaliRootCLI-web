@@ -138,7 +138,7 @@ function showAuthGate() {
                     </div>
                     <div class="auth-step">
                         <span class="step-num">3</span>
-                        <span class="step-text">Selecciona "Web H4ck3r" en el menú</span>
+                        <span class="step-text">Selecciona "Opción 2" en el menú</span>
                     </div>
                 </div>
                 
@@ -150,7 +150,7 @@ function showAuthGate() {
                     </div>
                     <div class="term-body">
                         <span class="prompt">$</span> kr-cli<br>
-                        <span class="output">> Selecciona opción 15: Web H4ck3r</span>
+                        <span class="output">> Selecciona opción 2: Web H4ck3r</span>
                     </div>
                 </div>
                 

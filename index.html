@@ -27,7 +27,8 @@
 
     <style>
         :root {
-            --neon-green: #00ff88;
+            --neon-green: #0088ff;
+            /* Changed from green to blue to match cyan logo */
             --neon-cyan: #00d4ff;
             --neon-purple: #a855f7;
             --neon-red: #ef4444;
@@ -41,6 +42,12 @@
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 90px;
+            /* Compensate for fixed header */
+        }
+
         body {
             font-family: 'JetBrains Mono', monospace;
             background: #000000;
@@ -48,7 +55,7 @@
             overflow-x: hidden;
         }
 
-        /* Matrix Background */
+        /* Background - Pure Black */
         .matrix-bg {
             position: fixed;
             top: 0;
@@ -61,23 +68,405 @@
         }
 
         .matrix-rain {
+            display: none;
+        }
+
+        /* Cyber Menu Button */
+        .cyber-menu-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background: transparent;
+            border: 2px solid var(--neon-green);
+            border-radius: 8px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .cyber-menu-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 136, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .cyber-menu-btn:hover::before {
+            left: 100%;
+        }
+
+        .cyber-menu-btn:hover {
+            box-shadow: 0 0 20px rgba(0, 136, 255, 0.5), inset 0 0 20px rgba(0, 136, 255, 0.1);
+            border-color: var(--neon-cyan);
+        }
+
+        .cyber-menu-icon {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .cyber-menu-icon span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: var(--neon-green);
+            transition: all 0.3s ease;
+            box-shadow: 0 0 5px var(--neon-green);
+        }
+
+        .cyber-menu-btn.active .cyber-menu-icon span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .cyber-menu-btn.active .cyber-menu-icon span:nth-child(2) {
+            opacity: 0;
+            transform: translateX(-10px);
+        }
+
+        .cyber-menu-btn.active .cyber-menu-icon span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        /* Cyber Dropdown Menu */
+        .cyber-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: 280px;
+            background: rgba(0, 0, 0, 0.95);
+            border: 1px solid var(--neon-green);
+            border-radius: 12px;
+            padding: 0;
+            margin-top: 15px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-20px) scale(0.95);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0, 136, 255, 0.2);
+        }
+
+        .cyber-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+        }
+
+        .cyber-dropdown::before {
+            content: '> SYSTEM_MENU_INITIALIZED';
+            display: block;
+            padding: 12px 20px;
+            font-size: 0.7rem;
+            color: var(--neon-green);
+            background: rgba(0, 136, 255, 0.1);
+            border-bottom: 1px solid rgba(0, 136, 255, 0.3);
+            font-family: 'JetBrains Mono', monospace;
+            animation: typing-effect 0.5s steps(25);
+        }
+
+        @keyframes typing-effect {
+            from {
+                width: 0;
+                overflow: hidden;
+                white-space: nowrap;
+            }
+
+            to {
+                width: 100%;
+            }
+        }
+
+        .cyber-dropdown-item {
+            display: block;
+            padding: 15px 20px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 0.95rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .cyber-dropdown-item::before {
+            content: '>';
+            margin-right: 10px;
+            color: var(--neon-green);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .cyber-dropdown-item:hover {
+            background: rgba(0, 136, 255, 0.1);
+            color: var(--neon-green);
+            padding-left: 30px;
+        }
+
+        .cyber-dropdown-item:hover::before {
+            opacity: 1;
+        }
+
+        .cyber-dropdown-cta {
+            display: block;
+            margin: 15px;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, var(--neon-green), var(--neon-cyan));
+            color: #000;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-family: 'Orbitron', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .cyber-dropdown-cta:hover {
+            box-shadow: 0 0 25px rgba(0, 136, 255, 0.6);
+            transform: scale(1.02);
+        }
+
+        /* Header Separator Animation - Floating Light Effect */
+        .header-separator {
+            position: fixed;
+            top: 76px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent 0%, rgba(0, 136, 255, 0.3) 20%, rgba(0, 212, 255, 0.5) 50%, rgba(0, 136, 255, 0.3) 80%, transparent 100%);
+            z-index: 1000;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.3), 0 0 30px rgba(0, 136, 255, 0.15);
+            animation: header-glow 3s ease-in-out infinite;
+        }
+
+        .header-separator::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 30%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: light-sweep 4s linear infinite;
+        }
+
+        @keyframes header-glow {
+
+            0%,
+            100% {
+                opacity: 0.7;
+                box-shadow: 0 0 10px rgba(0, 212, 255, 0.2), 0 0 20px rgba(0, 136, 255, 0.1);
+            }
+
+            50% {
+                opacity: 1;
+                box-shadow: 0 0 20px rgba(0, 212, 255, 0.4), 0 0 40px rgba(0, 136, 255, 0.2);
+            }
+        }
+
+        @keyframes light-sweep {
+            0% {
+                left: -30%;
+            }
+
+            100% {
+                left: 130%;
+            }
+        }
+
+        /* Cyber Alert Banner */
+        .cyber-alert-banner {
+            background: linear-gradient(90deg, rgba(239, 68, 68, 0.1) 0%, rgba(0, 0, 0, 0.95) 50%, rgba(239, 68, 68, 0.1) 100%);
+            border-top: 1px solid rgba(239, 68, 68, 0.3);
+            border-bottom: 1px solid rgba(239, 68, 68, 0.3);
+            padding: 12px 0;
+            position: relative;
+            margin-top: 76px;
+            /* Space for fixed navbar */
+            overflow: hidden;
+        }
+
+        .cyber-alert-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px;
+            position: relative;
+        }
+
+        .cyber-alert-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 100%;
+            background: radial-gradient(ellipse, rgba(239, 68, 68, 0.2) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .cyber-alert-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cyber-alert-icon {
+            position: relative;
+            font-size: 1.2rem;
+            animation: alert-shake 0.5s ease-in-out infinite;
+        }
+
+        @keyframes alert-shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-2px) rotate(-5deg);
+            }
+
+            75% {
+                transform: translateX(2px) rotate(5deg);
+            }
+        }
+
+        .alert-pulse {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(239, 68, 68, 0.3);
+            animation: pulse-expand 1.5s ease-out infinite;
+        }
+
+        @keyframes pulse-expand {
+            0% {
+                transform: translate(-50%, -50%) scale(0.5);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(2);
+                opacity: 0;
+            }
+        }
+
+        .cyber-alert-prefix {
+            color: var(--neon-red);
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+            animation: glitch-text-alert 3s infinite;
+        }
+
+        @keyframes glitch-text-alert {
+
+            0%,
+            90%,
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+            92% {
+                opacity: 0.8;
+                transform: translateX(-1px);
+                text-shadow: 2px 0 #ef4444, -2px 0 #0088ff;
+            }
+
+            94% {
+                opacity: 1;
+                transform: translateX(1px);
+            }
+
+            96% {
+                opacity: 0.9;
+                transform: translateX(0);
+            }
+        }
+
+        .cyber-alert-text {
+            color: #fff;
+            letter-spacing: 1px;
+        }
+
+        .cyber-alert-cursor {
+            color: var(--neon-green);
+            animation: blink-cursor 0.7s step-end infinite;
+        }
+
+        @keyframes blink-cursor {
+
+            0%,
+            50% {
+                opacity: 1;
+            }
+
+            51%,
+            100% {
+                opacity: 0;
+            }
+        }
+
+        .cyber-alert-scanner {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            opacity: 0.03;
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Ctext x='0' y='15' fill='%2300ff88' font-family='monospace' font-size='12'%3E01%3C/text%3E%3Ctext x='20' y='35' fill='%2300ff88' font-family='monospace' font-size='12'%3E10%3C/text%3E%3Ctext x='40' y='55' fill='%2300ff88' font-family='monospace' font-size='12'%3E11%3C/text%3E%3C/svg%3E");
-            animation: matrix-scroll 20s linear infinite;
+            pointer-events: none;
+            overflow: hidden;
         }
 
-        @keyframes matrix-scroll {
-            from {
-                transform: translateY(-100%);
+        .cyber-alert-scanner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(239, 68, 68, 0.1), rgba(0, 136, 255, 0.05), transparent);
+            animation: alert-scan 4s linear infinite;
+        }
+
+        @keyframes alert-scan {
+            0% {
+                left: -50%;
             }
 
-            to {
-                transform: translateY(100%);
+            100% {
+                left: 150%;
+            }
+        }
+
+        /* Responsive Alert */
+        @media (max-width: 768px) {
+            .cyber-alert-content {
+                flex-direction: column;
+                gap: 8px;
+                font-size: 0.75rem;
+                text-align: center;
+            }
+
+            .cyber-alert-prefix {
+                font-size: 0.7rem;
             }
         }
 
@@ -91,7 +480,7 @@
             padding: 15px 0;
             background: #000000;
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(0, 255, 136, 0.2);
+            border-bottom: 1px solid rgba(0, 136, 255, 0.2);
         }
 
         .nav-container {
@@ -113,7 +502,7 @@
         .logo-img {
             width: 45px;
             height: 45px;
-            filter: drop-shadow(0 0 10px rgba(0, 255, 136, 0.5));
+            filter: drop-shadow(0 0 10px rgba(0, 136, 255, 0.5));
         }
 
         .logo-text {
@@ -152,7 +541,7 @@
         }
 
         .nav-cta:hover {
-            box-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+            box-shadow: 0 0 30px rgba(0, 136, 255, 0.5);
             transform: translateY(-2px);
         }
 
@@ -208,7 +597,8 @@
             align-items: center;
             justify-content: center;
             position: relative;
-            padding-top: 80px;
+            padding-top: 40px;
+            /* Reduced since banner is no longer fixed */
         }
 
         .hero-content {
@@ -246,7 +636,7 @@
             margin: 0 auto 30px auto;
             display: block;
             animation: float 3s ease-in-out infinite;
-            filter: drop-shadow(0 0 30px rgba(0, 255, 136, 0.5));
+            filter: drop-shadow(0 0 30px rgba(0, 136, 255, 0.5));
         }
 
         @keyframes float {
@@ -266,7 +656,7 @@
             font-size: 4rem;
             font-weight: 900;
             margin-bottom: 10px;
-            text-shadow: 0 0 50px rgba(0, 255, 136, 0.5);
+            text-shadow: 0 0 50px rgba(0, 136, 255, 0.5);
             text-align: center;
         }
 
@@ -326,7 +716,7 @@
             96% {
                 opacity: 0.9;
                 transform: translateX(0);
-                text-shadow: 2px 0 #00ff88, -2px 0 #00d4ff;
+                text-shadow: 2px 0 #0088ff, -2px 0 #00d4ff;
             }
 
             98% {
@@ -462,7 +852,7 @@
 
         .btn-primary:hover {
             transform: translateY(-3px);
-            box-shadow: 0 0 40px rgba(0, 255, 136, 0.6);
+            box-shadow: 0 0 40px rgba(0, 136, 255, 0.6);
         }
 
         .btn-secondary {
@@ -668,7 +1058,7 @@
 
         .arch-node:hover {
             border-color: var(--neon-green);
-            box-shadow: 0 0 25px rgba(0, 255, 136, 0.2);
+            box-shadow: 0 0 25px rgba(0, 136, 255, 0.2);
         }
 
         .arch-node-icon {
@@ -714,7 +1104,7 @@
         }
 
         .arch-benefit {
-            background: rgba(0, 255, 136, 0.05);
+            background: rgba(0, 136, 255, 0.05);
             border-left: 3px solid var(--neon-green);
             padding: 20px;
             border-radius: 0 12px 12px 0;
@@ -764,7 +1154,7 @@
         .feature-card:hover {
             transform: translateY(-8px);
             border-color: var(--neon-green);
-            box-shadow: 0 20px 40px rgba(0, 255, 136, 0.15);
+            box-shadow: 0 20px 40px rgba(0, 136, 255, 0.15);
         }
 
         .feature-card:hover::before {
@@ -791,7 +1181,7 @@
 
         /* ==================== WEB PLATFORM ==================== */
         .platform-section {
-            background: linear-gradient(180deg, transparent, rgba(0, 255, 136, 0.05), transparent);
+            background: linear-gradient(180deg, transparent, rgba(0, 136, 255, 0.05), transparent);
         }
 
         .platform-grid {
@@ -802,7 +1192,7 @@
 
         .platform-card {
             background: rgba(10, 14, 39, 0.9);
-            border: 1px solid rgba(0, 255, 136, 0.2);
+            border: 1px solid rgba(0, 136, 255, 0.2);
             border-radius: 16px;
             padding: 30px;
             text-align: center;
@@ -811,7 +1201,7 @@
 
         .platform-card:hover {
             border-color: var(--neon-green);
-            box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
+            box-shadow: 0 0 30px rgba(0, 136, 255, 0.2);
             transform: translateY(-5px);
         }
 
@@ -854,7 +1244,7 @@
         .pricing-card.featured {
             border-color: var(--neon-green);
             transform: scale(1.05);
-            box-shadow: 0 0 50px rgba(0, 255, 136, 0.2);
+            box-shadow: 0 0 50px rgba(0, 136, 255, 0.2);
         }
 
         .pricing-card.featured::before {
@@ -932,7 +1322,7 @@
 
         /* Premium Box */
         .premium-box {
-            background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(0, 255, 136, 0.1));
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(0, 136, 255, 0.1));
             border: 2px solid var(--neon-purple);
             border-radius: 24px;
             overflow: hidden;
@@ -949,7 +1339,7 @@
             }
 
             50% {
-                box-shadow: 0 0 60px rgba(168, 85, 247, 0.5), 0 0 100px rgba(0, 255, 136, 0.2);
+                box-shadow: 0 0 60px rgba(168, 85, 247, 0.5), 0 0 100px rgba(0, 136, 255, 0.2);
             }
         }
 
@@ -1062,11 +1452,11 @@
             max-width: 800px;
             margin: 0 auto;
             overflow: hidden;
-            box-shadow: 0 0 50px rgba(0, 255, 136, 0.2);
+            box-shadow: 0 0 50px rgba(0, 136, 255, 0.2);
         }
 
         .terminal-header {
-            background: rgba(0, 255, 136, 0.1);
+            background: rgba(0, 136, 255, 0.1);
             padding: 12px 20px;
             display: flex;
             align-items: center;
@@ -1088,7 +1478,7 @@
         }
 
         .terminal-dot.green {
-            background: #00ff88;
+            background: #0088ff;
         }
 
         .terminal-body {
@@ -1273,7 +1663,7 @@
                 flex-direction: column;
                 padding: 20px;
                 gap: 0;
-                border-bottom: 1px solid rgba(0, 255, 136, 0.2);
+                border-bottom: 1px solid rgba(0, 136, 255, 0.2);
                 transform: translateY(-150%);
                 opacity: 0;
                 transition: all 0.3s ease;
@@ -1650,37 +2040,60 @@
                 <img src="assets/logo.png" alt="KR-CLI" class="logo-img">
                 <span class="logo-text">KR-CLI</span>
             </a>
-            <ul class="nav-menu" id="nav-menu">
-                <li><a href="#threats" class="nav-link">Amenazas</a></li>
-                <li><a href="#features" class="nav-link">Características</a></li>
-                <li><a href="#architecture" class="nav-link">Arquitectura</a></li>
-                <li><a href="#pricing" class="nav-link">Precios</a></li>
-                <li><a href="acceso.html" class="nav-link nav-cta">🚀 Acceder</a></li>
-            </ul>
-            <button class="nav-toggle" id="nav-toggle">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
+            <div style="position: relative;">
+                <button class="cyber-menu-btn" id="cyber-menu-btn" onclick="toggleCyberMenu()">
+                    <div class="cyber-menu-icon">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </button>
+                <div class="cyber-dropdown" id="cyber-dropdown">
+                    <a href="#threats" class="cyber-dropdown-item" onclick="closeCyberMenu()">🔴 Amenazas</a>
+                    <a href="#attacks" class="cyber-dropdown-item" onclick="closeCyberMenu()">⚔️ Vectores de Ataque</a>
+                    <a href="#features" class="cyber-dropdown-item" onclick="closeCyberMenu()">🛠️ Arsenal</a>
+                    <a href="#architecture" class="cyber-dropdown-item" onclick="closeCyberMenu()">⚙️ Arquitectura</a>
+                    <a href="#pricing" class="cyber-dropdown-item" onclick="closeCyberMenu()">💎 Precios</a>
+                    <a href="acceso.html" class="cyber-dropdown-cta">🚀 DESCARGAR GRATIS</a>
+                </div>
+            </div>
         </div>
     </nav>
+    <div class="header-separator"></div>
+
+    <!-- Cyber Alert Banner -->
+    <div class="cyber-alert-banner">
+        <div class="cyber-alert-container">
+            <div class="cyber-alert-glow"></div>
+            <div class="cyber-alert-content">
+                <span class="cyber-alert-icon">
+                    <span class="alert-pulse"></span>
+                    ⚠️
+                </span>
+                <span class="cyber-alert-prefix">[THREAT_MONITOR]</span>
+                <span class="cyber-alert-text" id="cyber-alert-text"></span>
+                <span class="cyber-alert-cursor">█</span>
+            </div>
+            <div class="cyber-alert-scanner"></div>
+        </div>
+    </div>
 
     <!-- Hero -->
     <section class="hero" id="hero">
         <div class="hero-content">
-            <div class="hero-badge">⚠️ +2.365 ATAQUES HOY EN LATINOAMÉRICA</div>
             <img src="assets/logo.png" alt="KR-CLI" class="hero-logo">
             <h1 class="hero-title">
                 <span class="hero-title-main">KR-CLI DOMINION</span>
-                <span class="hero-title-sub">EL PODER ESTÁ EN TUS MANOS</span>
+                <span class="hero-title-sub">EL CONOCIMIENTO ES PODER</span>
             </h1>
             <p class="hero-tagline">
                 Tu <strong>Centro de Operaciones de Ciberseguridad</strong> directamente en la terminal.<br>
-                El conocimiento es poder. Domina el arte del hacking ético con IA.
+                <em>Domina el arte del hacking ético con Inteligencia Artificial.</em><br>
+                <span style="color: var(--neon-purple);">Tú decides cómo usar este poder.</span>
             </p>
             <div class="hero-cta">
-                <a href="#install" class="btn btn-primary">⚡ Instalar Ahora</a>
-                <a href="#demo" class="btn btn-secondary">▶ Ver Demo</a>
+                <a href="acceso.html" class="btn btn-primary">⚡ PRUEBA GRATIS</a>
+                <a href="#attacks" class="btn btn-secondary">⚔️ Ver Ataques</a>
             </div>
             <div class="hero-stats">
                 <div class="stat">
@@ -1696,6 +2109,12 @@
                     <span class="stat-label">IA Activa</span>
                 </div>
             </div>
+            <p
+                style="margin-top: 30px; font-size: 0.75rem; color: rgba(255,255,255,0.4); max-width: 600px; margin-left: auto; margin-right: auto;">
+                ⚖️ <em>Esta herramienta está diseñada exclusivamente para fines éticos y profesionales en
+                    ciberseguridad.
+                    El usuario es el único responsable del uso que le dé a este conocimiento.</em>
+            </p>
         </div>
     </section>
 
@@ -1730,6 +2149,105 @@
                     <p style="color: rgba(255,255,255,0.5); font-size: 0.8rem;">Proyectado 2026</p>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <!-- Attack Vectors Section -->
+    <section class="section" id="attacks"
+        style="background: linear-gradient(180deg, rgba(168, 85, 247, 0.05) 0%, transparent 50%, rgba(239, 68, 68, 0.05) 100%);">
+        <div class="container">
+            <h2 class="section-title">⚔️ VECTORES DE ATAQUE</h2>
+            <p class="section-subtitle">Conoce las técnicas que usan los atacantes. El conocimiento es tu mejor defensa.
+            </p>
+            <div class="features-grid">
+                <!-- DDoS -->
+                <div class="feature-card" style="border-color: rgba(239, 68, 68, 0.3);">
+                    <div class="feature-icon">🌊</div>
+                    <h3 class="feature-title" style="color: var(--neon-red);">DDoS Attack</h3>
+                    <p class="feature-desc">
+                        <strong>Distributed Denial of Service.</strong> Saturación masiva de recursos mediante miles de
+                        solicitudes simultáneas desde múltiples orígenes. Colapsa servidores, redes y servicios
+                        haciéndolos inaccesibles. Vectores: UDP Flood, SYN Flood, HTTP Flood, Amplification attacks.
+                    </p>
+                    <span
+                        style="display: inline-block; margin-top: 10px; padding: 4px 10px; background: rgba(239, 68, 68, 0.2); border-radius: 12px; font-size: 0.7rem; color: var(--neon-red);">PELIGRO:
+                        CRÍTICO</span>
+                </div>
+
+                <!-- PDF Malicioso -->
+                <div class="feature-card" style="border-color: rgba(168, 85, 247, 0.3);">
+                    <div class="feature-icon">📄</div>
+                    <h3 class="feature-title" style="color: var(--neon-purple);">PDF Weaponizado</h3>
+                    <p class="feature-desc">
+                        <strong>Exploits embebidos en documentos.</strong> PDFs aparentemente legítimos que contienen
+                        JavaScript malicioso, exploits de buffer overflow o enlaces de phishing. Se activan al abrir
+                        el documento. Bypass de antivirus mediante ofuscación y técnicas de evasión.
+                    </p>
+                    <span
+                        style="display: inline-block; margin-top: 10px; padding: 4px 10px; background: rgba(168, 85, 247, 0.2); border-radius: 12px; font-size: 0.7rem; color: var(--neon-purple);">PELIGRO:
+                        ALTO</span>
+                </div>
+
+                <!-- Phishing -->
+                <div class="feature-card" style="border-color: rgba(0, 212, 255, 0.3);">
+                    <div class="feature-icon">🎣</div>
+                    <h3 class="feature-title" style="color: var(--neon-cyan);">Phishing Avanzado</h3>
+                    <p class="feature-desc">
+                        <strong>Ingeniería social automatizada.</strong> Réplicas exactas de sitios legítimos, emails
+                        spoofing con SPF bypass, y ataques de spear-phishing personalizados mediante OSINT.
+                        Credential harvesting en tiempo real con proxies inversos y MFA bypass.
+                    </p>
+                    <span
+                        style="display: inline-block; margin-top: 10px; padding: 4px 10px; background: rgba(0, 212, 255, 0.2); border-radius: 12px; font-size: 0.7rem; color: var(--neon-cyan);">PELIGRO:
+                        ALTO</span>
+                </div>
+
+                <!-- SQL Injection -->
+                <div class="feature-card" style="border-color: rgba(0, 136, 255, 0.3);">
+                    <div class="feature-icon">💉</div>
+                    <h3 class="feature-title" style="color: var(--neon-green);">SQL Injection</h3>
+                    <p class="feature-desc">
+                        <strong>Manipulación de bases de datos.</strong> Inyección de código SQL malicioso en
+                        formularios
+                        y parámetros. Permite extracción de datos, bypass de autenticación, escalación de privilegios
+                        y ejecución de comandos. Variantes: Blind SQLi, Time-based, Union-based, Error-based.
+                    </p>
+                    <span
+                        style="display: inline-block; margin-top: 10px; padding: 4px 10px; background: rgba(0, 136, 255, 0.2); border-radius: 12px; font-size: 0.7rem; color: var(--neon-green);">PELIGRO:
+                        CRÍTICO</span>
+                </div>
+
+                <!-- XSS -->
+                <div class="feature-card" style="border-color: rgba(251, 191, 36, 0.3);">
+                    <div class="feature-icon">🔥</div>
+                    <h3 class="feature-title" style="color: #fbbf24;">Cross-Site Scripting</h3>
+                    <p class="feature-desc">
+                        <strong>Inyección de scripts en navegador.</strong> Código JavaScript malicioso ejecutado en
+                        contexto de víctima. Robo de cookies/sesiones, keylogging, defacement, distribución de malware.
+                        Tipos: Reflected XSS, Stored XSS, DOM-based XSS, Blind XSS.
+                    </p>
+                    <span
+                        style="display: inline-block; margin-top: 10px; padding: 4px 10px; background: rgba(251, 191, 36, 0.2); border-radius: 12px; font-size: 0.7rem; color: #fbbf24;">PELIGRO:
+                        MEDIO-ALTO</span>
+                </div>
+
+                <!-- MITM -->
+                <div class="feature-card" style="border-color: rgba(239, 68, 68, 0.3);">
+                    <div class="feature-icon">👁️</div>
+                    <h3 class="feature-title" style="color: var(--neon-red);">Man-in-the-Middle</h3>
+                    <p class="feature-desc">
+                        <strong>Intercepción de comunicaciones.</strong> Posicionamiento entre víctima y servidor para
+                        capturar, modificar o inyectar tráfico. Técnicas: ARP Spoofing, DNS Poisoning, SSL Stripping,
+                        Evil Twin AP. Captura de credenciales, tokens y datos sensibles en tránsito.
+                    </p>
+                    <span
+                        style="display: inline-block; margin-top: 10px; padding: 4px 10px; background: rgba(239, 68, 68, 0.2); border-radius: 12px; font-size: 0.7rem; color: var(--neon-red);">PELIGRO:
+                        CRÍTICO</span>
+                </div>
+            </div>
+            <p style="text-align: center; margin-top: 40px; color: rgba(255,255,255,0.5); font-size: 0.85rem;">
+                🎓 <em>Aprende a identificar, prevenir y defenderte de estos ataques con KR-CLI DOMINION.</em>
+            </p>
         </div>
     </section>
 
@@ -2028,43 +2546,6 @@
         </div>
     </section>
 
-    <!-- Install -->
-    <section class="section install-section" id="install">
-        <div class="container">
-            <h2 class="section-title">⚡ INSTALACIÓN</h2>
-            <p class="section-subtitle">Un solo comando y estás dentro</p>
-            <div class="install-terminal">
-                <div class="terminal-header">
-                    <span class="terminal-dot red"></span>
-                    <span class="terminal-dot yellow"></span>
-                    <span class="terminal-dot green"></span>
-                </div>
-                <div class="terminal-body">
-                    <div class="terminal-line">
-                        <span class="terminal-prompt">┌──(kali㉿root)-[~]</span>
-                    </div>
-                    <div class="terminal-line">
-                        <span class="terminal-prompt">└─$ </span>
-                        <span class="terminal-command">pip install kr-cli-dominion</span>
-                    </div>
-                    <div class="terminal-line" style="color: rgba(255,255,255,0.5);">
-                        Installing kr-cli-dominion-6.0.0...
-                    </div>
-                    <div class="terminal-line" style="color: var(--neon-green);">
-                        ✓ Successfully installed kr-cli-dominion
-                    </div>
-                    <div class="terminal-line">
-                        <span class="terminal-prompt">└─$ </span>
-                        <span class="terminal-command">kr-clidn</span>
-                    </div>
-                    <div class="terminal-line" style="color: var(--neon-cyan);">
-                        🚀 Iniciando KR-CLI DOMINION...
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- Quote -->
     <section class="quote-section">
         <div class="container">
@@ -2093,6 +2574,86 @@
     </footer>
 
     <script src="js/main.js"></script>
+    <script>
+        // Cyber Menu Functions
+        function toggleCyberMenu() {
+            const btn = document.getElementById('cyber-menu-btn');
+            const dropdown = document.getElementById('cyber-dropdown');
+            btn.classList.toggle('active');
+            dropdown.classList.toggle('active');
+        }
+
+        function closeCyberMenu() {
+            const btn = document.getElementById('cyber-menu-btn');
+            const dropdown = document.getElementById('cyber-dropdown');
+            btn.classList.remove('active');
+            dropdown.classList.remove('active');
+        }
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function (e) {
+            const btn = document.getElementById('cyber-menu-btn');
+            const dropdown = document.getElementById('cyber-dropdown');
+            if (!btn.contains(e.target) && !dropdown.contains(e.target)) {
+                closeCyberMenu();
+            }
+        });
+
+        // Close menu on scroll
+        window.addEventListener('scroll', function () {
+            closeCyberMenu();
+        });
+
+        // Cyber Alert Typing Effect
+        const alertMessages = [
+            "+2,365 ATAQUES DETECTADOS HOY EN LATINOAMÉRICA",
+            "RANSOMWARE: +340% DE INCREMENTO EN 2025",
+            "3.4 BILLONES DE EMAILS DE PHISHING DIARIOS",
+            "97 VULNERABILIDADES ZERO-DAY EXPLOTADAS",
+            "$10.5 TRILLONES EN PÉRDIDAS PROYECTADAS 2026",
+            "NUEVO MALWARE DETECTADO CADA 4.2 SEGUNDOS",
+            "ATAQUES DDoS: +200% EN INFRAESTRUCTURA CRÍTICA"
+        ];
+
+        let currentMessageIndex = 0;
+        let currentCharIndex = 0;
+        let isDeleting = false;
+        const alertTextElement = document.getElementById('cyber-alert-text');
+
+        function typeAlertMessage() {
+            const currentMessage = alertMessages[currentMessageIndex];
+
+            if (!isDeleting) {
+                // Typing
+                alertTextElement.textContent = currentMessage.substring(0, currentCharIndex + 1);
+                currentCharIndex++;
+
+                if (currentCharIndex === currentMessage.length) {
+                    // Pause at end before deleting
+                    setTimeout(() => {
+                        isDeleting = true;
+                        typeAlertMessage();
+                    }, 3000);
+                    return;
+                }
+            } else {
+                // Deleting
+                alertTextElement.textContent = currentMessage.substring(0, currentCharIndex - 1);
+                currentCharIndex--;
+
+                if (currentCharIndex === 0) {
+                    isDeleting = false;
+                    currentMessageIndex = (currentMessageIndex + 1) % alertMessages.length;
+                }
+            }
+
+            const typingSpeed = isDeleting ? 30 : 50;
+            setTimeout(typeAlertMessage, typingSpeed);
+        }
+
+        // Start typing effect
+        typeAlertMessage();
+    </script>
 </body>
 
 </html>

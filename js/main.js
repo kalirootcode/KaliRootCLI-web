@@ -16,20 +16,22 @@ document.addEventListener('DOMContentLoaded', () => {
  * Initialize navbar behavior
  */
 function initNavbar() {
-    const navbar = document.getElementById('navbar');
+    const navbar = document.querySelector('.navbar');
     const navToggle = document.getElementById('nav-toggle');
     const navMenu = document.getElementById('nav-menu');
 
-    // Scroll effect
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
-        }
-    });
+    // Scroll effect - only if navbar exists
+    if (navbar) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+    }
 
-    // Mobile toggle
+    // Mobile toggle (legacy support)
     if (navToggle && navMenu) {
         navToggle.addEventListener('click', () => {
             navToggle.classList.toggle('active');
@@ -53,7 +55,7 @@ function initNavbar() {
                 e.preventDefault();
                 const target = document.querySelector(href);
                 if (target) {
-                    const offset = navbar.offsetHeight + 20;
+                    const offset = navbar ? navbar.offsetHeight + 20 : 100;
                     const targetPosition = target.offsetTop - offset;
                     window.scrollTo({
                         top: targetPosition,

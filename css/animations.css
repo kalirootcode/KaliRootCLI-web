@@ -298,21 +298,10 @@
     }
 }
 
-/* ===== Scan Line Effect ===== */
+/* ===== Scan Line Effect (DISABLED) ===== */
 .scanlines::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: repeating-linear-gradient(0deg,
-            transparent,
-            transparent 2px,
-            rgba(0, 0, 0, 0.1) 2px,
-            rgba(0, 0, 0, 0.1) 4px);
-    pointer-events: none;
-    animation: scanlines 8s linear infinite;
+    display: none;
+    /* Disabled - no animated lines */
 }
 
 @keyframes scanlines {
@@ -523,28 +512,15 @@
     }
 }
 
-/* ===== Matrix Rain Effect (for backgrounds) ===== */
+/* ===== Matrix Rain Effect (DISABLED - Pure black background) ===== */
 .matrix-bg {
     position: relative;
     overflow: hidden;
 }
 
 .matrix-bg::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-        linear-gradient(0deg, transparent 24%,
-            rgba(0, 255, 255, 0.05) 25%,
-            rgba(0, 255, 255, 0.05) 26%,
-            transparent 27%,
-            transparent 74%,
-            rgba(0, 255, 255, 0.05) 75%,
-            rgba(0, 255, 255, 0.05) 76%,
-            transparent 77%,
-            transparent);
-    background-size: 50px 50px;
-    animation: matrix-fall 20s linear infinite;
+    display: none;
+    /* Disabled - no animated lines */
 }
 
 @keyframes matrix-fall {

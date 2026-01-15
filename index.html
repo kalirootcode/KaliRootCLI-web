@@ -287,9 +287,11 @@
             background: linear-gradient(90deg, rgba(239, 68, 68, 0.1) 0%, rgba(0, 0, 0, 0.95) 50%, rgba(239, 68, 68, 0.1) 100%);
             border-top: 1px solid rgba(239, 68, 68, 0.3);
             border-bottom: 1px solid rgba(239, 68, 68, 0.3);
-            padding: 12px 0;
+            padding: 6px 0;
+            /* Minimized padding */
+            line-height: 1.2;
             position: relative;
-            margin-top: 76px;
+            margin-top: 78px;
             /* Space for fixed navbar */
             overflow: hidden;
         }
@@ -597,8 +599,8 @@
             align-items: center;
             justify-content: center;
             position: relative;
-            padding-top: 40px;
-            /* Reduced since banner is no longer fixed */
+            padding-top: 10px;
+            /* Reduced to help equal spacing */
         }
 
         .hero-content {
@@ -633,8 +635,8 @@
         .hero-logo {
             width: 150px;
             height: 150px;
-            margin: 30px auto 30px auto;
-            /* Equal spacing top and bottom */
+            margin: 20px auto 30px auto;
+            /* 20px + 10px (hero padding) = 30px Top. 30px Bottom. */
             display: block;
             animation: float 3s ease-in-out infinite;
             filter: drop-shadow(0 0 30px rgba(0, 136, 255, 0.5));
@@ -1738,8 +1740,8 @@
             .hero-logo {
                 width: 200px;
                 height: 200px;
-                margin: 30px auto 30px auto;
-                /* Equal spacing */
+                margin: 20px auto 30px auto;
+                /* Consistent 30px spacing */
                 display: block;
             }
 
@@ -2006,8 +2008,8 @@
             .hero-logo {
                 width: 200px;
                 height: 200px;
-                margin: 30px auto 30px auto;
-                /* Equal spacing */
+                margin: 20px auto 30px auto;
+                /* Consistent 30px spacing */
                 display: block;
             }
 

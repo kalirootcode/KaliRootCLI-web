@@ -24,9 +24,251 @@
             --neon-red: #ef4444;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             background: #000000;
             min-height: 100vh;
+        }
+
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1001;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 136, 255, 0.2);
+            padding: 15px 0;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .nav-logo img {
+            width: 45px;
+            height: 45px;
+        }
+
+        .logo-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #0088ff, #00d4ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Cyber Menu Button */
+        .cyber-menu-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background: transparent;
+            border: 2px solid var(--neon-green);
+            border-radius: 8px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .cyber-menu-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 136, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .cyber-menu-btn:hover::before {
+            left: 100%;
+        }
+
+        .cyber-menu-btn:hover {
+            box-shadow: 0 0 20px rgba(0, 136, 255, 0.5);
+        }
+
+        .cyber-menu-icon {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            z-index: 1;
+        }
+
+        .cyber-menu-icon span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: var(--neon-green);
+            transition: all 0.3s ease;
+        }
+
+        .cyber-menu-btn.active .cyber-menu-icon span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .cyber-menu-btn.active .cyber-menu-icon span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .cyber-menu-btn.active .cyber-menu-icon span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        /* Cyber Dropdown Menu */
+        .cyber-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 30px;
+            width: 280px;
+            background: rgba(0, 0, 0, 0.98);
+            border: 1px solid rgba(0, 136, 255, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            box-shadow: 0 20px 50px rgba(0, 136, 255, 0.15);
+        }
+
+        .cyber-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(10px);
+        }
+
+        .cyber-dropdown-header {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--neon-green);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0, 136, 255, 0.2);
+        }
+
+        .cyber-dropdown-item {
+            display: block;
+            padding: 12px 15px;
+            color: #e2e8f0;
+            text-decoration: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .cyber-dropdown-item::before {
+            content: '>';
+            position: absolute;
+            left: 0;
+            opacity: 0;
+            color: var(--neon-green);
+            transition: all 0.2s ease;
+        }
+
+        .cyber-dropdown-item:hover {
+            background: rgba(0, 136, 255, 0.1);
+            color: var(--neon-cyan);
+            padding-left: 25px;
+        }
+
+        .cyber-dropdown-item:hover::before {
+            opacity: 1;
+            left: 10px;
+        }
+
+        .cyber-dropdown-cta {
+            display: block;
+            margin-top: 15px;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #0088ff, #00d4ff);
+            color: #000;
+            text-align: center;
+            text-decoration: none;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .cyber-dropdown-cta:hover {
+            box-shadow: 0 0 25px rgba(0, 136, 255, 0.6);
+            transform: scale(1.02);
+        }
+
+        /* Header Separator Animation */
+        .header-separator {
+            position: fixed;
+            top: 76px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent 0%, rgba(0, 136, 255, 0.3) 20%, rgba(0, 212, 255, 0.5) 50%, rgba(0, 136, 255, 0.3) 80%, transparent 100%);
+            z-index: 1000;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.3), 0 0 30px rgba(0, 136, 255, 0.15);
+            animation: header-glow 3s ease-in-out infinite;
+        }
+
+        .header-separator::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 30%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: light-sweep 4s linear infinite;
+        }
+
+        @keyframes header-glow {
+
+            0%,
+            100% {
+                opacity: 0.7;
+                box-shadow: 0 0 10px rgba(0, 212, 255, 0.2), 0 0 20px rgba(0, 136, 255, 0.1);
+            }
+
+            50% {
+                opacity: 1;
+                box-shadow: 0 0 20px rgba(0, 212, 255, 0.4), 0 0 40px rgba(0, 136, 255, 0.2);
+            }
+        }
+
+        @keyframes light-sweep {
+            0% {
+                left: -30%;
+            }
+
+            100% {
+                left: 130%;
+            }
         }
 
         .install-page {
@@ -403,20 +645,31 @@
 
 <body>
     <!-- Navbar -->
-    <nav class="navbar" style="background: #000; border-bottom: 1px solid rgba(0, 136, 255, 0.2);">
-        <div class="nav-container"
-            style="max-width: 1200px; margin: 0 auto; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;">
-            <a href="index.html" class="nav-logo"
-                style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
-                <img src="assets/logo.png" alt="KR-CLI" style="width: 40px; height: 40px;">
-                <span
-                    style="font-family: 'Orbitron', sans-serif; font-size: 1.3rem; background: linear-gradient(135deg, #0088ff, #00d4ff); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">KR-CLI</span>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <img src="assets/logo.png" alt="KR-CLI">
+                <span class="logo-text">KR-CLI</span>
             </a>
-            <a href="index.html"
-                style="padding: 10px 25px; background: transparent; border: 1px solid #0088ff; color: #0088ff; text-decoration: none; border-radius: 25px; font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 0.9rem; transition: all 0.3s;">←
-                Inicio</a>
+            <button class="cyber-menu-btn" id="cyber-menu-btn" onclick="toggleCyberMenu()">
+                <div class="cyber-menu-icon">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </button>
+            <div class="cyber-dropdown" id="cyber-dropdown">
+                <div class="cyber-dropdown-header">> SYSTEM_MENU_INITIALIZED</div>
+                <a href="index.html#hero" class="cyber-dropdown-item" onclick="closeCyberMenu()">🏠 Inicio</a>
+                <a href="index.html#threats" class="cyber-dropdown-item" onclick="closeCyberMenu()">🔴 Amenazas</a>
+                <a href="index.html#attacks" class="cyber-dropdown-item" onclick="closeCyberMenu()">⚔️ Vectores de
+                    Ataque</a>
+                <a href="index.html#features" class="cyber-dropdown-item" onclick="closeCyberMenu()">🛠️ Arsenal</a>
+                <a href="index.html#pricing" class="cyber-dropdown-item" onclick="closeCyberMenu()">💎 Precios</a>
+            </div>
         </div>
     </nav>
+    <div class="header-separator"></div>
 
     <main class="install-page">
         <header class="install-header">
@@ -875,6 +1128,35 @@
 
         // Change quote every 5 seconds
         setInterval(displayRandomQuote, 5000);
+
+        // Cyber Menu Functions
+        function toggleCyberMenu() {
+            const btn = document.getElementById('cyber-menu-btn');
+            const dropdown = document.getElementById('cyber-dropdown');
+            btn.classList.toggle('active');
+            dropdown.classList.toggle('active');
+        }
+
+        function closeCyberMenu() {
+            const btn = document.getElementById('cyber-menu-btn');
+            const dropdown = document.getElementById('cyber-dropdown');
+            btn.classList.remove('active');
+            dropdown.classList.remove('active');
+        }
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function (e) {
+            const btn = document.getElementById('cyber-menu-btn');
+            const dropdown = document.getElementById('cyber-dropdown');
+            if (!btn.contains(e.target) && !dropdown.contains(e.target)) {
+                closeCyberMenu();
+            }
+        });
+
+        // Close menu on scroll
+        window.addEventListener('scroll', function () {
+            closeCyberMenu();
+        });
     </script>
 </body>
 

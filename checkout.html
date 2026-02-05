@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Completa tu compra de forma segura con criptomonedas.">
+    <title>Checkout | KR Digital Store</title>
+
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@700;900&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #7C3AED;
+            --primary-light: #A78BFA;
+            --primary-dark: #5B21B6;
+            --secondary: #06B6D4;
+            --accent-pink: #EC4899;
+            --accent-green: #10B981;
+            --accent-orange: #F97316;
+            --accent-yellow: #FBBF24;
+            --bg-dark: #0F0F1A;
+            --bg-card: #1A1A2E;
+            --bg-input: #252542;
+            --text-primary: #FFFFFF;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-muted: rgba(255, 255, 255, 0.5);
+            --border-color: rgba(124, 58, 237, 0.2);
+            --error: #EF4444;
+            --success: #10B981;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .checkout-header {
+            background: rgba(15, 15, 26, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo img {
+            width: 36px;
+            height: 36px;
+        }
+
+        .logo span {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary-light), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .secure-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent-green);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* Main Layout */
+        .checkout-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 40px;
+        }
+
+        /* Checkout Form Section */
+        .checkout-main {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .checkout-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 30px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .section-number {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        /* User Info */
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: var(--bg-input);
+            border-radius: 12px;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .user-details h4 {
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .user-details p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .login-prompt {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .login-prompt p {
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+        }
+
+        .btn-login {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: var(--primary);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .btn-login:hover {
+            background: var(--primary-light);
+        }
+
+        /* Crypto Selection */
+        .crypto-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+        }
+
+        .crypto-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 20px 15px;
+            background: var(--bg-input);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .crypto-option:hover {
+            border-color: var(--border-color);
+            background: rgba(124, 58, 237, 0.1);
+        }
+
+        .crypto-option.selected {
+            border-color: var(--primary);
+            background: rgba(124, 58, 237, 0.15);
+        }
+
+        .crypto-option input {
+            display: none;
+        }
+
+        .crypto-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .crypto-icon.btc {
+            background: #F7931A;
+        }
+
+        .crypto-icon.eth {
+            background: #627EEA;
+        }
+
+        .crypto-icon.usdt {
+            background: #26A17B;
+        }
+
+        .crypto-icon.usdc {
+            background: #2775CA;
+        }
+
+        .crypto-icon.ltc {
+            background: #345D9D;
+        }
+
+        .crypto-icon.sol {
+            background: linear-gradient(135deg, #9945FF, #14F195);
+        }
+
+        .crypto-icon.trx {
+            background: #EF0027;
+        }
+
+        .crypto-icon.bnb {
+            background: #F3BA2F;
+        }
+
+        .crypto-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .crypto-symbol {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* Coupon */
+        .coupon-form {
+            display: flex;
+            gap: 10px;
+        }
+
+        .coupon-input {
+            flex: 1;
+            padding: 14px 16px;
+            background: var(--bg-input);
+            border: 2px solid transparent;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            text-transform: uppercase;
+        }
+
+        .coupon-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .btn-apply {
+            padding: 14px 24px;
+            background: transparent;
+            border: 2px solid var(--primary);
+            border-radius: 10px;
+            color: var(--primary-light);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-apply:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .coupon-result {
+            margin-top: 15px;
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .coupon-result.success {
+            display: flex;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #6EE7B7;
+        }
+
+        .coupon-result.error {
+            display: flex;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #FCA5A5;
+        }
+
+        /* Order Summary Sidebar */
+        .order-summary {
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+
+        .summary-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 30px;
+        }
+
+        .summary-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .summary-items {
+            margin-bottom: 25px;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .item-info {
+            flex: 1;
+        }
+
+        .item-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .item-type {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .item-price {
+            font-weight: 700;
+            color: var(--accent-green);
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            font-size: 0.95rem;
+        }
+
+        .summary-row.discount {
+            color: var(--accent-green);
+        }
+
+        .summary-row.total {
+            padding-top: 20px;
+            margin-top: 10px;
+            border-top: 2px solid var(--border-color);
+            font-size: 1.2rem;
+            font-weight: 800;
+        }
+
+        .summary-row.total .value {
+            color: var(--accent-green);
+        }
+
+        .crypto-equivalent {
+            text-align: center;
+            padding: 15px;
+            background: var(--bg-input);
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .crypto-equivalent .label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+        }
+
+        .crypto-equivalent .value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--accent-orange);
+        }
+
+        .btn-pay {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--accent-green), #059669);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-family: inherit;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-pay:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-pay:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-pay .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        .btn-pay.loading .btn-text {
+            display: none;
+        }
+
+        .btn-pay.loading .spinner {
+            display: block;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .payment-note {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .payment-note a {
+            color: var(--primary-light);
+        }
+
+        /* Payment Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-header h2 {
+            font-size: 1.3rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: 30px;
+            text-align: center;
+        }
+
+        .payment-qr {
+            width: 200px;
+            height: 200px;
+            background: white;
+            border-radius: 12px;
+            margin: 0 auto 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .payment-qr img {
+            width: 180px;
+            height: 180px;
+        }
+
+        .payment-address {
+            background: var(--bg-input);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .payment-address label {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .address-copy {
+            display: flex;
+            gap: 10px;
+        }
+
+        .address-copy input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-family: monospace;
+            font-size: 0.85rem;
+        }
+
+        .btn-copy {
+            padding: 8px 16px;
+            background: var(--primary);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+
+        .payment-amount {
+            background: rgba(249, 115, 22, 0.15);
+            border: 1px solid rgba(249, 115, 22, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .payment-amount .label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+        }
+
+        .payment-amount .value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--accent-orange);
+        }
+
+        .payment-status {
+            padding: 15px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .payment-status.waiting {
+            background: rgba(251, 191, 36, 0.15);
+            color: var(--accent-yellow);
+        }
+
+        .payment-status.confirmed {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--accent-green);
+        }
+
+        .payment-status .pulse {
+            width: 10px;
+            height: 10px;
+            background: currentColor;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.5;
+                transform: scale(1.2);
+            }
+        }
+
+        /* Empty Cart */
+        .empty-cart {
+            text-align: center;
+            padding: 60px 30px;
+        }
+
+        .empty-cart .icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        .empty-cart h3 {
+            margin-bottom: 10px;
+        }
+
+        .empty-cart p {
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .checkout-container {
+                grid-template-columns: 1fr;
+            }
+
+            .order-summary {
+                position: static;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="checkout-header">
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <img src="assets/logo.png" alt="KR Digital">
+                <span>KR DIGITAL</span>
+            </a>
+            <div class="secure-badge">
+                🔒 Pago Seguro con Crypto
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="checkout-container">
+        <!-- Checkout Form -->
+        <div class="checkout-main">
+            <!-- Account Section -->
+            <section class="checkout-section">
+                <div class="section-header">
+                    <span class="section-number">1</span>
+                    <h2 class="section-title">Tu Cuenta</h2>
+                </div>
+
+                <div id="account-content">
+                    <div class="login-prompt">
+                        <p>Cargando información de cuenta...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Crypto Selection -->
+            <section class="checkout-section">
+                <div class="section-header">
+                    <span class="section-number">2</span>
+                    <h2 class="section-title">Elige tu Criptomoneda</h2>
+                </div>
+
+                <div class="crypto-grid" id="crypto-grid">
+                    <label class="crypto-option selected">
+                        <input type="radio" name="crypto" value="btc" checked>
+                        <div class="crypto-icon btc">₿</div>
+                        <span class="crypto-name">Bitcoin</span>
+                        <span class="crypto-symbol">BTC</span>
+                    </label>
+
+                    <label class="crypto-option">
+                        <input type="radio" name="crypto" value="eth">
+                        <div class="crypto-icon eth">Ξ</div>
+                        <span class="crypto-name">Ethereum</span>
+                        <span class="crypto-symbol">ETH</span>
+                    </label>
+
+                    <label class="crypto-option">
+                        <input type="radio" name="crypto" value="usdttrc20">
+                        <div class="crypto-icon usdt">₮</div>
+                        <span class="crypto-name">Tether</span>
+                        <span class="crypto-symbol">USDT TRC20</span>
+                    </label>
+
+                    <label class="crypto-option">
+                        <input type="radio" name="crypto" value="usdterc20">
+                        <div class="crypto-icon usdt">₮</div>
+                        <span class="crypto-name">Tether</span>
+                        <span class="crypto-symbol">USDT ERC20</span>
+                    </label>
+
+                    <label class="crypto-option">
+                        <input type="radio" name="crypto" value="ltc">
+                        <div class="crypto-icon ltc">Ł</div>
+                        <span class="crypto-name">Litecoin</span>
+                        <span class="crypto-symbol">LTC</span>
+                    </label>
+
+                    <label class="crypto-option">
+                        <input type="radio" name="crypto" value="sol">
+                        <div class="crypto-icon sol">◎</div>
+                        <span class="crypto-name">Solana</span>
+                        <span class="crypto-symbol">SOL</span>
+                    </label>
+
+                    <label class="crypto-option">
+                        <input type="radio" name="crypto" value="trx">
+                        <div class="crypto-icon trx">T</div>
+                        <span class="crypto-name">Tron</span>
+                        <span class="crypto-symbol">TRX</span>
+                    </label>
+
+                    <label class="crypto-option">
+                        <input type="radio" name="crypto" value="bnbbsc">
+                        <div class="crypto-icon bnb">B</div>
+                        <span class="crypto-name">BNB</span>
+                        <span class="crypto-symbol">BSC</span>
+                    </label>
+                </div>
+            </section>
+
+            <!-- Coupon Section -->
+            <section class="checkout-section">
+                <div class="section-header">
+                    <span class="section-number">3</span>
+                    <h2 class="section-title">Cupón de Descuento</h2>
+                </div>
+
+                <div class="coupon-form">
+                    <input type="text" class="coupon-input" id="coupon-input" placeholder="CÓDIGO DE CUPÓN">
+                    <button type="button" class="btn-apply" onclick="applyCoupon()">Aplicar</button>
+                </div>
+                <div class="coupon-result" id="coupon-result"></div>
+            </section>
+        </div>
+
+        <!-- Order Summary -->
+        <aside class="order-summary">
+            <div class="summary-card">
+                <h2 class="summary-title">Resumen de Pedido</h2>
+
+                <div class="summary-items" id="summary-items">
+                    <!-- Items loaded dynamically -->
+                </div>
+
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span id="subtotal">$0.00</span>
+                </div>
+
+                <div class="summary-row discount" id="discount-row" style="display: none;">
+                    <span>Descuento</span>
+                    <span id="discount-amount">-$0.00</span>
+                </div>
+
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <span class="value" id="total">$0.00</span>
+                </div>
+
+                <div class="crypto-equivalent" id="crypto-equivalent">
+                    <div class="label">Equivalente en BTC</div>
+                    <div class="value" id="crypto-amount">~ 0.00000000 BTC</div>
+                </div>
+
+                <button class="btn-pay" id="btn-pay" onclick="initiatePayment()" disabled>
+                    <span class="btn-text">🔐 Pagar con Crypto</span>
+                    <div class="spinner"></div>
+                </button>
+
+                <p class="payment-note">
+                    Procesado por <a href="https://nowpayments.io" target="_blank">NOWPayments</a>
+                </p>
+            </div>
+        </aside>
+    </main>
+
+    <!-- Payment Modal -->
+    <div class="modal-overlay" id="payment-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>💰 Completar Pago</h2>
+                <button class="modal-close" onclick="closePaymentModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="payment-qr" id="payment-qr">
+                    <span style="color: #666;">Cargando QR...</span>
+                </div>
+
+                <div class="payment-address">
+                    <label>Enviar a esta dirección:</label>
+                    <div class="address-copy">
+                        <input type="text" id="payment-address" readonly value="Generando...">
+                        <button class="btn-copy" onclick="copyAddress()">Copiar</button>
+                    </div>
+                </div>
+
+                <div class="payment-amount">
+                    <div class="label">Monto exacto a enviar:</div>
+                    <div class="value" id="modal-crypto-amount">0.00000000 BTC</div>
+                </div>
+
+                <div class="payment-status waiting" id="payment-status">
+                    <div class="pulse"></div>
+                    <span>Esperando pago...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/supabase-client.js"></script>
+    <script>
+        // NOWPayments Configuration - Uses global CONFIG
+        const NOWPAYMENTS_API_KEY = CONFIG.NOWPAYMENTS_API_KEY;
+        const NOWPAYMENTS_API_URL = CONFIG.NOWPAYMENTS_API_URL;
+
+        // State
+        let cart = [];
+        let currentUser = null;
+        let selectedCrypto = 'btc';
+        let subtotal = 0;
+        let discount = 0;
+        let total = 0;
+        let currentPayment = null;
+        let appliedCoupon = null;
+
+        // Initialize
+        async function init() {
+            loadCart();
+            await checkAuth();
+            setupCryptoSelection();
+            updateSummary();
+        }
+
+        // Load cart from localStorage
+        function loadCart() {
+            const saved = localStorage.getItem('kr_cart');
+            if (saved) {
+                cart = JSON.parse(saved);
+            }
+
+            if (cart.length === 0) {
+                showEmptyCart();
+                return;
+            }
+
+            renderCartItems();
+        }
+
+        // Show empty cart message
+        function showEmptyCart() {
+            document.querySelector('.checkout-main').innerHTML = `
+                <div class="checkout-section">
+                    <div class="empty-cart">
+                        <div class="icon">🛒</div>
+                        <h3>Tu carrito está vacío</h3>
+                        <p>Añade productos antes de proceder al pago</p>
+                        <a href="tienda.html" class="btn-login">Ir a la Tienda</a>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Check authentication
+        async function checkAuth() {
+            try {
+                await window.KRSupabase.init();
+                const session = await window.KRSupabase.getSession();
+
+                if (session?.user) {
+                    currentUser = session.user;
+                    const userData = await window.KRSupabase.getUserData(currentUser.id);
+
+                    document.getElementById('account-content').innerHTML = `
+                        <div class="user-info">
+                            <div class="user-avatar">👤</div>
+                            <div class="user-details">
+                                <h4>${userData?.username || currentUser.email.split('@')[0]}</h4>
+                                <p>${currentUser.email}</p>
+                            </div>
+                        </div>
+                    `;
+
+                    document.getElementById('btn-pay').disabled = cart.length === 0;
+                } else {
+                    showLoginPrompt();
+                }
+            } catch (e) {
+                showLoginPrompt();
+            }
+        }
+
+        // Show login prompt
+        function showLoginPrompt() {
+            document.getElementById('account-content').innerHTML = `
+                <div class="login-prompt">
+                    <p>Inicia sesión para completar tu compra</p>
+                    <a href="login.html?redirect=checkout.html" class="btn-login">
+                        🔐 Iniciar Sesión
+                    </a>
+                </div>
+            `;
+        }
+
+        // Render cart items
+        function renderCartItems() {
+            const container = document.getElementById('summary-items');
+            container.innerHTML = cart.map(item => `
+                <div class="summary-item">
+                    <div class="item-info">
+                        <div class="item-name">${item.name}</div>
+                        <div class="item-type">Digital</div>
+                    </div>
+                    <div class="item-price">$${item.price.toFixed(2)}</div>
+                </div>
+            `).join('');
+        }
+
+        // Crypto selection
+        function setupCryptoSelection() {
+            const options = document.querySelectorAll('.crypto-option');
+            options.forEach(option => {
+                option.addEventListener('click', () => {
+                    options.forEach(o => o.classList.remove('selected'));
+                    option.classList.add('selected');
+                    selectedCrypto = option.querySelector('input').value;
+                    updateCryptoEquivalent();
+                });
+            });
+        }
+
+        // Update summary
+        function updateSummary() {
+            subtotal = cart.reduce((sum, item) => sum + item.price, 0);
+            total = subtotal - discount;
+
+            document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
+            document.getElementById('total').textContent = `$${total.toFixed(2)}`;
+
+            updateCryptoEquivalent();
+        }
+
+        // Get crypto price and update equivalent
+        async function updateCryptoEquivalent() {
+            const cryptoNames = {
+                btc: 'BTC',
+                eth: 'ETH',
+                usdttrc20: 'USDT',
+                usdterc20: 'USDT',
+                ltc: 'LTC',
+                sol: 'SOL',
+                trx: 'TRX',
+                bnbbsc: 'BNB'
+            };
+
+            try {
+                // Use NOWPayments estimate endpoint
+                const response = await fetch(`${NOWPAYMENTS_API_URL}/estimate?amount=${total}&currency_from=usd&currency_to=${selectedCrypto}`, {
+                    headers: {
+                        'x-api-key': NOWPAYMENTS_API_KEY
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('crypto-amount').textContent =
+                        `~ ${data.estimated_amount.toFixed(8)} ${cryptoNames[selectedCrypto]}`;
+                } else {
+                    // Fallback estimation
+                    document.getElementById('crypto-amount').textContent =
+                        `~ Calculando ${cryptoNames[selectedCrypto]}...`;
+                }
+            } catch (error) {
+                console.error('Price fetch error:', error);
+            }
+        }
+
+        // Apply coupon
+        async function applyCoupon() {
+            const code = document.getElementById('coupon-input').value.trim();
+            if (!code) return;
+
+            const resultDiv = document.getElementById('coupon-result');
+
+            try {
+                const result = await window.KRSupabase.validateCoupon(code, subtotal);
+
+                if (result.valid) {
+                    appliedCoupon = result.coupon;
+                    discount = result.discount;
+
+                    resultDiv.className = 'coupon-result success';
+                    resultDiv.innerHTML = `✅ ¡Cupón aplicado! Ahorraste $${discount.toFixed(2)}`;
+
+                    document.getElementById('discount-row').style.display = 'flex';
+                    document.getElementById('discount-amount').textContent = `-$${discount.toFixed(2)}`;
+
+                    updateSummary();
+                } else {
+                    resultDiv.className = 'coupon-result error';
+                    resultDiv.innerHTML = `❌ ${result.error}`;
+                }
+            } catch (error) {
+                resultDiv.className = 'coupon-result error';
+                resultDiv.innerHTML = '❌ Error al validar cupón';
+            }
+        }
+
+        // Initiate payment with NOWPayments
+        async function initiatePayment() {
+            if (!currentUser || cart.length === 0) return;
+
+            const btn = document.getElementById('btn-pay');
+            btn.classList.add('loading');
+            btn.disabled = true;
+
+            try {
+                // Create order in our database first
+                const items = cart.map(item => ({
+                    product_id: item.id,
+                    name: item.name,
+                    slug: item.slug || item.id,
+                    price: item.price,
+                    quantity: 1
+                }));
+
+                const orderResult = await window.KRSupabase.createOrder(
+                    currentUser.id,
+                    currentUser.email,
+                    items,
+                    total,
+                    { payment_method: 'crypto', currency: selectedCrypto }
+                );
+
+                if (!orderResult.success) {
+                    throw new Error('Failed to create order');
+                }
+
+                // Create NOWPayments invoice
+                const paymentResponse = await fetch(`${NOWPAYMENTS_API_URL}/payment`, {
+                    method: 'POST',
+                    headers: {
+                        'x-api-key': NOWPAYMENTS_API_KEY,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        price_amount: total,
+                        price_currency: 'usd',
+                        pay_currency: selectedCrypto,
+                        order_id: orderResult.order.id,
+                        order_description: `KR Digital Store - Order #${orderResult.order.order_number}`,
+                        ipn_callback_url: `${window.location.origin}/api/nowpayments-webhook`,
+                        success_url: `${window.location.origin}/success.html?order=${orderResult.order.id}`,
+                        cancel_url: `${window.location.origin}/checkout.html`
+                    })
+                });
+
+                if (!paymentResponse.ok) {
+                    throw new Error('Failed to create payment');
+                }
+
+                currentPayment = await paymentResponse.json();
+
+                // Show payment modal
+                showPaymentModal(currentPayment);
+
+                // Start polling for payment status
+                pollPaymentStatus(currentPayment.payment_id);
+
+            } catch (error) {
+                console.error('Payment error:', error);
+                alert('Error al iniciar el pago. Por favor intenta de nuevo.');
+            } finally {
+                btn.classList.remove('loading');
+                btn.disabled = false;
+            }
+        }
+
+        // Show payment modal
+        function showPaymentModal(payment) {
+            const modal = document.getElementById('payment-modal');
+
+            // Generate QR code URL (using a service or NOWPayments QR)
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(payment.pay_address)}`;
+
+            document.getElementById('payment-qr').innerHTML = `<img src="${qrUrl}" alt="QR Code">`;
+            document.getElementById('payment-address').value = payment.pay_address;
+            document.getElementById('modal-crypto-amount').textContent =
+                `${payment.pay_amount} ${payment.pay_currency.toUpperCase()}`;
+
+            modal.classList.add('open');
+        }
+
+        // Close payment modal
+        function closePaymentModal() {
+            document.getElementById('payment-modal').classList.remove('open');
+        }
+
+        // Copy address
+        function copyAddress() {
+            const input = document.getElementById('payment-address');
+            input.select();
+            document.execCommand('copy');
+
+            const btn = event.target;
+            btn.textContent = '✓ Copiado';
+            setTimeout(() => btn.textContent = 'Copiar', 2000);
+        }
+
+        // Poll payment status
+        async function pollPaymentStatus(paymentId) {
+            const checkStatus = async () => {
+                try {
+                    const response = await fetch(`${NOWPAYMENTS_API_URL}/payment/${paymentId}`, {
+                        headers: {
+                            'x-api-key': NOWPAYMENTS_API_KEY
+                        }
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+
+                        const statusDiv = document.getElementById('payment-status');
+
+                        switch (data.payment_status) {
+                            case 'waiting':
+                                statusDiv.innerHTML = '<div class="pulse"></div><span>Esperando pago...</span>';
+                                break;
+                            case 'confirming':
+                                statusDiv.innerHTML = '<div class="pulse"></div><span>Confirmando transacción...</span>';
+                                break;
+                            case 'confirmed':
+                            case 'finished':
+                                statusDiv.className = 'payment-status confirmed';
+                                statusDiv.innerHTML = '✅ ¡Pago confirmado!';
+
+                                // Complete order
+                                await window.KRSupabase.completeOrder(
+                                    currentPayment.order_id,
+                                    currentUser.id,
+                                    paymentId
+                                );
+
+                                // Clear cart
+                                localStorage.removeItem('kr_cart');
+
+                                // Redirect to success
+                                setTimeout(() => {
+                                    window.location.href = `success.html?order=${currentPayment.order_id}`;
+                                }, 2000);
+
+                                return; // Stop polling
+                            case 'failed':
+                            case 'expired':
+                                statusDiv.className = 'payment-status error';
+                                statusDiv.innerHTML = '❌ Pago fallido o expirado';
+                                return; // Stop polling
+                        }
+
+                        // Continue polling
+                        setTimeout(checkStatus, 10000); // Check every 10 seconds
+                    }
+                } catch (error) {
+                    console.error('Status check error:', error);
+                    setTimeout(checkStatus, 15000);
+                }
+            };
+
+            checkStatus();
+        }
+
+        // Initialize on load
+        init();
+    </script>
+</body>
+
+</html>

@@ -54,70 +54,25 @@ async function checkSession() {
 }
 
 /**
- * Show session expired message
+ * Show session expired message and redirect to login
  */
 function showSessionExpired() {
-    // Clear session
-    sessionStorage.removeItem('kr_user');
+    // Clear all session data
+    sessionStorage.clear();
+    localStorage.removeItem('kr_user');
 
-    // Show overlay message
-    const overlay = document.createElement('div');
-    overlay.id = 'session-expired-overlay';
-    overlay.innerHTML = `
-        <div style="
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.95);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
-            padding: 20px;
-        ">
-            <div style="
-                background: #0d0d0d;
-                border: 2px solid #ef4444;
-                border-radius: 20px;
-                padding: 50px 40px;
-                max-width: 500px;
-                text-align: center;
-                box-shadow: 0 0 50px rgba(239, 68, 68, 0.3);
-            ">
-                <div style="font-size: 4rem; margin-bottom: 20px;">🔐</div>
-                <h2 style="font-family: 'Orbitron', sans-serif; font-size: 1.5rem; margin-bottom: 15px; color: #ef4444;">
-                    Sesión Expirada
-                </h2>
-                <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 30px; line-height: 1.6;">
-                    Tu sesión ha expirado o fue cerrada.<br>
-                    <strong style="color: #00FFFF;">Inicia sesión desde KR-CLI</strong> para acceder a la web.
-                </p>
-                <div style="
-                    background: #0a0a0a;
-                    border-radius: 10px;
-                    padding: 20px;
-                    font-family: 'JetBrains Mono', monospace;
-                    text-align: left;
-                    margin-bottom: 30px;
-                ">
-                    <span style="color: #00FFFF;">$</span> kr-clidn<br>
-                    <span style="color: rgba(255,255,255,0.6);">> Opción 2: Web H4ck3r</span>
-                </div>
-                <a href="index.html" style="
-                    display: inline-block;
-                    padding: 12px 30px;
-                    background: linear-gradient(135deg, #0066FF, #00FFFF);
-                    color: #000;
-                    border-radius: 5px;
-                    font-family: 'Orbitron', sans-serif;
-                    font-weight: 600;
-                    text-decoration: none;
-                ">
-                    ← Volver al Inicio
-                </a>
-            </div>
-        </div>
-    `;
-    document.body.appendChild(overlay);
+    // Clear Supabase tokens
+    const keysToRemove = [];
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && (key.includes('supabase') || key.includes('sb-'))) {
+            keysToRemove.push(key);
+        }
+    }
+    keysToRemove.forEach(key => localStorage.removeItem(key));
+
+    // Redirect to login
+    window.location.href = 'login.html';
 }
 
 /**

@@ -706,21 +706,6 @@
                 btnSubmit.disabled = false;
             }
         });
-
-        // Check if already logged in
-        async function checkExistingSession() {
-            try {
-                await window.KRSupabase.init();
-                const session = await window.KRSupabase.getSession();
-                if (session?.user) {
-                    window.location.href = 'dashboard.html';
-                }
-            } catch (e) {
-                // Not logged in, stay on login page
-            }
-        }
-
-        checkExistingSession();
     </script>
 </body>
 

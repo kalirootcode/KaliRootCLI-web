@@ -67,12 +67,37 @@ function getCurrentUser() {
 }
 
 /**
- * Logout user
+ * Logout user - clear all session data completely
  */
-function logout() {
+async function logout() {
+    try {
+        // Clear Supabase session
+        if (window.KRSupabase && typeof supabaseClient !== 'undefined') {
+            await supabaseClient.auth.signOut();
+        }
+    } catch (e) {
+        console.warn('Supabase signOut error:', e);
+    }
+
+    // Clear all local storage
     currentUser = null;
     sessionStorage.removeItem('kr_user');
-    window.location.href = 'index.html';
+    localStorage.removeItem('kr_user');
+    localStorage.removeItem('kr_cart');
+    sessionStorage.clear();
+
+    // Clear any Supabase tokens from localStorage
+    const keysToRemove = [];
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && (key.includes('supabase') || key.includes('sb-'))) {
+            keysToRemove.push(key);
+        }
+    }
+    keysToRemove.forEach(key => localStorage.removeItem(key));
+
+    // Redirect to login page
+    window.location.href = 'login.html';
 }
 
 /**

@@ -547,62 +547,6 @@
             transform: translateY(-2px);
         }
 
-        /* Nav Auth Buttons */
-        .nav-auth-buttons {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .nav-auth-link {
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            font-size: 0.9rem;
-            padding: 8px 15px;
-            transition: all 0.3s;
-        }
-
-        .nav-auth-link:hover {
-            color: var(--neon-green);
-        }
-
-        .nav-auth-btn {
-            padding: 8px 18px;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s;
-        }
-
-        .nav-auth-login {
-            color: var(--neon-cyan);
-            border: 1px solid var(--neon-cyan);
-            background: transparent;
-        }
-
-        .nav-auth-login:hover {
-            background: rgba(0, 212, 255, 0.1);
-            box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
-        }
-
-        .nav-auth-register {
-            color: #000;
-            background: linear-gradient(135deg, var(--neon-green), var(--neon-cyan));
-        }
-
-        .nav-auth-register:hover {
-            box-shadow: 0 0 20px rgba(0, 136, 255, 0.5);
-            transform: translateY(-2px);
-        }
-
-        /* Hide auth buttons on mobile */
-        @media (max-width: 768px) {
-            .nav-auth-buttons {
-                display: none;
-            }
-        }
-
         .nav-toggle {
             display: none;
             flex-direction: column;
@@ -2105,14 +2049,6 @@
                 <img src="assets/logo.png" alt="KR-CLI" class="logo-img">
                 <span class="logo-text">KR-CLI</span>
             </a>
-
-            <!-- Desktop Auth Buttons -->
-            <div class="nav-auth-buttons">
-                <a href="tienda.html" class="nav-auth-link">🛒 Tienda</a>
-                <a href="login.html" class="nav-auth-btn nav-auth-login">Iniciar Sesión</a>
-                <a href="register.html" class="nav-auth-btn nav-auth-register">Registrarse</a>
-            </div>
-
             <div style="position: relative;">
                 <button class="cyber-menu-btn" id="cyber-menu-btn" onclick="toggleCyberMenu()">
                     <div class="cyber-menu-icon">

@@ -19,6 +19,130 @@
         rel="stylesheet">
     <!-- Font Awesome for professional icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        /* Cyber Menu Button */
+        .cyber-menu-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background: transparent;
+            border: 2px solid var(--neon-green, #00FF88);
+            border-radius: 8px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .cyber-menu-btn:hover {
+            box-shadow: 0 0 20px rgba(0, 136, 255, 0.5), inset 0 0 20px rgba(0, 136, 255, 0.1);
+            border-color: var(--neon-cyan, #00FFFF);
+        }
+
+        .cyber-menu-icon {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .cyber-menu-icon span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: var(--neon-green, #00FF88);
+            transition: all 0.3s ease;
+            box-shadow: 0 0 5px var(--neon-green, #00FF88);
+        }
+
+        .cyber-menu-btn.active .cyber-menu-icon span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .cyber-menu-btn.active .cyber-menu-icon span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .cyber-menu-btn.active .cyber-menu-icon span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        /* Cyber Dropdown Menu */
+        .cyber-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: 280px;
+            background: rgba(0, 0, 0, 0.95);
+            border: 1px solid var(--neon-green, #00FF88);
+            border-radius: 12px;
+            padding: 0;
+            margin-top: 15px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-20px) scale(0.95);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0, 136, 255, 0.2);
+            z-index: 1000;
+        }
+
+        .cyber-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+        }
+
+        .cyber-dropdown::before {
+            content: '> USER_MENU_ACTIVE';
+            display: block;
+            padding: 12px 20px;
+            font-size: 0.7rem;
+            color: var(--neon-green, #00FF88);
+            background: rgba(0, 136, 255, 0.1);
+            border-bottom: 1px solid rgba(0, 136, 255, 0.3);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .cyber-dropdown-item {
+            display: block;
+            padding: 15px 20px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 0.95rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .cyber-dropdown-item:hover {
+            background: rgba(0, 136, 255, 0.1);
+            color: var(--neon-green, #00FF88);
+            padding-left: 30px;
+        }
+
+        .cyber-dropdown-logout {
+            display: block;
+            width: calc(100% - 30px);
+            margin: 15px;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: #fff;
+            text-align: center;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-family: 'Orbitron', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .cyber-dropdown-logout:hover {
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
+        }
+    </style>
 </head>
 
 <body class="dashboard-page">
@@ -29,20 +153,27 @@
                 <img src="assets/logo.png" alt="KR-CLI" class="logo-img">
                 <span class="logo-text">KR-CLI</span>
             </a>
-            <ul class="nav-menu" id="nav-menu">
-                <li><a href="educacion.html" class="nav-link"><i class="fas fa-graduation-cap"></i> Educación</a></li>
-                <li><a href="noticias.html" class="nav-link"><i class="fas fa-newspaper"></i> Noticias</a></li>
-                <li><a href="herramientas.html" class="nav-link"><i class="fas fa-tools"></i> Herramientas</a></li>
-                <li><a href="#stats" class="nav-link"><i class="fas fa-user-circle"></i> Mi Cuenta</a></li>
-                <li><a href="support.html" class="nav-link"><i class="fas fa-headset"></i> Soporte</a></li>
-                <li><button onclick="window.KRAuth.logout()" class="nav-link logout-btn"><i
-                            class="fas fa-sign-out-alt"></i> Cerrar Sesión</button></li>
-            </ul>
-            <button class="nav-toggle" id="nav-toggle">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
+            <div style="position: relative;">
+                <button class="cyber-menu-btn" id="cyber-menu-btn" onclick="toggleCyberMenu()">
+                    <div class="cyber-menu-icon">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </button>
+                <div class="cyber-dropdown" id="cyber-dropdown">
+                    <a href="dashboard.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">🏠 Dashboard</a>
+                    <a href="educacion.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">📚 Educación</a>
+                    <a href="noticias.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">📰 Noticias</a>
+                    <a href="herramientas.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">🛠️
+                        Herramientas</a>
+                    <a href="tienda.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">🛒 Tienda</a>
+                    <a href="support.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">💬 Soporte</a>
+                    <div style="border-top: 1px solid rgba(0, 136, 255, 0.2); margin: 8px 0;"></div>
+                    <button onclick="window.KRAuth.logout(); closeCyberMenu();" class="cyber-dropdown-logout">🔓 Cerrar
+                        Sesión</button>
+                </div>
+            </div>
         </div>
     </nav>
 
@@ -198,6 +329,33 @@
     <script src="js/supabase-client.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/dashboard.js"></script>
+
+    <script>
+        // Cyber Menu Functions
+        function toggleCyberMenu() {
+            const btn = document.getElementById('cyber-menu-btn');
+            const dropdown = document.getElementById('cyber-dropdown');
+            btn.classList.toggle('active');
+            dropdown.classList.toggle('active');
+        }
+
+        function closeCyberMenu() {
+            const btn = document.getElementById('cyber-menu-btn');
+            const dropdown = document.getElementById('cyber-dropdown');
+            btn.classList.remove('active');
+            dropdown.classList.remove('active');
+        }
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function (e) {
+            const btn = document.getElementById('cyber-menu-btn');
+            const dropdown = document.getElementById('cyber-dropdown');
+            if (btn && dropdown && !btn.contains(e.target) && !dropdown.contains(e.target)) {
+                btn.classList.remove('active');
+                dropdown.classList.remove('active');
+            }
+        });
+    </script>
 </body>
 
 </html>

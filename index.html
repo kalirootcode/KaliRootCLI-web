@@ -473,82 +473,85 @@
             transform: translateY(-2px);
         }
 
-        /* Scroll Indicator */
+        /* Scroll Indicator - Terminal Style */
         .scroll-indicator {
             position: absolute;
-            bottom: 30px;
+            bottom: 25px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
-            color: var(--accent-green);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            opacity: 0.6;
-            animation: bounce 2s infinite;
+            gap: 6px;
             z-index: 10;
         }
 
-        .scroll-indicator span {
-            width: 18px;
-            height: 28px;
-            border: 1px solid var(--accent-green);
-            border-radius: 10px;
-            position: relative;
+        .scroll-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--accent-green);
+            letter-spacing: 1px;
+            opacity: 0.8;
         }
 
-        .scroll-indicator span::before {
-            content: '';
-            position: absolute;
-            top: 5px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 2px;
-            height: 6px;
-            background: var(--accent-green);
-            border-radius: 1px;
-            animation: scroll-dot 1.5s infinite;
+        .scroll-text::before {
+            content: '> ';
+            animation: blink-cursor 1s infinite;
         }
 
-        @keyframes scroll-dot {
+        @keyframes blink-cursor {
 
             0%,
-            100% {
-                top: 5px;
+            50% {
                 opacity: 1;
             }
 
-            50% {
-                top: 14px;
-                opacity: 0.3;
-            }
-        }
-
-        @keyframes bounce {
-
-            0%,
+            51%,
             100% {
-                transform: translateX(-50%) translateY(0);
-            }
-
-            50% {
-                transform: translateX(-50%) translateY(8px);
-            }
-        }
-
-        @keyframes fade-up {
-            from {
                 opacity: 0;
-                transform: translateY(20px);
+            }
+        }
+
+        .scroll-arrows {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .scroll-arrow {
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 6px solid var(--accent-green);
+            opacity: 0.3;
+            animation: arrow-fade 1.5s infinite;
+        }
+
+        .scroll-arrow:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .scroll-arrow:nth-child(2) {
+            animation-delay: 0.15s;
+        }
+
+        .scroll-arrow:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        @keyframes arrow-fade {
+
+            0%,
+            100% {
+                opacity: 0.2;
+                transform: translateY(0);
             }
 
-            to {
+            50% {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(3px);
             }
         }
 
@@ -892,8 +895,12 @@
         </div>
 
         <div class="scroll-indicator">
-            <span></span>
-            Scroll
+            <span class="scroll-text">scroll_down</span>
+            <div class="scroll-arrows">
+                <div class="scroll-arrow"></div>
+                <div class="scroll-arrow"></div>
+                <div class="scroll-arrow"></div>
+            </div>
         </div>
     </section>
 

@@ -59,7 +59,7 @@
         }
 
         /* ============================================
-           NAVBAR
+           NAVBAR - ESTILO APP HACKER
         ============================================ */
         .navbar {
             position: fixed;
@@ -67,80 +67,128 @@
             left: 0;
             right: 0;
             z-index: 1000;
-            padding: 15px 0;
-            background: rgba(0, 0, 0, 0.9);
+            padding: 0;
+            background: rgba(0, 0, 0, 0.95);
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(0, 255, 255, 0.15);
         }
 
         .nav-container {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 0 30px;
+            padding: 0 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            height: 60px;
+        }
+
+        /* Terminal Style Title Bar */
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .window-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+
+        .window-dot.red {
+            background: #ff5f56;
+        }
+
+        .window-dot.yellow {
+            background: #ffbd2e;
+        }
+
+        .window-dot.green {
+            background: #27ca40;
+        }
+
+        .window-dot:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 10px currentColor;
         }
 
         .nav-logo {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             text-decoration: none;
         }
 
         .nav-logo img {
-            width: 45px;
-            height: 45px;
-            filter: drop-shadow(0 0 15px rgba(0, 255, 255, 0.5));
+            width: 32px;
+            height: 32px;
+            filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.6));
         }
 
         .nav-logo span {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.4rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--primary-light), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--secondary);
         }
 
-        .nav-cta {
+        /* Status Indicators */
+        .nav-center {
             display: flex;
             align-items: center;
             gap: 20px;
         }
 
-        .nav-btn {
-            padding: 12px 28px;
-            border-radius: 10px;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 700;
-            font-size: 0.85rem;
-            text-decoration: none;
-            transition: all 0.3s ease;
+        .nav-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: var(--accent-green);
         }
 
-        .nav-btn-outline {
-            border: 2px solid var(--secondary);
-            color: var(--secondary);
-            background: transparent;
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
         }
 
-        .nav-btn-outline:hover {
-            background: rgba(0, 255, 255, 0.1);
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        .nav-version {
+            padding: 6px 12px;
+            background: rgba(0, 102, 255, 0.1);
+            border: 1px solid rgba(0, 102, 255, 0.2);
+            border-radius: 6px;
+            font-size: 0.7rem;
+            color: var(--primary-light);
+            font-family: 'JetBrains Mono', monospace;
         }
 
-        .nav-btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
-            border: none;
+        /* Nav Right */
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .nav-btn-primary:hover {
-            box-shadow: 0 0 30px rgba(0, 102, 255, 0.5);
-            transform: translateY(-2px);
+        .nav-time {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.5);
+            padding: 0 15px;
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         /* ============================================
@@ -673,7 +721,13 @@
            RESPONSIVE
         ============================================ */
         @media (max-width: 768px) {
-            .nav-cta {
+
+            .nav-center,
+            .nav-time {
+                display: none;
+            }
+
+            .window-controls {
                 display: none;
             }
 
@@ -704,35 +758,50 @@
 </head>
 
 <body>
-    <!-- Navbar -->
+    <!-- Navbar - Estilo App/Terminal -->
     <nav class="navbar">
         <div class="nav-container">
-            <a href="index.html" class="nav-logo">
-                <img src="assets/logo.png" alt="KR-CLI">
-                <span>KR-CLI DOMINION</span>
-            </a>
-            <div class="nav-cta">
-                <a href="login.html" class="nav-btn nav-btn-outline">Iniciar Sesión</a>
-                <a href="register.html" class="nav-btn nav-btn-primary">Registrarse</a>
+            <div class="nav-left">
+                <div class="window-controls">
+                    <span class="window-dot red"></span>
+                    <span class="window-dot yellow"></span>
+                    <span class="window-dot green"></span>
+                </div>
+                <a href="index.html" class="nav-logo">
+                    <img src="assets/logo.png" alt="KR-CLI">
+                    <span>kr-cli@dominion:~</span>
+                </a>
             </div>
-            <div class="cyber-menu-wrapper">
-                <button class="cyber-menu-btn" id="cyber-menu-btn" onclick="toggleCyberMenu()">
-                    <div class="cyber-menu-icon">
-                        <span></span>
-                        <span></span>
-                        <span></span>
+
+            <div class="nav-center">
+                <div class="nav-status">
+                    <span class="status-dot"></span>
+                    SISTEMA ACTIVO
+                </div>
+                <span class="nav-version">v3.0</span>
+            </div>
+
+            <div class="nav-right">
+                <span class="nav-time" id="nav-time">00:00:00</span>
+                <div class="cyber-menu-wrapper">
+                    <button class="cyber-menu-btn" id="cyber-menu-btn" onclick="toggleCyberMenu()">
+                        <div class="cyber-menu-icon">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </button>
+                    <div class="cyber-dropdown" id="cyber-dropdown">
+                        <a href="#dashboard" class="cyber-dropdown-item">📊 Dashboard</a>
+                        <a href="#education" class="cyber-dropdown-item">📚 Educación</a>
+                        <a href="#news" class="cyber-dropdown-item">📰 Noticias</a>
+                        <a href="#tools" class="cyber-dropdown-item">🛠️ Herramientas</a>
+                        <a href="#store" class="cyber-dropdown-item">🛒 Tienda</a>
+                        <a href="login.html" class="cyber-dropdown-item">🔐 Iniciar Sesión</a>
+                        <a href="register.html" class="cyber-dropdown-item"
+                            style="background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; margin: 15px; border-radius: 8px; text-align: center;">Acceder
+                            a la App →</a>
                     </div>
-                </button>
-                <div class="cyber-dropdown" id="cyber-dropdown">
-                    <a href="#dashboard" class="cyber-dropdown-item">📊 Dashboard</a>
-                    <a href="#education" class="cyber-dropdown-item">📚 Educación</a>
-                    <a href="#news" class="cyber-dropdown-item">📰 Noticias</a>
-                    <a href="#tools" class="cyber-dropdown-item">🛠️ Herramientas</a>
-                    <a href="#store" class="cyber-dropdown-item">🛒 Tienda</a>
-                    <a href="login.html" class="cyber-dropdown-item">🔐 Iniciar Sesión</a>
-                    <a href="register.html" class="cyber-dropdown-item"
-                        style="background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; margin: 15px; border-radius: 8px; text-align: center;">Registrarse
-                        Gratis</a>
                 </div>
             </div>
         </div>
@@ -1025,6 +1094,21 @@
 
         window.addEventListener('scroll', revealOnScroll);
         window.addEventListener('load', revealOnScroll);
+
+        // Live clock in navbar
+        function updateNavTime() {
+            const timeEl = document.getElementById('nav-time');
+            if (timeEl) {
+                const now = new Date();
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                const seconds = String(now.getSeconds()).padStart(2, '0');
+                timeEl.textContent = `${hours}:${minutes}:${seconds}`;
+            }
+        }
+
+        updateNavTime();
+        setInterval(updateNavTime, 1000);
     </script>
 </body>
 

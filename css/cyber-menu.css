@@ -3,50 +3,7 @@
    Shared styles for hamburger menu
    ============================================ */
 
-/* Navbar Base */
-.navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-    padding: 15px 0;
-    background: rgba(0, 0, 0, 0.95);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(0, 255, 255, 0.1);
-}
-
-.nav-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.nav-logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    text-decoration: none;
-}
-
-.nav-logo .logo-img {
-    width: 40px;
-    height: 40px;
-    filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.5));
-}
-
-.nav-logo .logo-text {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.5rem;
-    font-weight: 700;
-    background: linear-gradient(135deg, #0066FF, #00FFFF);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
+/* Styles for Navbar Base have been moved to main.css */
 
 /* Cyber Menu Button */
 .cyber-menu-btn {

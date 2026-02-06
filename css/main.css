@@ -227,6 +227,23 @@ img {
     box-shadow: 0 0 10px currentColor;
 }
 
+.nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    margin-right: 15px;
+    /* Espacio extra seguro */
+}
+
+.nav-logo img {
+    width: 38px;
+    height: 38px;
+    filter: drop-shadow(0 0 15px rgba(0, 255, 255, 0.7));
+    display: block;
+    /* Asegurar renderizado */
+}
+
 .nav-brand {
     font-family: 'Orbitron', sans-serif;
     font-size: 1.2rem;

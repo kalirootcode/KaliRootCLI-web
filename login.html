@@ -594,6 +594,28 @@
     <script src="js/config.js"></script>
     <script src="js/supabase-client.js"></script>
     <script>
+        // Check if user is already logged in - redirect to dashboard
+        (async function checkExistingSession() {
+            try {
+                // Check localStorage first (faster)
+                const storedUser = localStorage.getItem('kr_user') || sessionStorage.getItem('kr_user');
+                if (storedUser) {
+                    window.location.href = 'dashboard.html';
+                    return;
+                }
+
+                // Check Supabase session
+                await window.KRSupabase.init();
+                const session = await window.KRSupabase.getSession();
+                if (session?.user) {
+                    window.location.href = 'dashboard.html';
+                    return;
+                }
+            } catch (e) {
+                console.log('No active session');
+            }
+        })();
+
         // Check for registration redirect
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('registered') === 'true') {

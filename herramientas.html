@@ -16,6 +16,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@400;700;900&display=swap"
         rel="stylesheet">
+    <link rel="stylesheet" href="css/cyber-menu.css">
 
     <style>
         .tools-page {
@@ -233,17 +234,26 @@
                 <img src="assets/logo.png" alt="KR-CLI" class="logo-img">
                 <span class="logo-text">KR-CLI</span>
             </a>
-            <ul class="nav-menu" id="nav-menu">
-                <li><a href="educacion.html" class="nav-link">🎓 Educación</a></li>
-                <li><a href="noticias.html" class="nav-link">📰 Noticias</a></li>
-                <li><a href="herramientas.html" class="nav-link">🛠️ Herramientas</a></li>
-                <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
-            </ul>
-            <button class="nav-toggle" id="nav-toggle">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
+            <div class="cyber-menu-wrapper">
+                <button class="cyber-menu-btn" id="cyber-menu-btn" onclick="toggleCyberMenu()">
+                    <div class="cyber-menu-icon">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </button>
+                <div class="cyber-dropdown" id="cyber-dropdown">
+                    <a href="dashboard.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">🏠 Dashboard</a>
+                    <a href="educacion.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">📚 Educación</a>
+                    <a href="noticias.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">📰 Noticias</a>
+                    <a href="herramientas.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">🛠️
+                        Herramientas</a>
+                    <a href="tienda.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">🛒 Tienda</a>
+                    <a href="support.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">💬 Soporte</a>
+                    <button onclick="if(window.KRAuth) window.KRAuth.logout(); closeCyberMenu();"
+                        class="cyber-dropdown-logout">🔓 Cerrar Sesión</button>
+                </div>
+            </div>
         </div>
     </nav>
 
@@ -535,6 +545,7 @@
             renderTools(filtered);
         }
     </script>
+    <script src="js/cyber-menu.js"></script>
 </body>
 
 </html>

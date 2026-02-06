@@ -576,25 +576,31 @@
         .section-badge {
             display: inline-block;
             padding: 8px 20px;
-            background: rgba(0, 102, 255, 0.1);
-            border: 1px solid rgba(0, 102, 255, 0.2);
-            border-radius: 30px;
-            font-size: 0.8rem;
-            color: var(--primary-light);
+            background: rgba(0, 255, 136, 0.08);
+            border: 1px solid var(--accent-green);
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--accent-green);
             margin-bottom: 20px;
+            letter-spacing: 1px;
         }
 
         .section-title {
             font-family: 'Orbitron', sans-serif;
-            font-size: clamp(2rem, 4vw, 3rem);
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
             font-weight: 900;
             margin-bottom: 20px;
+            background: linear-gradient(90deg, #fff, var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .section-subtitle {
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: var(--text-secondary);
-            max-width: 600px;
+            max-width: 550px;
             margin: 0 auto;
             line-height: 1.7;
         }
@@ -908,10 +914,10 @@
     <section class="section section-dashboard" id="dashboard">
         <div class="section-container">
             <div class="section-header reveal">
-                <span class="section-badge">📊 DASHBOARD</span>
-                <h2 class="section-title">Tu Centro de Comando Personal</h2>
+                <span class="section-badge">> ./command_center</span>
+                <h2 class="section-title">Centro de Operaciones</h2>
                 <p class="section-subtitle">
-                    Visualiza tu progreso, estadísticas y accede a todas las herramientas desde un panel centralizado.
+                    Panel de control con estadísticas en tiempo real, acceso rápido a módulos y gestión de sesiones.
                 </p>
             </div>
 
@@ -945,10 +951,10 @@
     <section class="section section-education" id="education">
         <div class="section-container">
             <div class="section-header reveal">
-                <span class="section-badge">📚 EDUCACIÓN</span>
-                <h2 class="section-title">Academia de Ciberseguridad</h2>
+                <span class="section-badge">> ./hack_academy</span>
+                <h2 class="section-title">Escuela de Operadores</h2>
                 <p class="section-subtitle">
-                    Aprende hacking ético desde cero con laboratorios prácticos organizados por categorías MITRE ATT&CK.
+                    Formación práctica en hacking ético. Laboratorios basados en MITRE ATT&CK sin censura.
                 </p>
             </div>
 
@@ -982,10 +988,10 @@
     <section class="section section-news" id="news">
         <div class="section-container">
             <div class="section-header reveal">
-                <span class="section-badge">📰 NOTICIAS</span>
-                <h2 class="section-title">Feed de Ciberseguridad con IA</h2>
+                <span class="section-badge">> ./intel_feed</span>
+                <h2 class="section-title">Inteligencia en Tiempo Real</h2>
                 <p class="section-subtitle">
-                    Las últimas vulnerabilidades, exploits y brechas de seguridad traducidas automáticamente al español.
+                    CVEs, exploits y brechas globales traducidas con IA. Mantente un paso adelante.
                 </p>
             </div>
 
@@ -1019,10 +1025,10 @@
     <section class="section section-tools" id="tools">
         <div class="section-container">
             <div class="section-header reveal">
-                <span class="section-badge">🛠️ HERRAMIENTAS</span>
-                <h2 class="section-title">Arsenal de 14+ Módulos</h2>
+                <span class="section-badge">> ./arsenal --load</span>
+                <h2 class="section-title">Arsenal Ofensivo</h2>
                 <p class="section-subtitle">
-                    Desde escaneo de puertos hasta explotación avanzada. Todas las herramientas integradas con IA.
+                    14+ módulos integrados con IA: escaneo, explotación, post-explotación y forense.
                 </p>
             </div>
 
@@ -1056,10 +1062,10 @@
     <section class="section section-store" id="store">
         <div class="section-container">
             <div class="section-header reveal">
-                <span class="section-badge">🛒 TIENDA</span>
-                <h2 class="section-title">Recursos Digitales Premium</h2>
+                <span class="section-badge">> ./vault --unlock</span>
+                <h2 class="section-title">Vault Premium</h2>
                 <p class="section-subtitle">
-                    Ebooks, programas y bundles exclusivos para potenciar tus habilidades al siguiente nivel.
+                    Recursos exclusivos: ebooks, scripts y bundles para operadores avanzados.
                 </p>
             </div>
 

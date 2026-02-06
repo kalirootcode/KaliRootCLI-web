@@ -15,21 +15,21 @@
 
     <style>
         :root {
-            --primary: #3A5BA0;
-            --primary-light: #5B7EC0;
-            --primary-dark: #2A4580;
-            --secondary: #4DD9D9;
-            --accent-cyan: #00FFFF;
-            --accent-turquoise: #40E0D0;
+            --primary: #0066FF;
+            --primary-light: #3399FF;
+            --primary-dark: #0044AA;
+            --secondary: #00FFFF;
+            --accent-cyan: #00CCCC;
+            --neon-green: #00FF88;
             --bg-dark: #000000;
-            --bg-card: #0D1525;
-            --bg-input: #152035;
+            --bg-card: #0d0d0d;
+            --bg-input: #1a1a1a;
             --text-primary: #FFFFFF;
             --text-secondary: rgba(255, 255, 255, 0.7);
             --text-muted: rgba(255, 255, 255, 0.5);
-            --border-color: rgba(58, 91, 160, 0.4);
+            --border-color: rgba(0, 255, 255, 0.2);
             --error: #EF4444;
-            --success: #4DD9D9;
+            --success: #00FF88;
         }
 
         * {
@@ -57,8 +57,8 @@
             width: 100%;
             height: 100%;
             background:
-                radial-gradient(ellipse at 80% 20%, rgba(58, 91, 160, 0.08) 0%, transparent 50%),
-                radial-gradient(ellipse at 20% 80%, rgba(77, 217, 217, 0.05) 0%, transparent 50%);
+                radial-gradient(ellipse at 80% 20%, rgba(0, 102, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 20% 80%, rgba(0, 255, 255, 0.08) 0%, transparent 50%);
             pointer-events: none;
             z-index: 0;
         }
@@ -133,7 +133,7 @@
         .auth-logo img {
             width: 70px;
             height: 70px;
-            filter: drop-shadow(0 0 20px rgba(58, 91, 160, 0.5));
+            filter: drop-shadow(0 0 20px rgba(0, 255, 255, 0.5));
             animation: pulse-glow 2s infinite;
         }
 
@@ -141,11 +141,11 @@
 
             0%,
             100% {
-                filter: drop-shadow(0 0 20px rgba(58, 91, 160, 0.5));
+                filter: drop-shadow(0 0 20px rgba(0, 255, 255, 0.5));
             }
 
             50% {
-                filter: drop-shadow(0 0 30px rgba(77, 217, 217, 0.8));
+                filter: drop-shadow(0 0 30px rgba(0, 102, 255, 0.8));
             }
         }
 
@@ -161,14 +161,14 @@
 
         /* Card */
         .auth-card {
-            background: rgba(13, 21, 37, 0.9);
+            background: rgba(13, 13, 13, 0.95);
             backdrop-filter: blur(20px);
             border: 1px solid var(--border-color);
             border-radius: 24px;
             padding: 40px;
             box-shadow:
                 0 25px 50px rgba(0, 0, 0, 0.5),
-                0 0 100px rgba(58, 91, 160, 0.15);
+                0 0 100px rgba(0, 255, 255, 0.1);
         }
 
         .auth-header {

@@ -12,19 +12,39 @@ let supabaseClient = null;
 async function initSupabase() {
     if (supabaseClient) return supabaseClient;
 
-    // Load Supabase from CDN if not already loaded
-    if (typeof supabase === 'undefined') {
-        await loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2');
-    }
+    try {
+        // Load Supabase from CDN if not already loaded
+        if (typeof supabase === 'undefined') {
+            console.log('[Supabase] Loading Supabase SDK from CDN...');
+            await loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2');
+            console.log('[Supabase] SDK loaded successfully');
+        }
 
-    // Get config from config.js
-    if (typeof CONFIG === 'undefined') {
-        console.error('CONFIG not loaded. Make sure config.js is included before this script.');
-        return null;
-    }
+        // Verify supabase is now available
+        if (typeof supabase === 'undefined') {
+            console.error('[Supabase] SDK failed to load');
+            throw new Error('Supabase SDK no pudo cargarse');
+        }
 
-    supabaseClient = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
-    return supabaseClient;
+        // Get config from config.js
+        if (typeof CONFIG === 'undefined') {
+            console.error('[Supabase] CONFIG not loaded');
+            throw new Error('Configuración no encontrada');
+        }
+
+        if (!CONFIG.SUPABASE_URL || !CONFIG.SUPABASE_ANON_KEY) {
+            console.error('[Supabase] Missing credentials in CONFIG');
+            throw new Error('Credenciales de Supabase no configuradas');
+        }
+
+        console.log('[Supabase] Creating client with URL:', CONFIG.SUPABASE_URL.substring(0, 30) + '...');
+        supabaseClient = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+        console.log('[Supabase] Client created successfully');
+        return supabaseClient;
+    } catch (error) {
+        console.error('[Supabase] Init error:', error);
+        throw error;
+    }
 }
 
 /**

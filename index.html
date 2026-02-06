@@ -122,21 +122,26 @@
         .nav-logo {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             text-decoration: none;
         }
 
         .nav-logo img {
-            width: 32px;
-            height: 32px;
-            filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.6));
+            width: 38px;
+            height: 38px;
+            filter: drop-shadow(0 0 15px rgba(0, 255, 255, 0.7));
         }
 
-        .nav-logo span {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--secondary);
+        .nav-brand {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 900;
+            background: linear-gradient(90deg, var(--secondary), var(--accent-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+            letter-spacing: 2px;
         }
 
         /* Status Indicators */
@@ -827,17 +832,9 @@
                     <span class="window-dot green"></span>
                 </div>
                 <a href="index.html" class="nav-logo">
-                    <img src="assets/logo.png" alt="KR-CLI">
-                    <span>kr-cli@dominion:~</span>
+                    <img src="assets/logo.png" alt="KR-CLIDN">
+                    <span class="nav-brand">KR-CLIDN</span>
                 </a>
-            </div>
-
-            <div class="nav-center">
-                <div class="nav-status">
-                    <span class="status-dot"></span>
-                    SISTEMA ACTIVO
-                </div>
-                <span class="nav-version">v3.0</span>
             </div>
 
             <div class="nav-right">

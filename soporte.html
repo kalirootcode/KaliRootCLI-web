@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Soporte | KR-CLI DOMINION</title>
+
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@700;900&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/cyber-menu.css">
+
+    <style>
+        :root {
+            --primary: #0066FF;
+            --primary-light: #3399FF;
+            --secondary: #00FFFF;
+            --accent-green: #00FF88;
+            --accent-orange: #F97316;
+            --bg-dark: #000000;
+            --bg-card: #0a0a0a;
+            --bg-input: #111111;
+            --text-primary: #FFFFFF;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-muted: rgba(255, 255, 255, 0.5);
+            --border-color: rgba(0, 255, 255, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 15px 0;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--secondary);
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(0, 255, 255, 0.1);
+            border-color: var(--secondary);
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .nav-logo img {
+            width: 40px;
+            height: 40px;
+            filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.5));
+        }
+
+        .nav-logo span {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-light), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Chat Container */
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-width: 900px;
+            width: 100%;
+            margin: 90px auto 0;
+            padding: 20px;
+        }
+
+        /* Chat Header */
+        .chat-header {
+            background: linear-gradient(135deg, rgba(0, 102, 255, 0.1), rgba(0, 255, 255, 0.05));
+            border: 1px solid var(--border-color);
+            border-radius: 20px 20px 0 0;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .chat-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .chat-title i {
+            color: var(--primary-light);
+        }
+
+        .chat-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .chat-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 15px;
+            padding: 8px 18px;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--accent-green);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.4;
+            }
+        }
+
+        /* Messages Area */
+        .chat-messages {
+            flex: 1;
+            background: var(--bg-card);
+            border-left: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            padding: 25px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            min-height: 400px;
+            max-height: 500px;
+        }
+
+        .message {
+            max-width: 85%;
+            padding: 15px 20px;
+            border-radius: 18px;
+            position: relative;
+        }
+
+        .message-user {
+            align-self: flex-end;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message-admin {
+            align-self: flex-start;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom-left-radius: 5px;
+        }
+
+        .message-content {
+            line-height: 1.6;
+        }
+
+        .message-time {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 8px;
+            text-align: right;
+        }
+
+        .message-admin .message-time {
+            text-align: left;
+        }
+
+        .message-welcome {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-muted);
+        }
+
+        .message-welcome i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.3;
+        }
+
+        /* Input Area */
+        .chat-input-area {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 0 0 20px 20px;
+            padding: 20px;
+        }
+
+        .chat-input-form {
+            display: flex;
+            gap: 15px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 15px 20px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 1rem;
+            resize: none;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .chat-input:focus {
+            border-color: var(--primary-light);
+        }
+
+        .chat-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .chat-send-btn {
+            padding: 15px 25px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chat-send-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 25px rgba(0, 102, 255, 0.4);
+        }
+
+        .chat-send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Tickets List */
+        .tickets-section {
+            margin-top: 30px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 25px;
+        }
+
+        .tickets-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tickets-title i {
+            color: var(--primary-light);
+        }
+
+        .ticket-item {
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .ticket-item:hover {
+            background: rgba(0, 102, 255, 0.1);
+            border-color: rgba(0, 102, 255, 0.2);
+        }
+
+        .ticket-item.active {
+            background: rgba(0, 102, 255, 0.15);
+            border-color: var(--primary-light);
+        }
+
+        .ticket-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .ticket-id {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--primary-light);
+        }
+
+        .ticket-status {
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .status-open {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--accent-green);
+        }
+
+        .status-pending {
+            background: rgba(249, 115, 22, 0.1);
+            color: var(--accent-orange);
+        }
+
+        .status-closed {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
+        }
+
+        .ticket-subject {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .ticket-date {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .new-ticket-btn {
+            width: 100%;
+            padding: 15px;
+            background: transparent;
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .new-ticket-btn:hover {
+            border-color: var(--primary-light);
+            color: var(--primary-light);
+            background: rgba(0, 102, 255, 0.05);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-logo span {
+                display: none;
+            }
+
+            .chat-container {
+                padding: 10px;
+            }
+
+            .chat-messages {
+                min-height: 300px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-left">
+                <a href="cuenta.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    Volver
+                </a>
+                <a href="dashboard.html" class="nav-logo">
+                    <img src="assets/logo.png" alt="KR-CLI">
+                    <span>SOPORTE</span>
+                </a>
+            </div>
+            <div class="cyber-menu-wrapper">
+                <button class="cyber-menu-btn" id="cyber-menu-btn" onclick="toggleCyberMenu()">
+                    <div class="cyber-menu-icon">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </button>
+                <div class="cyber-dropdown" id="cyber-dropdown">
+                    <a href="dashboard.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">🏠 Dashboard</a>
+                    <a href="cuenta.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">👤 Mi Cuenta</a>
+                    <button onclick="window.KRAuth.logout(); closeCyberMenu();" class="cyber-dropdown-logout">🔓 Cerrar
+                        Sesión</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Chat Container -->
+    <div class="chat-container">
+        <!-- Chat Header -->
+        <div class="chat-header">
+            <h1 class="chat-title">
+                <i class="fas fa-headset"></i>
+                Centro de Soporte
+            </h1>
+            <p class="chat-subtitle">Estamos aquí para ayudarte con cualquier problema</p>
+            <div class="chat-status">
+                <span class="status-dot"></span>
+                Soporte en línea
+            </div>
+        </div>
+
+        <!-- Messages -->
+        <div class="chat-messages" id="chat-messages">
+            <div class="message-welcome">
+                <i class="fas fa-comments"></i>
+                <p>¡Bienvenido al soporte de KR-CLI!</p>
+                <p style="font-size: 0.85rem; margin-top: 10px;">Escribe tu mensaje y te responderemos lo antes posible.
+                </p>
+            </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="chat-input-area">
+            <form class="chat-input-form" id="chat-form">
+                <textarea class="chat-input" id="message-input" placeholder="Escribe tu mensaje aquí..."
+                    rows="1"></textarea>
+                <button type="submit" class="chat-send-btn" id="send-btn">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </form>
+        </div>
+
+        <!-- Previous Tickets -->
+        <div class="tickets-section">
+            <h3 class="tickets-title">
+                <i class="fas fa-ticket-alt"></i>
+                Mis Tickets
+            </h3>
+            <div id="tickets-list">
+                <button class="new-ticket-btn" onclick="createNewTicket()">
+                    <i class="fas fa-plus"></i>
+                    Crear Nuevo Ticket
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/supabase-client.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/cyber-menu.js"></script>
+    <script>
+        let currentUser = null;
+        let currentTicketId = null;
+
+        // Initialize
+        async function init() {
+            try {
+                const authResult = await window.KRAuth.checkAuth();
+                if (!authResult.authenticated) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+                currentUser = authResult.user;
+                loadTickets();
+            } catch (error) {
+                console.error('Auth error:', error);
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Load user tickets
+        async function loadTickets() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('support_tickets')
+                    .select('*')
+                    .eq('user_id', currentUser.id)
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                const ticketsList = document.getElementById('tickets-list');
+
+                if (data && data.length > 0) {
+                    ticketsList.innerHTML = data.map(ticket => `
+                        <div class="ticket-item ${currentTicketId === ticket.id ? 'active' : ''}" 
+                             onclick="selectTicket('${ticket.id}')">
+                            <div class="ticket-header">
+                                <span class="ticket-id">#${ticket.id.slice(0, 8)}</span>
+                                <span class="ticket-status status-${ticket.status}">${ticket.status.toUpperCase()}</span>
+                            </div>
+                            <div class="ticket-subject">${ticket.subject || 'Sin asunto'}</div>
+                            <div class="ticket-date">${new Date(ticket.created_at).toLocaleDateString('es-ES')}</div>
+                        </div>
+                    `).join('');
+
+                    ticketsList.innerHTML += `
+                        <button class="new-ticket-btn" onclick="createNewTicket()">
+                            <i class="fas fa-plus"></i>
+                            Crear Nuevo Ticket
+                        </button>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading tickets:', error);
+            }
+        }
+
+        // Select ticket
+        async function selectTicket(ticketId) {
+            currentTicketId = ticketId;
+            loadTickets();
+            loadMessages(ticketId);
+        }
+
+        // Load messages for ticket
+        async function loadMessages(ticketId) {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('support_messages')
+                    .select('*')
+                    .eq('ticket_id', ticketId)
+                    .order('created_at', { ascending: true });
+
+                if (error) throw error;
+
+                const messagesContainer = document.getElementById('chat-messages');
+
+                if (data && data.length > 0) {
+                    messagesContainer.innerHTML = data.map(msg => `
+                        <div class="message ${msg.is_admin ? 'message-admin' : 'message-user'}">
+                            <div class="message-content">${msg.message}</div>
+                            <div class="message-time">${new Date(msg.created_at).toLocaleTimeString('es-ES', {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    })}</div>
+                        </div>
+                    `).join('');
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                } else {
+                    messagesContainer.innerHTML = `
+                        <div class="message-welcome">
+                            <i class="fas fa-comments"></i>
+                            <p>Escribe tu primer mensaje en este ticket.</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading messages:', error);
+            }
+        }
+
+        // Create new ticket
+        async function createNewTicket() {
+            const subject = prompt('Asunto del ticket:');
+            if (!subject) return;
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from('support_tickets')
+                    .insert({
+                        user_id: currentUser.id,
+                        subject: subject,
+                        status: 'open'
+                    })
+                    .select()
+                    .single();
+
+                if (error) throw error;
+
+                currentTicketId = data.id;
+                loadTickets();
+
+                document.getElementById('chat-messages').innerHTML = `
+                    <div class="message-welcome">
+                        <i class="fas fa-check-circle" style="color: var(--accent-green);"></i>
+                        <p>Ticket creado exitosamente</p>
+                        <p style="font-size: 0.85rem; margin-top: 10px;">Describe tu problema y te responderemos pronto.</p>
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Error creating ticket:', error);
+                alert('Error al crear ticket. Inténtalo de nuevo.');
+            }
+        }
+
+        // Send message
+        document.getElementById('chat-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const input = document.getElementById('message-input');
+            const message = input.value.trim();
+
+            if (!message) return;
+            if (!currentTicketId) {
+                alert('Por favor, selecciona o crea un ticket primero.');
+                return;
+            }
+
+            const sendBtn = document.getElementById('send-btn');
+            sendBtn.disabled = true;
+
+            try {
+                const { error } = await supabaseClient
+                    .from('support_messages')
+                    .insert({
+                        ticket_id: currentTicketId,
+                        user_id: currentUser.id,
+                        message: message,
+                        is_admin: false
+                    });
+
+                if (error) throw error;
+
+                input.value = '';
+                loadMessages(currentTicketId);
+            } catch (error) {
+                console.error('Error sending message:', error);
+                alert('Error al enviar mensaje. Inténtalo de nuevo.');
+            } finally {
+                sendBtn.disabled = false;
+            }
+        });
+
+        // Auto-resize textarea
+        document.getElementById('message-input').addEventListener('input', function () {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+        });
+
+        // Initialize
+        init();
+    </script>
+</body>
+
+</html>

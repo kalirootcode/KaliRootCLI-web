@@ -201,6 +201,91 @@ def create_user_downloads(order_id, user_id):
         print(f"❌ Error creating downloads: {e}")
         return False
 
+
+def credit_kr_purchase(user_id, kr_amount, order_id, payment_id):
+    """
+    Add KR credits to user_wallets after a confirmed KR package purchase.
+    Uses an upsert to create the wallet row if it doesn't exist yet,
+    then increments the balance with a secondary UPDATE + returning.
+    """
+    if not SUPABASE_URL or not SUPABASE_KEY:
+        print("⚠️ Supabase credentials not configured for KR credit")
+        return False
+    
+    try:
+        import requests
+        from datetime import datetime
+
+        headers = {
+            'apikey': SUPABASE_KEY,
+            'Authorization': f'Bearer {SUPABASE_KEY}',
+            'Content-Type': 'application/json',
+            'Prefer': 'return=representation'
+        }
+
+        now = datetime.utcnow().isoformat()
+
+        # 1. Try to upsert the wallet row (create if not exists)
+        upsert_payload = {
+            'user_id': user_id,
+            'balance': kr_amount,
+            'updated_at': now
+        }
+        upsert_resp = requests.post(
+            f'{SUPABASE_URL}/rest/v1/user_wallets',
+            headers={**headers, 'Prefer': 'resolution=merge-duplicates,return=representation'},
+            json=upsert_payload
+        )
+
+        if upsert_resp.status_code in [200, 201]:
+            # Upsert created a new row — balance is already set, done
+            print(f"✅ KR wallet upserted: +{kr_amount} KR for user {user_id}")
+        else:
+            print(f"⚠️ Upsert failed ({upsert_resp.status_code}), trying increment...")
+
+        # 2. Increment balance for existing wallet using RPC if available,
+        #    or patch with a read-modify-write (safe for low concurrency)
+        read_resp = requests.get(
+            f'{SUPABASE_URL}/rest/v1/user_wallets?user_id=eq.{user_id}&select=balance',
+            headers=headers
+        )
+        if read_resp.status_code == 200 and read_resp.json():
+            current = read_resp.json()[0].get('balance', 0) or 0
+            new_balance = current + kr_amount
+
+            patch_resp = requests.patch(
+                f'{SUPABASE_URL}/rest/v1/user_wallets?user_id=eq.{user_id}',
+                headers=headers,
+                json={'balance': new_balance, 'updated_at': now}
+            )
+            if patch_resp.status_code in [200, 204]:
+                print(f"✅ KR credited: {current} → {new_balance} KR for user {user_id}")
+            else:
+                print(f"❌ KR patch failed: {patch_resp.status_code} {patch_resp.text}")
+                return False
+        else:
+            # Row was just created by upsert
+            print(f"✅ New KR wallet created with {kr_amount} KR for user {user_id}")
+
+        # 3. Log the credit transaction
+        requests.post(
+            f'{SUPABASE_URL}/rest/v1/kr_transactions',
+            headers=headers,
+            json={
+                'user_id': user_id,
+                'amount': kr_amount,
+                'type': 'purchase',
+                'order_id': order_id,
+                'payment_id': payment_id,
+                'created_at': now
+            }
+        )  # Non-blocking — table may not exist yet, ignore errors
+
+        return True
+    except Exception as e:
+        print(f"❌ Error crediting KR: {e}")
+        return False
+
 @app.route('/api/nowpayments-webhook', methods=['POST'])
 def nowpayments_webhook():
     """Handle NOWPayments IPN callbacks"""
@@ -246,21 +331,37 @@ def nowpayments_webhook():
         if order_id:
             update_order_status(order_id, our_status, payment_id)
             
-            # If completed, create download entries
+            # If completed, handle fulfillment
             if our_status == 'completed':
-                # Get user_id from order
                 import requests
                 headers = {
                     'apikey': SUPABASE_KEY,
                     'Authorization': f'Bearer {SUPABASE_KEY}'
                 }
+                # Get order details (user_id + payment_details for KR amount)
                 response = requests.get(
-                    f'{SUPABASE_URL}/rest/v1/orders?id=eq.{order_id}&select=user_id',
+                    f'{SUPABASE_URL}/rest/v1/orders?id=eq.{order_id}&select=user_id,payment_details',
                     headers=headers
                 )
                 if response.status_code == 200 and response.json():
-                    user_id = response.json()[0]['user_id']
-                    create_user_downloads(order_id, user_id)
+                    order_data = response.json()[0]
+                    user_id = order_data.get('user_id')
+                    payment_details = order_data.get('payment_details') or {}
+
+                    # ── KR Credits purchase? ──
+                    kr_amount = None
+                    # Check payment_details for kr_amount (set when checkout.html builds the order)
+                    if isinstance(payment_details, dict):
+                        kr_amount = payment_details.get('kr_amount')
+
+                    if kr_amount and user_id:
+                        kr_amount = int(kr_amount)
+                        print(f"💚 Crediting {kr_amount} KR to user {user_id} (order {order_id})")
+                        credit_kr_purchase(user_id, kr_amount, order_id, payment_id)
+                    else:
+                        # Regular product order — create download links
+                        if user_id:
+                            create_user_downloads(order_id, user_id)
         
         return {'status': 'ok'}, 200
         

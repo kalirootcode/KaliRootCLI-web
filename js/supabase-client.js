@@ -111,6 +111,46 @@ async function getUserData(userId) {
 }
 
 /**
+ * Get user KR credit balance from user_wallets table
+ * Falls back to credit_balance in cli_users if wallet not found
+ * @param {string} userId - UUID of the user
+ * @returns {number} KR balance
+ */
+async function getUserBalance(userId) {
+    const client = await initSupabase();
+
+    // Primary: query user_wallets table
+    const { data: wallet, error: walletError } = await client
+        .from('user_wallets')
+        .select('balance, updated_at')
+        .eq('user_id', userId)
+        .maybeSingle();
+
+    if (wallet && !walletError) {
+        console.log('[KR] Wallet balance:', wallet.balance);
+        return Number(wallet.balance) || 0;
+    }
+
+    // Fallback: credit_balance in cli_users
+    if (walletError) {
+        console.warn('[KR] user_wallets query failed, falling back to cli_users:', walletError.message);
+    }
+
+    const { data: userData, error: userError } = await client
+        .from('cli_users')
+        .select('credit_balance')
+        .eq('id', userId)
+        .maybeSingle();
+
+    if (userError) {
+        console.error('[KR] getUserBalance fallback error:', userError);
+        return 0;
+    }
+
+    return Number(userData?.credit_balance) || 0;
+}
+
+/**
  * Log web activity
  */
 async function logActivity(userId, action, pageVisited, metadata = {}) {
@@ -664,6 +704,7 @@ window.KRSupabase = {
     init: initSupabase,
     getSession,
     getUserData,
+    getUserBalance,
     logActivity,
     validateCLIToken,
     createSupportTicket,

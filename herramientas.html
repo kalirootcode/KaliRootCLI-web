@@ -8,10 +8,10 @@
     <title>Herramientas | KR-CLI DOMINION</title>
 
     <link rel="icon" type="image/png" href="assets/favicon.png">
-    <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/animations.css">
-    <link rel="stylesheet" href="css/responsive.css">
-    <link rel="stylesheet" href="css/shared.css">
+    <link rel="stylesheet" href="css/main.css?v=2.1">
+    <link rel="stylesheet" href="css/animations.css?v=2.1">
+    <link rel="stylesheet" href="css/responsive.css?v=2.1">
+    <link rel="stylesheet" href="css/shared.css?v=2.1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link
         href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@400;700;900&display=swap"
@@ -228,30 +228,42 @@
 
 <body class="tools-page">
     <!-- Navbar -->
+    <!-- Navbar -->
     <nav class="navbar">
         <div class="nav-container">
-            <a href="index.html" class="nav-logo">
-                <img src="assets/logo.png" alt="KR-CLI" class="logo-img">
-                <span class="logo-text">KR-CLI</span>
-            </a>
-            <div class="cyber-menu-wrapper">
-                <button class="cyber-menu-btn" id="cyber-menu-btn" onclick="toggleCyberMenu()">
-                    <div class="cyber-menu-icon">
-                        <span></span>
-                        <span></span>
-                        <span></span>
+            <div class="nav-left">
+                <div class="window-controls">
+                    <span class="window-dot red"></span>
+                    <span class="window-dot yellow"></span>
+                    <span class="window-dot green"></span>
+                </div>
+                <a href="index.html" class="nav-logo">
+                    <img src="assets/logo.png" alt="KR-CLIDN">
+                    <span class="nav-brand">KR-CLIDN</span>
+                </a>
+            </div>
+
+            <div class="nav-right">
+                <span class="nav-time" id="nav-time">00:00:00</span>
+                <div class="cyber-menu-wrapper">
+                    <button class="cyber-menu-btn" id="cyber-menu-btn" onclick="toggleCyberMenu()">
+                        <div class="cyber-menu-icon">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </button>
+                    <div class="cyber-dropdown" id="cyber-dropdown">
+                        <a href="dashboard.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">🏠 Dashboard</a>
+                        <a href="educacion.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">📚 Educación</a>
+                        <a href="noticias.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">📰 Noticias</a>
+                        <a href="herramientas.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">🛠️
+                            Herramientas</a>
+                        <a href="tienda.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">🛒 Tienda</a>
+                        <a href="cuenta.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">👤 Mi Cuenta</a>
+                        <button onclick="if(window.KRAuth) window.KRAuth.logout(); closeCyberMenu();"
+                            class="cyber-dropdown-logout">🔓 Cerrar Sesión</button>
                     </div>
-                </button>
-                <div class="cyber-dropdown" id="cyber-dropdown">
-                    <a href="dashboard.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">🏠 Dashboard</a>
-                    <a href="educacion.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">📚 Educación</a>
-                    <a href="noticias.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">📰 Noticias</a>
-                    <a href="herramientas.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">🛠️
-                        Herramientas</a>
-                    <a href="tienda.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">🛒 Tienda</a>
-                    <a href="cuenta.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">👤 Mi Cuenta</a>
-                    <button onclick="if(window.KRAuth) window.KRAuth.logout(); closeCyberMenu();"
-                        class="cyber-dropdown-logout">🔓 Cerrar Sesión</button>
                 </div>
             </div>
         </div>
@@ -546,6 +558,24 @@
         }
     </script>
     <script src="js/cyber-menu.js"></script>
+    <script>
+        // Nav Time Update
+        function updateNavTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('es-ES', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            });
+            const timeElement = document.getElementById('nav-time');
+            if (timeElement) {
+                timeElement.textContent = timeString;
+            }
+        }
+        updateNavTime();
+        setInterval(updateNavTime, 1000);
+    </script>
 </body>
 
 </html>

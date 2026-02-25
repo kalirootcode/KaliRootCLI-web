@@ -8,170 +8,244 @@
     <title>Dashboard | KR-CLI DOMINION</title>
 
     <link rel="icon" type="image/png" href="assets/favicon.png">
-    <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/animations.css">
-    <link rel="stylesheet" href="css/responsive.css">
-    <link rel="stylesheet" href="css/shared.css">
-    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/main.css?v=2.1">
+    <link rel="stylesheet" href="css/animations.css?v=2.1">
+    <link rel="stylesheet" href="css/responsive.css?v=2.1">
+    <link rel="stylesheet" href="css/shared.css?v=2.1">
+    <link rel="stylesheet" href="css/dashboard.css?v=2.1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link
         href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@400;700;900&display=swap"
         rel="stylesheet">
+    <link rel="stylesheet" href="css/cyber-menu.css?v=2.1">
     <!-- Font Awesome for professional icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
-        /* Cyber Menu Button */
-        .cyber-menu-btn {
+        /* Cyber Menu styles moved to css/cyber-menu.css */
+
+        /* ── KR BALANCE WIDGET ── */
+        .kr-balance-widget {
+            background: linear-gradient(135deg, rgba(0, 255, 65, 0.05) 0%, rgba(0, 255, 65, 0.02) 100%);
+            border: 1px solid rgba(0, 255, 65, 0.3);
+            border-radius: 14px;
+            padding: 28px 36px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 0;
+            position: relative;
+            overflow: hidden;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .kr-balance-widget:hover {
+            box-shadow: 0 0 40px rgba(0, 255, 65, 0.12);
+        }
+
+        .kr-balance-widget::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00ff41, transparent);
+            animation: kr-sweep 3s linear infinite;
+        }
+
+        @keyframes kr-sweep {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        .kr-coin-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, #00ff41, #007a20);
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 50px;
-            height: 50px;
-            background: transparent;
-            border: 2px solid var(--neon-green, #00FF88);
-            border-radius: 8px;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
+            font-size: 1.6rem;
+            box-shadow: 0 0 24px rgba(0, 255, 65, 0.5);
+            flex-shrink: 0;
+            animation: kr-pulse 2s ease-in-out infinite;
         }
 
-        .cyber-menu-btn:hover {
-            box-shadow: 0 0 20px rgba(0, 136, 255, 0.5), inset 0 0 20px rgba(0, 136, 255, 0.1);
-            border-color: var(--neon-cyan, #00FFFF);
+        @keyframes kr-pulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 20px rgba(0, 255, 65, 0.4);
+            }
+
+            50% {
+                box-shadow: 0 0 40px rgba(0, 255, 65, 0.7);
+            }
         }
 
-        .cyber-menu-icon {
+        .kr-balance-info {
+            flex: 1;
+        }
+
+        .kr-balance-label {
+            font-size: 0.75rem;
+            color: rgba(0, 255, 65, 0.7);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-family: 'JetBrains Mono', monospace;
+            margin-bottom: 4px;
+        }
+
+        .kr-balance-amount {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 900;
+            color: #00ff41;
+            text-shadow: 0 0 30px rgba(0, 255, 65, 0.6);
+            line-height: 1;
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+        }
+
+        .kr-balance-unit {
+            font-size: 1.2rem;
+            opacity: 0.7;
+        }
+
+        .kr-balance-sub {
+            font-size: 0.78rem;
+            color: rgba(255, 255, 255, 0.45);
+            margin-top: 6px;
+        }
+
+        .kr-balance-actions {
             display: flex;
             flex-direction: column;
-            gap: 5px;
-            transition: all 0.3s ease;
+            gap: 10px;
+            flex-shrink: 0;
         }
 
-        .cyber-menu-icon span {
-            display: block;
-            width: 24px;
-            height: 2px;
-            background: var(--neon-green, #00FF88);
-            transition: all 0.3s ease;
-            box-shadow: 0 0 5px var(--neon-green, #00FF88);
-        }
-
-        .cyber-menu-btn.active .cyber-menu-icon span:nth-child(1) {
-            transform: rotate(45deg) translate(5px, 5px);
-        }
-
-        .cyber-menu-btn.active .cyber-menu-icon span:nth-child(2) {
-            opacity: 0;
-        }
-
-        .cyber-menu-btn.active .cyber-menu-icon span:nth-child(3) {
-            transform: rotate(-45deg) translate(5px, -5px);
-        }
-
-        /* Cyber Dropdown Menu */
-        .cyber-dropdown {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            width: 280px;
-            background: rgba(0, 0, 0, 0.95);
-            border: 1px solid var(--neon-green, #00FF88);
-            border-radius: 12px;
-            padding: 0;
-            margin-top: 15px;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-20px) scale(0.95);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            overflow: hidden;
-            box-shadow: 0 0 30px rgba(0, 136, 255, 0.2);
-            z-index: 1000;
-        }
-
-        .cyber-dropdown.active {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0) scale(1);
-        }
-
-        .cyber-dropdown::before {
-            content: '> USER_MENU_ACTIVE';
-            display: block;
-            padding: 12px 20px;
-            font-size: 0.7rem;
-            color: var(--neon-green, #00FF88);
-            background: rgba(0, 136, 255, 0.1);
-            border-bottom: 1px solid rgba(0, 136, 255, 0.3);
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .cyber-dropdown-item {
-            display: block;
-            padding: 15px 20px;
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            font-size: 0.95rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.3s ease;
-        }
-
-        .cyber-dropdown-item:hover {
-            background: rgba(0, 136, 255, 0.1);
-            color: var(--neon-green, #00FF88);
-            padding-left: 30px;
-        }
-
-        .cyber-dropdown-logout {
-            display: block;
-            width: calc(100% - 30px);
-            margin: 15px;
-            padding: 12px 20px;
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            color: #fff;
-            text-align: center;
-            border: none;
+        .kr-btn-recharge {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, rgba(0, 255, 65, 0.2), rgba(0, 255, 65, 0.1));
+            border: 1px solid rgba(0, 255, 65, 0.45);
             border-radius: 8px;
+            color: #00ff41;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
             font-weight: 700;
-            font-family: 'Orbitron', sans-serif;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.25s ease;
+            white-space: nowrap;
         }
 
-        .cyber-dropdown-logout:hover {
-            box-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
+        .kr-btn-recharge:hover {
+            background: rgba(0, 255, 65, 0.28);
+            box-shadow: 0 0 18px rgba(0, 255, 65, 0.35);
+            transform: translateY(-1px);
+        }
+
+        .kr-btn-history {
+            padding: 8px 20px;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: rgba(255, 255, 255, 0.5);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.25s ease;
+        }
+
+        .kr-btn-history:hover {
+            border-color: rgba(255, 255, 255, 0.25);
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        @media (max-width: 640px) {
+            .kr-balance-widget {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .kr-balance-amount {
+                justify-content: center;
+                font-size: 2.2rem;
+            }
+
+            .kr-balance-actions {
+                flex-direction: row;
+            }
         }
     </style>
 </head>
 
 <body class="dashboard-page">
+    <script>
+        // Nav Time Update
+        function updateNavTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('es-ES', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            });
+            const timeElement = document.getElementById('nav-time');
+            if (timeElement) {
+                timeElement.textContent = timeString;
+            }
+        }
+        setInterval(updateNavTime, 1000);
+        window.addEventListener('load', updateNavTime);
+    </script>
+    <!-- Navbar -->
     <!-- Navbar -->
     <nav class="navbar">
         <div class="nav-container">
-            <a href="index.html" class="nav-logo">
-                <img src="assets/logo.png" alt="KR-CLI" class="logo-img">
-                <span class="logo-text">KR-CLI</span>
-            </a>
-            <div style="position: relative;">
-                <button class="cyber-menu-btn" id="cyber-menu-btn" onclick="toggleCyberMenu()">
-                    <div class="cyber-menu-icon">
-                        <span></span>
-                        <span></span>
-                        <span></span>
+            <div class="nav-left">
+                <div class="window-controls">
+                    <span class="window-dot red"></span>
+                    <span class="window-dot yellow"></span>
+                    <span class="window-dot green"></span>
+                </div>
+                <a href="index.html" class="nav-logo">
+                    <img src="assets/logo.png" alt="KR-CLIDN">
+                    <span class="nav-brand">KR-CLIDN</span>
+                </a>
+            </div>
+
+            <div class="nav-right">
+                <span class="nav-time" id="nav-time">00:00:00</span>
+                <div class="cyber-menu-wrapper">
+                    <button class="cyber-menu-btn" id="cyber-menu-btn" onclick="toggleCyberMenu()">
+                        <div class="cyber-menu-icon">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </button>
+                    <div class="cyber-dropdown" id="cyber-dropdown">
+                        <a href="dashboard.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">🏠 Dashboard</a>
+                        <a href="educacion.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">📚 Educación</a>
+                        <a href="noticias.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">📰 Noticias</a>
+                        <a href="herramientas.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">🛠️
+                            Herramientas</a>
+                        <a href="tienda.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">🛒 Tienda</a>
+                        <a href="cuenta.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">👤 Mi Cuenta</a>
+                        <button onclick="if(window.KRAuth) window.KRAuth.logout(); closeCyberMenu();"
+                            class="cyber-dropdown-logout">🔓 Cerrar Sesión</button>
                     </div>
-                </button>
-                <div class="cyber-dropdown" id="cyber-dropdown">
-                    <a href="dashboard.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">🏠 Dashboard</a>
-                    <a href="educacion.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">📚 Educación</a>
-                    <a href="noticias.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">📰 Noticias</a>
-                    <a href="herramientas.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">🛠️
-                        Herramientas</a>
-                    <a href="tienda.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">🛒 Tienda</a>
-                    <a href="cuenta.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">👤 Mi Cuenta</a>
-                    <div style="border-top: 1px solid rgba(0, 136, 255, 0.2); margin: 8px 0;"></div>
-                    <button onclick="window.KRAuth.logout(); closeCyberMenu();" class="cyber-dropdown-logout">🔓 Cerrar
-                        Sesión</button>
                 </div>
             </div>
         </div>
@@ -194,14 +268,35 @@
             </div>
         </section>
 
+        <!-- KR BALANCE WIDGET -->
+        <section style="padding: 12px 0 0;">
+            <div class="container">
+                <div class="kr-balance-widget" id="kr-balance-widget">
+                    <div class="kr-coin-icon">⚡</div>
+                    <div class="kr-balance-info">
+                        <div class="kr-balance-label">Saldo Actual · KR Credits</div>
+                        <div class="kr-balance-amount">
+                            <span id="kr-balance-display">---</span>
+                            <span class="kr-balance-unit">KR</span>
+                        </div>
+                        <div class="kr-balance-sub" id="kr-balance-sub">Cargando saldo desde la red...</div>
+                    </div>
+                    <div class="kr-balance-actions">
+                        <a href="tienda.html" class="kr-btn-recharge">⚡ Recargar KR</a>
+                        <a href="cuenta.html" class="kr-btn-history">Ver historial</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Stats Grid -->
         <section class="dashboard-stats" id="stats">
             <div class="container">
                 <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon"><i class="fas fa-coins"></i></div>
-                        <div class="stat-value" id="stat-credits">0</div>
-                        <div class="stat-label">Créditos</div>
+                    <div class="stat-card" style="border-color: rgba(0,255,65,0.3);">
+                        <div class="stat-icon" style="color:#00ff41;"><i class="fas fa-coins"></i></div>
+                        <div class="stat-value" id="stat-credits" style="color:#00ff41;">0</div>
+                        <div class="stat-label">KR Credits</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon"><i class="fas fa-robot"></i></div>
@@ -329,6 +424,54 @@
     <script src="js/supabase-client.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/dashboard.js"></script>
+
+    <!-- KR Balance Loader -->
+    <script>
+        (async function loadKRBalance() {
+            const display = document.getElementById('kr-balance-display');
+            const sub = document.getElementById('kr-balance-sub');
+            const statEl = document.getElementById('stat-credits');
+
+            async function fetchBalance() {
+                try {
+                    await window.KRSupabase.init();
+
+                    // Get authenticated user
+                    const session = await window.KRSupabase.getSession();
+                    if (!session?.user) {
+                        if (display) display.textContent = '0';
+                        if (sub) sub.textContent = 'Inicia sesión para ver tu saldo.';
+                        return;
+                    }
+
+                    const userId = session.user.id;
+
+                    // getUserBalance queries user_wallets table
+                    const balance = await window.KRSupabase.getUserBalance(userId);
+
+                    if (display) display.textContent = balance.toLocaleString('en');
+                    if (statEl) statEl.textContent = balance.toLocaleString('en');
+                    if (sub) {
+                        sub.textContent = balance === 0
+                            ? 'Sin saldo · Recarga ahora para usar la IA'
+                            : `Actualizado · ${new Date().toLocaleTimeString('es-ES')}`;
+                    }
+
+                } catch (err) {
+                    console.warn('[KR] Balance load failed:', err);
+                    if (display) display.textContent = 'N/A';
+                    if (sub) sub.textContent = 'No se pudo cargar el saldo.';
+                }
+            }
+
+            // Load on page ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', fetchBalance);
+            } else {
+                fetchBalance();
+            }
+        })();
+    </script>
 
     <script>
         // Cyber Menu Functions

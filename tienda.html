@@ -5,15 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
-        content="Tienda de recursos digitales: ebooks, programas y bundles exclusivos para potenciar tus habilidades.">
-    <title>Tienda | KR Digital Store</title>
+        content="Compra paquetes de KR Credits para usar la IA de Gemini en KaliRootCLI. Paga solo lo que usas con USDT.">
+    <title>Tienda KR | KaliRootCLI · Recarga tus Créditos</title>
 
     <link rel="icon" type="image/png" href="assets/favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@700;900&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="css/cyber-menu.css">
+    <link rel="stylesheet" href="css/cyber-menu.css?v=2.1">
 
     <style>
         :root {
@@ -46,102 +46,7 @@
             min-height: 100vh;
         }
 
-        /* Navbar */
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border-color);
-            padding: 15px 0;
-        }
-
-        .nav-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .nav-logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-        }
-
-        .nav-logo img {
-            width: 40px;
-            height: 40px;
-            filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.5));
-        }
-
-        .nav-logo span {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.3rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--primary-light), var(--secondary));
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 30px;
-        }
-
-        .nav-link {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-
-        .nav-link:hover {
-            color: var(--primary-light);
-        }
-
-        .nav-cart {
-            position: relative;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 20px;
-            background: rgba(0, 102, 255, 0.2);
-            border: 1px solid var(--primary);
-            border-radius: 10px;
-            color: var(--primary-light);
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .nav-cart:hover {
-            background: var(--primary);
-            color: white;
-        }
-
-        .cart-count {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            width: 22px;
-            height: 22px;
-            background: var(--accent-orange);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.75rem;
-            font-weight: 700;
-        }
+        /* Navbar styles removed - using main.css now */
 
         /* Back Button */
         .back-btn {
@@ -210,12 +115,7 @@
             color: white;
         }
 
-        /* Nav right section */
-        .nav-right {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
+        /* nav-right removed */
 
         /* Hero Section */
         .store-hero {
@@ -386,6 +286,7 @@
             margin-bottom: 20px;
             display: -webkit-box;
             -webkit-line-clamp: 2;
+            line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
@@ -505,7 +406,7 @@
             position: fixed;
             inset: 0;
             background: rgba(0, 0, 0, 0.7);
-            z-index: 2000;
+            z-index: 10000;
             opacity: 0;
             visibility: hidden;
             transition: all 0.3s;
@@ -524,7 +425,7 @@
             max-width: 100%;
             height: 100%;
             background: var(--bg-card);
-            z-index: 2001;
+            z-index: 10001;
             transition: right 0.4s ease;
             display: flex;
             flex-direction: column;
@@ -730,29 +631,32 @@
 
 <body>
     <!-- Navbar -->
+    <!-- Navbar -->
     <nav class="navbar">
         <div class="nav-container">
-            <a href="dashboard.html" class="back-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M19 12H5M12 19l-7-7 7-7" />
-                </svg>
-                Regresar
-            </a>
-
-            <a href="dashboard.html" class="nav-logo">
-                <img src="assets/logo.png" alt="KR Digital" class="logo-img">
-                <span class="logo-text">KR DIGITAL STORE</span>
-            </a>
+            <div class="nav-left">
+                <div class="window-controls">
+                    <span class="window-dot red"></span>
+                    <span class="window-dot yellow"></span>
+                    <span class="window-dot green"></span>
+                </div>
+                <a href="index.html" class="nav-logo">
+                    <img src="assets/logo.png" alt="KR-CLIDN">
+                    <span class="nav-brand">KR-CLIDN</span>
+                </a>
+            </div>
 
             <div class="nav-right">
-                <button class="fixed-cart-btn" onclick="toggleCart()">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <span class="nav-time" id="nav-time">00:00:00</span>
+
+                <button class="fixed-cart-btn" onclick="toggleCart()" style="margin-right: 15px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24" height="24">
                         <path
                             d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z" />
                     </svg>
                     <span class="cart-badge" id="cart-count">0</span>
                 </button>
+
                 <div class="cyber-menu-wrapper">
                     <button class="cyber-menu-btn" id="cyber-menu-btn" onclick="toggleCyberMenu()">
                         <div class="cyber-menu-icon">
@@ -779,16 +683,22 @@
 
     <!-- Hero -->
     <section class="store-hero">
-        <h1>Tienda Digital</h1>
-        <p>Recursos exclusivos para potenciar tus habilidades. Ebooks, programas y bundles diseñados para llevarte al
-            siguiente nivel.</p>
+        <div
+            style="display:inline-flex;align-items:center;gap:8px;padding:6px 16px;background:rgba(0,255,65,0.08);border:1px solid rgba(0,255,65,0.35);border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:#00ff41;margin-bottom:20px;letter-spacing:2px;">
+            <span
+                style="width:7px;height:7px;border-radius:50%;background:#00ff41;box-shadow:0 0 8px #00ff41;animation:blink 1.4s infinite;display:inline-block;"></span>
+            KR CREDITS &bull; USDT &bull; INSTANT DELIVERY
+        </div>
+        <h1
+            style="background:linear-gradient(135deg,#fff,#00ff41);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">
+            Recarga tus KR</h1>
+        <p>El <strong style="color:#00ff41;">combustible</strong> de la IA en tu terminal.
+            Compra KR con USDT y úsalos para cada consulta de Gemini — sin suscripciones, sin sorpresas.</p>
 
         <div class="category-tabs">
-            <button class="category-tab active" data-category="all">🏪 Todos</button>
-            <button class="category-tab" data-category="ebook">📚 Ebooks</button>
-            <button class="category-tab" data-category="program">💻 Programas</button>
-            <button class="category-tab" data-category="bundle">📦 Bundles</button>
-            <button class="category-tab" data-category="course">🎓 Cursos</button>
+            <button class="category-tab active" data-category="kr">&#9889; Paquetes KR</button>
+            <button class="category-tab" data-category="ebook">&#128218; Ebooks</button>
+            <button class="category-tab" data-category="bundle">&#128230; Bundles</button>
         </div>
     </section>
 
@@ -852,7 +762,10 @@
 
         // Initialize
         async function init() {
-            await loadProducts();
+            // Load KR packages first, then DB products
+            products = getDemoProducts();
+            currentCategory = 'kr';
+            renderProducts();
             loadCartFromStorage();
             setupCategoryTabs();
             checkAuth();
@@ -885,41 +798,82 @@
             }
         }
 
-        // Demo products fallback
+        // Demo products fallback (with KR packages first)
         function getDemoProducts() {
             return [
+                // ── KR CREDIT PACKAGES ──
                 {
-                    id: '1',
+                    id: 'kr-100',
+                    name: 'Starter Pack · 100 KR',
+                    slug: 'kr-100',
+                    short_description: 'Ideal para probar la IA. Suficiente para ~100 consultas básicas de Gemini.',
+                    price: 1.00,
+                    sale_price: null,
+                    category: 'kr',
+                    features: ['100 KR Credits', 'Sin expiración', 'Uso inmediato'],
+                    is_featured: false,
+                    kr_amount: 100
+                },
+                {
+                    id: 'kr-500',
+                    name: 'Pro Pack · 500 KR',
+                    slug: 'kr-500',
+                    short_description: 'Para operadores activos. ~500 consultas de IA o sesiones de análisis profundo.',
+                    price: 4.50,
+                    sale_price: null,
+                    category: 'kr',
+                    features: ['500 KR Credits', 'Sin expiración', '10% Bonus incluido'],
+                    is_featured: true,
+                    kr_amount: 500
+                },
+                {
+                    id: 'kr-1000',
+                    name: 'Elite Pack · 1000 KR',
+                    slug: 'kr-1000',
+                    short_description: 'Maximíza tu potencia. 1000 KR + acceso prioritario a Gemini 1.5 Pro.',
+                    price: 8.00,
+                    sale_price: null,
+                    category: 'kr',
+                    features: ['1000 KR Credits', 'Acceso Gemini Pro', '20% Bonus incluido'],
+                    is_featured: true,
+                    kr_amount: 1000
+                },
+                {
+                    id: 'kr-3000',
+                    name: 'Whale Pack · 3000 KR',
+                    slug: 'kr-3000',
+                    short_description: 'Para equipos o hackers de alto rendimiento. Mejor precio por KR.',
+                    price: 20.00,
+                    sale_price: null,
+                    category: 'kr',
+                    features: ['3000 KR Credits', 'Prioridad total', '50% Bonus incluido'],
+                    is_featured: false,
+                    kr_amount: 3000
+                },
+                // ── EBOOKS ──
+                {
+                    id: 'ebook-1',
                     name: 'Guía Completa de Hacking Ético',
                     slug: 'guia-hacking-etico',
                     short_description: 'Domina las técnicas de pentesting desde cero hasta nivel avanzado.',
-                    price: 49.99,
-                    sale_price: 29.99,
-                    category: 'ebook',
-                    features: ['📖 +300 páginas', '🔬 15 labs', '🛠️ Scripts incluidos'],
-                    is_featured: true
-                },
-                {
-                    id: '2',
-                    name: 'Pack Automatización Python',
-                    slug: 'pack-automatizacion-python',
-                    short_description: 'Scripts profesionales para automatizar tareas de seguridad.',
-                    price: 79.99,
+                    price: 29.99,
                     sale_price: null,
-                    category: 'program',
-                    features: ['🐍 +50 scripts', '📝 Docs completa', '💻 Soporte'],
-                    is_featured: true
+                    category: 'ebook',
+                    features: ['+300 páginas', '15 labs', 'Scripts incluidos'],
+                    is_featured: false,
+                    kr_amount: 0
                 },
                 {
-                    id: '3',
+                    id: 'bundle-1',
                     name: 'Bundle Maestro Ciberseguridad',
-                    slug: 'bundle-maestro-ciberseguridad',
-                    short_description: 'Todo lo que necesitas para dominar la ciberseguridad.',
-                    price: 199.99,
-                    sale_price: 149.99,
+                    slug: 'bundle-maestro',
+                    short_description: 'Ebook + scripts + 500 KR para praticar con IA. Todo incluido.',
+                    price: 39.99,
+                    sale_price: null,
                     category: 'bundle',
-                    features: ['📚 Todo incluido', '🎬 +20h video', '🏆 Certificado'],
-                    is_featured: true
+                    features: ['Ebook completo', '+500 KR bonus', 'Scripts exclusivos'],
+                    is_featured: true,
+                    kr_amount: 500
                 }
             ];
         }
@@ -942,41 +896,46 @@
             }
 
             productsGrid.innerHTML = filtered.map(product => {
-                const features = Array.isArray(product.features)
-                    ? product.features.slice(0, 3)
-                    : [];
-
-                const hasDiscount = product.sale_price && product.sale_price < product.price;
-                const displayPrice = hasDiscount ? product.sale_price : product.price;
+                const isKR = product.category === 'kr';
+                const neonBorder = isKR ? 'border-color: rgba(0,255,65,0.35);' : '';
+                const features = Array.isArray(product.features) ? product.features.slice(0, 3) : [];
+                const displayPrice = product.sale_price || product.price;
+                const krLabel = isKR ? `<div style="font-family:'Orbitron',sans-serif;font-size:1.8rem;font-weight:900;color:#00ff41;text-shadow:0 0 20px rgba(0,255,65,0.5);margin:10px 0 4px;">${product.kr_amount.toLocaleString()} <span style="font-size:1rem;opacity:0.7;">KR</span></div>` : '';
+                const priceLabel = isKR
+                    ? `<div style="font-size:0.72rem;color:rgba(0,255,65,0.55);margin-bottom:14px;">≈ $${displayPrice.toFixed(2)} USDT</div>`
+                    : '';
 
                 return `
-                    <article class="product-card">
-                        ${product.is_featured ? '<span class="product-badge badge-featured">⭐ Destacado</span>' : ''}
-                        ${hasDiscount && !product.is_featured ? '<span class="product-badge badge-sale">🔥 Oferta</span>' : ''}
-                        
-                        <div class="product-image">
+                    <article class="product-card" style="${neonBorder}">
+                        ${product.is_featured ? '<span class="product-badge badge-featured">⭐ Popular</span>' : ''}
+                        ${isKR && product.id === 'kr-1000' ? '<span class="product-badge" style="background:linear-gradient(135deg,#00ff41,#007a20);color:#000;">🏆 Mejor Valor</span>' : ''}
+
+                        <div class="product-image" style="${isKR ? 'background: radial-gradient(ellipse at center, rgba(0,255,65,0.12) 0%, rgba(0,0,0,0) 70%);' : ''}">
                             ${product.image_url
                         ? `<img src="${product.image_url}" alt="${product.name}">`
-                        : `<span class="placeholder-icon">${getCategoryIcon(product.category)}</span>`
+                        : `<span class="placeholder-icon">${isKR ? '⚡' : getCategoryIcon(product.category)}</span>`
                     }
-                            <span class="product-category">${product.category}</span>
+                            <span class="product-category" style="${isKR ? 'color:#00ff41;border-color:rgba(0,255,65,0.3);' : ''}">${isKR ? 'KR Credits' : product.category}</span>
                         </div>
-                        
+
                         <div class="product-content">
                             <h3 class="product-title">${product.name}</h3>
                             <p class="product-description">${product.short_description || ''}</p>
-                            
+                            ${krLabel}${priceLabel}
+
                             <div class="product-features">
-                                ${features.map(f => `<span class="feature-tag">${stripEmoji(f)}</span>`).join('')}
+                                ${features.map(f => `<span class="feature-tag" style="${isKR ? 'background:rgba(0,255,65,0.08);color:#00ff41;' : ''}">${f}</span>`).join('')}
                             </div>
-                            
+
                             <div class="product-footer">
                                 <div class="product-price">
-                                    <span class="price-current">$${displayPrice.toFixed(2)}</span>
-                                    ${hasDiscount ? `<span class="price-original">$${product.price.toFixed(2)}</span>` : ''}
+                                    ${isKR
+                        ? `<span class="price-current" style="color:#00ff41;">$${displayPrice.toFixed(2)} USDT</span>`
+                        : `<span class="price-current">$${displayPrice.toFixed(2)}</span>`
+                    }
                                 </div>
-                                <button class="btn-add-cart" onclick="addToCart('${product.id}')">
-                                    🛒 Añadir
+                                <button class="btn-add-cart" style="${isKR ? 'background:linear-gradient(135deg,rgba(0,255,65,0.25),rgba(0,255,65,0.1));border:1px solid rgba(0,255,65,0.5);color:#00ff41;' : ''}" onclick="buyProduct('${product.id}', ${isKR},'${product.slug}')">
+                                    ${isKR ? '⚡ Comprar' : '🛒 Añadir'}
                                 </button>
                             </div>
                         </div>
@@ -1025,13 +984,33 @@
             localStorage.setItem('kr_cart', JSON.stringify(cart));
         }
 
+        // buyProduct: unified handler — KR goes direct to checkout, others add to cart
+        function buyProduct(productId, isKR, slug) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            if (isKR) {
+                // Direct checkout with package ID in URL (no cart needed)
+                const checkoutUrl = `checkout.html?package_id=${encodeURIComponent(productId)}&kr=${product.kr_amount}&price=${product.price}&name=${encodeURIComponent(product.name)}`;
+                if (!currentUser) {
+                    showNotification('Inicia sesión para comprar KR', 'warning');
+                    setTimeout(() => { window.location.href = `login.html?redirect=${encodeURIComponent(checkoutUrl)}`; }, 1200);
+                    return;
+                }
+                window.location.href = checkoutUrl;
+                return;
+            }
+
+            // Non-KR product — use cart
+            addToCart(productId);
+        }
+
         function addToCart(productId) {
             const product = products.find(p => p.id === productId);
             if (!product) return;
 
             const existing = cart.find(item => item.id === productId);
             if (existing) {
-                // Already in cart, show feedback
                 showNotification('Ya está en tu carrito', 'info');
                 return;
             }
@@ -1046,15 +1025,6 @@
             saveCartToStorage();
             updateCartUI();
             showNotification('¡Añadido al carrito!', 'success');
-
-            // Animate button
-            const btn = event.target;
-            btn.classList.add('added');
-            btn.textContent = '✓ Añadido';
-            setTimeout(() => {
-                btn.classList.remove('added');
-                btn.innerHTML = '🛒 Añadir';
-            }, 1500);
         }
 
         function removeFromCart(productId) {
@@ -1153,6 +1123,24 @@
         init();
     </script>
     <script src="js/cyber-menu.js"></script>
+    <script>
+        // Nav Time Update
+        function updateNavTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('es-ES', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            });
+            const timeElement = document.getElementById('nav-time');
+            if (timeElement) {
+                timeElement.textContent = timeString;
+            }
+        }
+        updateNavTime();
+        setInterval(updateNavTime, 1000);
+    </script>
 </body>
 
 </html>

@@ -13,7 +13,7 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@700;900&family=JetBrains+Mono:wght@400;500&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="css/cyber-menu.css">
+    <link rel="stylesheet" href="css/cyber-menu.css?v=2.1">
 
     <style>
         :root {
@@ -46,75 +46,7 @@
             flex-direction: column;
         }
 
-        /* Navbar */
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            padding: 15px 0;
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .nav-left {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .back-btn {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 18px;
-            background: transparent;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            color: var(--secondary);
-            font-size: 0.9rem;
-            text-decoration: none;
-            transition: all 0.3s;
-        }
-
-        .back-btn:hover {
-            background: rgba(0, 255, 255, 0.1);
-            border-color: var(--secondary);
-        }
-
-        .nav-logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-        }
-
-        .nav-logo img {
-            width: 40px;
-            height: 40px;
-            filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.5));
-        }
-
-        .nav-logo span {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.2rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--primary-light), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
+        /* Navbar styles removed - using main.css */
 
         /* Chat Container */
         .chat-container {
@@ -439,31 +371,42 @@
 
 <body>
     <!-- Navbar -->
+    <!-- Navbar -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-left">
-                <a href="cuenta.html" class="back-btn">
-                    <i class="fas fa-arrow-left"></i>
-                    Volver
-                </a>
-                <a href="dashboard.html" class="nav-logo">
-                    <img src="assets/logo.png" alt="KR-CLI">
-                    <span>SOPORTE</span>
+                <div class="window-controls">
+                    <span class="window-dot red"></span>
+                    <span class="window-dot yellow"></span>
+                    <span class="window-dot green"></span>
+                </div>
+                <a href="index.html" class="nav-logo">
+                    <img src="assets/logo.png" alt="KR-CLIDN">
+                    <span class="nav-brand">KR-CLIDN</span>
                 </a>
             </div>
-            <div class="cyber-menu-wrapper">
-                <button class="cyber-menu-btn" id="cyber-menu-btn" onclick="toggleCyberMenu()">
-                    <div class="cyber-menu-icon">
-                        <span></span>
-                        <span></span>
-                        <span></span>
+
+            <div class="nav-right">
+                <span class="nav-time" id="nav-time">00:00:00</span>
+                <div class="cyber-menu-wrapper">
+                    <button class="cyber-menu-btn" id="cyber-menu-btn" onclick="toggleCyberMenu()">
+                        <div class="cyber-menu-icon">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </button>
+                    <div class="cyber-dropdown" id="cyber-dropdown">
+                        <a href="dashboard.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">🏠 Dashboard</a>
+                        <a href="educacion.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">📚 Educación</a>
+                        <a href="noticias.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">📰 Noticias</a>
+                        <a href="herramientas.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">🛠️
+                            Herramientas</a>
+                        <a href="tienda.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">🛒 Tienda</a>
+                        <a href="cuenta.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">👤 Mi Cuenta</a>
+                        <button onclick="if(window.KRAuth) window.KRAuth.logout(); closeCyberMenu();"
+                            class="cyber-dropdown-logout">🔓 Cerrar Sesión</button>
                     </div>
-                </button>
-                <div class="cyber-dropdown" id="cyber-dropdown">
-                    <a href="dashboard.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">🏠 Dashboard</a>
-                    <a href="cuenta.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">👤 Mi Cuenta</a>
-                    <button onclick="window.KRAuth.logout(); closeCyberMenu();" class="cyber-dropdown-logout">🔓 Cerrar
-                        Sesión</button>
                 </div>
             </div>
         </div>
@@ -707,6 +650,24 @@
 
         // Initialize
         init();
+    </script>
+    <script>
+        // Nav Time Update
+        function updateNavTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('es-ES', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            });
+            const timeElement = document.getElementById('nav-time');
+            if (timeElement) {
+                timeElement.textContent = timeString;
+            }
+        }
+        setInterval(updateNavTime, 1000);
+        window.addEventListener('load', updateNavTime);
     </script>
 </body>
 

@@ -19,10 +19,11 @@
     <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
     <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
     <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
-    <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/animations.css">
-    <link rel="stylesheet" href="css/responsive.css">
-    <link rel="stylesheet" href="css/cyber-menu.css">
+    <link rel="stylesheet" href="css/main.css?v=2.1">
+    <link rel="stylesheet" href="css/animations.css?v=2.1">
+    <link rel="stylesheet" href="css/responsive.css?v=2.1">
+    <link rel="stylesheet" href="css/shared.css?v=2.1">
+    <link rel="stylesheet" href="css/cyber-menu.css?v=2.1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link
         href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@400;700;900&display=swap"
@@ -35,10 +36,278 @@
             --secondary: #00FFFF;
             --accent-green: #00FF88;
             --accent-purple: #a855f7;
+            --neon: #00ff41;
             --bg-dark: #000000;
             --bg-card: #0a0a0a;
             --text-primary: #FFFFFF;
             --text-secondary: rgba(255, 255, 255, 0.7);
+        }
+
+        /* ============================================
+           SECTION: KR PLANS (Planes de Potencia)
+        ============================================ */
+        .section-kr-plans {
+            background: linear-gradient(180deg,
+                    transparent 0%,
+                    rgba(0, 255, 65, 0.04) 40%,
+                    rgba(0, 255, 65, 0.06) 60%,
+                    transparent 100%);
+        }
+
+        .section-kr-plans .section-badge {
+            background: rgba(0, 255, 65, 0.1);
+            border-color: rgba(0, 255, 65, 0.35);
+            color: #00ff41;
+        }
+
+        /* KR Explain Banner */
+        .kr-explain {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px 28px;
+            background: rgba(0, 255, 65, 0.06);
+            border: 1px dashed rgba(0, 255, 65, 0.3);
+            border-radius: 8px;
+            margin-bottom: 50px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .kr-explain-icon {
+            font-size: 2rem;
+            flex-shrink: 0;
+        }
+
+        .kr-explain-text {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.75);
+            line-height: 1.65;
+        }
+
+        .kr-explain-text strong {
+            color: #00ff41;
+        }
+
+        /* Plans Grid */
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 28px;
+        }
+
+        .plan-card {
+            position: relative;
+            background: linear-gradient(135deg, rgba(10, 10, 10, 0.9), rgba(18, 18, 18, 0.7));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 36px 32px;
+            transition: all 0.4s ease;
+            overflow: hidden;
+        }
+
+        .plan-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            opacity: 0;
+            transition: opacity 0.35s;
+        }
+
+        .plan-card:hover {
+            transform: translateY(-8px);
+        }
+
+        .plan-card:hover::after {
+            opacity: 1;
+        }
+
+        /* Free Plan */
+        .plan-card.plan-free::after {
+            background: linear-gradient(90deg, var(--accent-green), #00ff41);
+        }
+
+        .plan-card.plan-free:hover {
+            border-color: rgba(0, 255, 65, 0.4);
+            box-shadow: 0 20px 50px rgba(0, 255, 65, 0.1);
+        }
+
+        /* Premium Plan */
+        .plan-card.plan-premium {
+            border-color: rgba(0, 255, 255, 0.25);
+            background: linear-gradient(135deg, rgba(0, 10, 25, 0.95), rgba(0, 30, 50, 0.7));
+        }
+
+        .plan-card.plan-premium::before {
+            content: 'MÁS POPULAR';
+            position: absolute;
+            top: 14px;
+            right: -28px;
+            background: linear-gradient(90deg, var(--secondary), var(--primary));
+            color: #000;
+            font-size: 0.62rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            letter-spacing: 2px;
+            padding: 5px 36px;
+            transform: rotate(35deg);
+        }
+
+        .plan-card.plan-premium::after {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .plan-card.plan-premium:hover {
+            border-color: rgba(0, 255, 255, 0.5);
+            box-shadow: 0 20px 50px rgba(0, 102, 255, 0.15);
+        }
+
+        .plan-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 14px;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .plan-card.plan-free .plan-tag {
+            background: rgba(0, 255, 65, 0.1);
+            color: #00ff41;
+            border: 1px solid rgba(0, 255, 65, 0.3);
+        }
+
+        .plan-card.plan-premium .plan-tag {
+            background: rgba(0, 255, 255, 0.1);
+            color: var(--secondary);
+            border: 1px solid rgba(0, 255, 255, 0.25);
+        }
+
+        .plan-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.7rem;
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+        .plan-card.plan-free .plan-name {
+            color: #00ff41;
+        }
+
+        .plan-card.plan-premium .plan-name {
+            background: linear-gradient(90deg, #fff, var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .plan-kr-bonus {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            margin: 14px 0 20px;
+            background: rgba(0, 255, 65, 0.08);
+            border: 1px solid rgba(0, 255, 65, 0.25);
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #00ff41;
+        }
+
+        .plan-card.plan-premium .plan-kr-bonus {
+            background: rgba(0, 255, 255, 0.08);
+            border-color: rgba(0, 255, 255, 0.25);
+            color: var(--secondary);
+        }
+
+        .plan-features {
+            list-style: none;
+            margin-bottom: 28px;
+        }
+
+        .plan-features li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 8px 0;
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .plan-features li:last-child {
+            border-bottom: none;
+        }
+
+        .plan-check {
+            color: #00ff41;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .plan-card.plan-premium .plan-check {
+            color: var(--secondary);
+        }
+
+        .plan-cta {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-align: center;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .plan-card.plan-free .plan-cta {
+            background: linear-gradient(135deg, rgba(0, 255, 65, 0.15), rgba(0, 255, 65, 0.08));
+            color: #00ff41;
+            border: 1px solid rgba(0, 255, 65, 0.4);
+        }
+
+        .plan-card.plan-free .plan-cta:hover {
+            background: rgba(0, 255, 65, 0.22);
+            box-shadow: 0 0 24px rgba(0, 255, 65, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .plan-card.plan-premium .plan-cta {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #000;
+        }
+
+        .plan-card.plan-premium .plan-cta:hover {
+            box-shadow: 0 8px 28px rgba(0, 102, 255, 0.5);
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+
+        @media (max-width: 640px) {
+            .kr-explain {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .plan-card.plan-premium::before {
+                display: none;
+            }
         }
 
         * {
@@ -878,25 +1147,26 @@
 
         <div class="hero-content">
             <div class="hero-badge">
-                IA + CIBERSEGURIDAD
+                GEMINI IA · PAY-AS-YOU-GO · KR CREDITS
             </div>
 
             <h1 class="hero-title">
-                Tu Mentor IA para<br>
-                <span class="gradient-text">Ciberseguridad Real</span>
+                Hacking con IA.<br>
+                <span class="gradient-text">Solo Pagas lo que Usas.</span>
             </h1>
 
             <p class="hero-subtitle">
-                La plataforma que otros no quieren que conozcas. Aprende hacking ético con IA que analiza, enseña y te
-                guía paso a paso.
+                KaliRootCLI usa la IA de Gemini desde tu terminal.
+                Cada consulta cuesta <strong style="color:#00ff41;">KR</strong> — la moneda del sistema.
+                Regístrate hoy y recibes <strong style="color:#00ff41;">50 KR gratis</strong> para empezar.
             </p>
 
             <div class="hero-cta">
                 <a href="register.html" class="hero-btn hero-btn-primary">
-                    Comenzar Ahora
+                    🚀 Obtener 50 KR Gratis
                 </a>
-                <a href="login.html" class="hero-btn hero-btn-secondary">
-                    Iniciar Sesión
+                <a href="tienda.html" class="hero-btn hero-btn-secondary">
+                    💰 Comprar más KR
                 </a>
             </div>
         </div>
@@ -1089,10 +1359,106 @@
                     <div class="feature-icon">💳</div>
                     <h3 class="feature-title">Pago Seguro con Cripto</h3>
                     <p class="feature-description">
-                        Acepta Bitcoin, Ethereum y más. Transacciones 100% anónimas.
+                        Acepta Bitcoin, Ethereum y USDT. Recarga KR cuando quieras.
                     </p>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <!-- Section: KR Plans (Planes de Potencia) -->
+    <section class="section section-kr-plans" id="pricing">
+        <div class="section-container">
+            <div class="section-header reveal">
+                <span class="section-badge">> ./kr --planes</span>
+                <h2 class="section-title">Planes de Potencia</h2>
+                <p class="section-subtitle">
+                    Elige cómo quieres operar. Ambos planes usan la misma IA — tú decides cuánto poder necesitas.
+                </p>
+            </div>
+
+            <!-- KR Explain Banner -->
+            <div class="kr-explain reveal">
+                <span class="kr-explain-icon">⚡</span>
+                <p class="kr-explain-text">
+                    <strong>¿Qué es KR?</strong> Es la moneda interna de KaliRootCLI.
+                    Cada vez que usas la IA de Gemini en tu terminal (análisis, exploits, código, OSINT…),
+                    el sistema consume <strong>KR</strong> de tu saldo.
+                    Puedes recargar en cualquier momento desde la tienda con <strong>USDT</strong>.
+                    Sin suscripción forzada — <strong>pagas solo lo que usas.</strong>
+                </p>
+            </div>
+
+            <!-- Plans Grid -->
+            <div class="plans-grid">
+
+                <!-- PLAN FREE -->
+                <div class="plan-card plan-free reveal">
+                    <span class="plan-tag">● Free</span>
+                    <div class="plan-name">KR FREE</div>
+                    <div class="plan-kr-bonus">🎁 50 KR de Bienvenida</div>
+
+                    <ul class="plan-features">
+                        <li>
+                            <span class="plan-check">✓</span>
+                            <span>50 KR al registrarte (sin tarjeta)</span>
+                        </li>
+                        <li>
+                            <span class="plan-check">✓</span>
+                            <span>Consultas IA con Gemini 1.5 Flash</span>
+                        </li>
+                        <li>
+                            <span class="plan-check">✓</span>
+                            <span>Módulos de recon y escaneo básicos</span>
+                        </li>
+                        <li>
+                            <span class="plan-check">✓</span>
+                            <span>Acceso a noticias de ciberseguridad</span>
+                        </li>
+                        <li>
+                            <span class="plan-check">✓</span>
+                            <span>Recarga KR cuando quieras con USDT</span>
+                        </li>
+                    </ul>
+
+                    <a href="register.html" class="plan-cta">Empezar Gratis →</a>
+                </div>
+
+                <!-- PLAN PREMIUM -->
+                <div class="plan-card plan-premium reveal">
+                    <span class="plan-tag">★ Premium</span>
+                    <div class="plan-name">KR PREMIUM</div>
+                    <div class="plan-kr-bonus"
+                        style="background:rgba(0,255,255,0.08);border-color:rgba(0,255,255,0.25);color:var(--secondary);">
+                        🚀 Prioridad Gemini 1.5 Pro</div>
+
+                    <ul class="plan-features">
+                        <li>
+                            <span class="plan-check" style="color:var(--secondary);">✓</span>
+                            <span>Acceso a <strong>Gemini 1.5 Pro</strong> (respuestas más profundas)</span>
+                        </li>
+                        <li>
+                            <span class="plan-check" style="color:var(--secondary);">✓</span>
+                            <span>Funciones Pro: RAG, análisis de malware, exploits avanzados</span>
+                        </li>
+                        <li>
+                            <span class="plan-check" style="color:var(--secondary);">✓</span>
+                            <span>Todos los módulos del arsenal desbloqueados</span>
+                        </li>
+                        <li>
+                            <span class="plan-check" style="color:var(--secondary);">✓</span>
+                            <span>Soporte prioritario y acceso anticipado a nuevas herramientas</span>
+                        </li>
+                        <li>
+                            <span class="plan-check" style="color:var(--secondary);">✓</span>
+                            <span>KR no caduca — acumula sin límite</span>
+                        </li>
+                    </ul>
+
+                    <a href="tienda.html" class="plan-cta">Comprar KR Premium →</a>
+                </div>
+
+            </div><!-- /plans-grid -->
         </div>
     </section>
 
@@ -1104,11 +1470,17 @@
                 ¿Listo para <span class="gradient-text">Dominar</span>?
             </h2>
             <p class="cta-subtitle">
-                Únete a la comunidad de hackers éticos más avanzada.
+                Regístrate ahora y recibe <strong style="color:#00ff41;">50 KR gratis</strong> para usar la IA desde el
+                primer minuto.
             </p>
-            <a href="register.html" class="hero-btn hero-btn-primary">
-                Crear Cuenta Gratis →
-            </a>
+            <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+                <a href="register.html" class="hero-btn hero-btn-primary">
+                    🚀 Registrarse + 50 KR Gratis
+                </a>
+                <a href="tienda.html" class="hero-btn hero-btn-secondary">
+                    💰 Ver Paquetes KR
+                </a>
+            </div>
         </div>
     </section>
 

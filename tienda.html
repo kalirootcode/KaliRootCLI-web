@@ -380,6 +380,18 @@
             }
         }
 
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
         /* Empty State */
         .empty-state {
             text-align: center;
@@ -798,57 +810,54 @@
             }
         }
 
-        // Demo products fallback (with KR packages first)
+        // Dominion Tier Products
         function getDemoProducts() {
             return [
-                // ── KR CREDIT PACKAGES ──
+                // ── DOMINION TIER PACKAGES ──
                 {
-                    id: 'kr-100',
-                    name: 'Starter Pack · 100 KR',
-                    slug: 'kr-100',
-                    short_description: 'Ideal para probar la IA. Suficiente para ~100 consultas básicas de Gemini.',
-                    price: 1.00,
+                    id: 'starter',
+                    name: '⚡ Dominion Starter',
+                    slug: 'starter',
+                    short_description: '250 KR + acceso al Núcleo Dominion Flash. Perfecto para comenzar tus operaciones de ciberseguridad.',
+                    price: 10.00,
                     sale_price: null,
                     category: 'kr',
-                    features: ['100 KR Credits', 'Sin expiración', 'Uso inmediato'],
+                    features: ['250 KR Credits', 'Núcleo Dominion Flash', 'Sin expiración'],
                     is_featured: false,
-                    kr_amount: 100
+                    kr_amount: 250,
+                    plan_id: 'starter',
+                    glow_color: '0, 255, 255',      // Cyan
+                    badge: null
                 },
                 {
-                    id: 'kr-500',
-                    name: 'Pro Pack · 500 KR',
-                    slug: 'kr-500',
-                    short_description: 'Para operadores activos. ~500 consultas de IA o sesiones de análisis profundo.',
-                    price: 4.50,
+                    id: 'hacker',
+                    name: '🚀 Hacker Promo',
+                    slug: 'hacker',
+                    short_description: '1,500 KR con lógica Doble KR incluida. Desbloquea el Agente de Proyectos para automatización avanzada.',
+                    price: 25.00,
                     sale_price: null,
                     category: 'kr',
-                    features: ['500 KR Credits', 'Sin expiración', '10% Bonus incluido'],
+                    features: ['1,500 KR Credits', '🔥 Doble KR incluido', 'Agente de Proyectos'],
                     is_featured: true,
-                    kr_amount: 500
+                    kr_amount: 1500,
+                    plan_id: 'hacker',
+                    glow_color: '124, 58, 237',      // Purple
+                    badge: '🔥 DOBLE KR'
                 },
                 {
-                    id: 'kr-1000',
-                    name: 'Elite Pack · 1000 KR',
-                    slug: 'kr-1000',
-                    short_description: 'Maximíza tu potencia. 1000 KR + acceso prioritario a Gemini 1.5 Pro.',
-                    price: 8.00,
+                    id: 'god_mode',
+                    name: '💀 Dominion God Mode',
+                    slug: 'god_mode',
+                    short_description: '4,000 KR + Arsenal Prohibido + Modelo de alta precisión. Poder absoluto sin restricciones.',
+                    price: 50.00,
                     sale_price: null,
                     category: 'kr',
-                    features: ['1000 KR Credits', 'Acceso Gemini Pro', '20% Bonus incluido'],
-                    is_featured: true,
-                    kr_amount: 1000
-                },
-                {
-                    id: 'kr-3000',
-                    name: 'Whale Pack · 3000 KR',
-                    slug: 'kr-3000',
-                    short_description: 'Para equipos o hackers de alto rendimiento. Mejor precio por KR.',
-                    price: 20.00,
-                    sale_price: null,
-                    category: 'kr',
-                    features: ['3000 KR Credits', 'Prioridad total', '50% Bonus incluido'],
+                    features: ['4,000 KR Credits', '☠️ Arsenal Prohibido', 'Modelo Alta Precisión'],
                     is_featured: false,
-                    kr_amount: 3000
+                    kr_amount: 4000,
+                    plan_id: 'god_mode',
+                    glow_color: '239, 68, 68',       // Red
+                    badge: '💀 LIMITADO'
                 },
                 // ── EBOOKS ──
                 {
@@ -861,7 +870,8 @@
                     category: 'ebook',
                     features: ['+300 páginas', '15 labs', 'Scripts incluidos'],
                     is_featured: false,
-                    kr_amount: 0
+                    kr_amount: 0,
+                    plan_id: null
                 },
                 {
                     id: 'bundle-1',
@@ -873,7 +883,8 @@
                     category: 'bundle',
                     features: ['Ebook completo', '+500 KR bonus', 'Scripts exclusivos'],
                     is_featured: true,
-                    kr_amount: 500
+                    kr_amount: 500,
+                    plan_id: null
                 }
             ];
         }
@@ -897,45 +908,48 @@
 
             productsGrid.innerHTML = filtered.map(product => {
                 const isKR = product.category === 'kr';
-                const neonBorder = isKR ? 'border-color: rgba(0,255,65,0.35);' : '';
+                const neonBorder = isKR ? `border-color: rgba(${product.glow_color || '0,255,65'}, 0.35);` : '';
                 const features = Array.isArray(product.features) ? product.features.slice(0, 3) : [];
                 const displayPrice = product.sale_price || product.price;
-                const krLabel = isKR ? `<div style="font-family:'Orbitron',sans-serif;font-size:1.8rem;font-weight:900;color:#00ff41;text-shadow:0 0 20px rgba(0,255,65,0.5);margin:10px 0 4px;">${product.kr_amount.toLocaleString()} <span style="font-size:1rem;opacity:0.7;">KR</span></div>` : '';
+                const krLabel = isKR ? `<div style="font-family:'Orbitron',sans-serif;font-size:1.8rem;font-weight:900;color:rgb(${product.glow_color || '0,255,65'});text-shadow:0 0 20px rgba(${product.glow_color || '0,255,65'},0.5);margin:10px 0 4px;">${product.kr_amount.toLocaleString()} <span style="font-size:1rem;opacity:0.7;">KR</span></div>` : '';
                 const priceLabel = isKR
-                    ? `<div style="font-size:0.72rem;color:rgba(0,255,65,0.55);margin-bottom:14px;">≈ $${displayPrice.toFixed(2)} USDT</div>`
+                    ? `<div style="font-size:0.72rem;color:rgba(${product.glow_color || '0,255,65'},0.55);margin-bottom:14px;">≈ $${displayPrice.toFixed(2)} USDT</div>`
                     : '';
+                const scarcityLabel = (product.id === 'god_mode') ? `<div style="font-size:0.75rem;color:#ef4444;font-weight:700;margin-bottom:10px;animation:pulse 2s infinite;">🔥 Solo ${Math.floor(Math.random() * 4) + 3} cupos restantes</div>` : '';
+                const badgeHtml = product.badge ? `<span class="product-badge" style="background:linear-gradient(135deg, rgba(${product.glow_color},0.9), rgba(${product.glow_color},0.6));color:#fff;">${product.badge}</span>` : (product.is_featured ? '<span class="product-badge badge-featured">⭐ Popular</span>' : '');
 
                 return `
                     <article class="product-card" style="${neonBorder}">
-                        ${product.is_featured ? '<span class="product-badge badge-featured">⭐ Popular</span>' : ''}
-                        ${isKR && product.id === 'kr-1000' ? '<span class="product-badge" style="background:linear-gradient(135deg,#00ff41,#007a20);color:#000;">🏆 Mejor Valor</span>' : ''}
+                        ${badgeHtml}
 
-                        <div class="product-image" style="${isKR ? 'background: radial-gradient(ellipse at center, rgba(0,255,65,0.12) 0%, rgba(0,0,0,0) 70%);' : ''}">
+                        <div class="product-image" style="${isKR ? `background: radial-gradient(ellipse at center, rgba(${product.glow_color || '0,255,65'},0.12) 0%, rgba(0,0,0,0) 70%);` : ''}">
                             ${product.image_url
                         ? `<img src="${product.image_url}" alt="${product.name}">`
                         : `<span class="placeholder-icon">${isKR ? '⚡' : getCategoryIcon(product.category)}</span>`
                     }
-                            <span class="product-category" style="${isKR ? 'color:#00ff41;border-color:rgba(0,255,65,0.3);' : ''}">${isKR ? 'KR Credits' : product.category}</span>
+                            <span class="product-category" style="${isKR ? `color:rgb(${product.glow_color || '0,255,65'});border-color:rgba(${product.glow_color || '0,255,65'},0.3);` : ''}">${isKR ? 'DOMINION TIER' : product.category}</span>
                         </div>
 
                         <div class="product-content">
                             <h3 class="product-title">${product.name}</h3>
                             <p class="product-description">${product.short_description || ''}</p>
+                            ${scarcityLabel}
                             ${krLabel}${priceLabel}
 
                             <div class="product-features">
-                                ${features.map(f => `<span class="feature-tag" style="${isKR ? 'background:rgba(0,255,65,0.08);color:#00ff41;' : ''}">${f}</span>`).join('')}
+                                ${features.map(f => `<span class="feature-tag" style="${isKR ? `background:rgba(${product.glow_color || '0,255,65'},0.08);color:rgb(${product.glow_color || '0,255,65'});` : ''}">${f}</span>`).join('')}
                             </div>
 
                             <div class="product-footer">
                                 <div class="product-price">
                                     ${isKR
-                        ? `<span class="price-current" style="color:#00ff41;">$${displayPrice.toFixed(2)} USDT</span>`
+                        ? `<span class="price-current" style="color:rgb(${product.glow_color || '0,255,65'});">`
+                        + `$${displayPrice.toFixed(2)} USDT</span>`
                         : `<span class="price-current">$${displayPrice.toFixed(2)}</span>`
                     }
                                 </div>
-                                <button class="btn-add-cart" style="${isKR ? 'background:linear-gradient(135deg,rgba(0,255,65,0.25),rgba(0,255,65,0.1));border:1px solid rgba(0,255,65,0.5);color:#00ff41;' : ''}" onclick="buyProduct('${product.id}', ${isKR},'${product.slug}')">
-                                    ${isKR ? '⚡ Comprar' : '🛒 Añadir'}
+                                <button class="btn-add-cart" style="${isKR ? `background:linear-gradient(135deg,rgba(${product.glow_color || '0,255,65'},0.25),rgba(${product.glow_color || '0,255,65'},0.1));border:1px solid rgba(${product.glow_color || '0,255,65'},0.5);color:rgb(${product.glow_color || '0,255,65'});` : ''}" onclick="buyProduct('${product.id}', ${isKR},'${product.slug}', '${product.plan_id || ''}')">
+                                    ${isKR ? (product.id === 'god_mode' ? '☠️ Desbloquear Arsenal' : (product.id === 'hacker' ? '🚀 Comprar' : '⚡ Activar')) : '🛒 Añadir'}
                                 </button>
                             </div>
                         </div>
@@ -985,16 +999,16 @@
         }
 
         // buyProduct: unified handler — KR goes direct to checkout, others add to cart
-        function buyProduct(productId, isKR, slug) {
+        function buyProduct(productId, isKR, slug, planId) {
             const product = products.find(p => p.id === productId);
             if (!product) return;
 
             if (isKR) {
-                // Direct checkout with package ID in URL (no cart needed)
-                const checkoutUrl = `checkout.html?package_id=${encodeURIComponent(productId)}&kr=${product.kr_amount}&price=${product.price}&name=${encodeURIComponent(product.name)}`;
+                // Direct checkout with plan_id in URL
+                const checkoutUrl = `checkout.html?plan_id=${encodeURIComponent(planId || productId)}&kr=${product.kr_amount}&price=${product.price}&name=${encodeURIComponent(product.name)}`;
                 if (!currentUser) {
                     showNotification('Inicia sesión para comprar KR', 'warning');
-                    setTimeout(() => { window.location.href = `login.html?redirect=${encodeURIComponent(checkoutUrl)}`; }, 1200);
+                    setTimeout(() => { window.location.href = `acceso.html?redirect=${encodeURIComponent(checkoutUrl)}`; }, 1200);
                     return;
                 }
                 window.location.href = checkoutUrl;

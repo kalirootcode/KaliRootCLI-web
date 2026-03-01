@@ -904,9 +904,8 @@
     <script src="js/config.js"></script>
     <script src="js/supabase-client.js"></script>
     <script>
-        // NOWPayments Configuration - Uses global CONFIG
-        const NOWPAYMENTS_API_KEY = CONFIG.NOWPAYMENTS_API_KEY;
-        const NOWPAYMENTS_API_URL = CONFIG.NOWPAYMENTS_API_URL;
+        // API base URL for backend calls
+        const API_BASE = window.CONFIG?.API_BASE_URL || '';
 
         // State
         let cart = [];
@@ -917,20 +916,28 @@
         let total = 0;
         let currentPayment = null;
         let appliedCoupon = null;
+        let planId = null;  // Dominion tier plan_id from URL
 
         // Initialize
         async function init() {
-            loadCart();
-            await checkAuth();
-            setupCryptoSelection();
-            updateSummary();
-        }
+            // Read plan_id from URL query params (from tienda.html)
+            const params = new URLSearchParams(window.location.search);
+            planId = params.get('plan_id');
+            const krAmount = params.get('kr');
+            const price = parseFloat(params.get('price') || '0');
+            const name = params.get('name') || 'Dominion Tier';
 
-        // Load cart from localStorage
-        function loadCart() {
-            const saved = localStorage.getItem('kr_cart');
-            if (saved) {
-                cart = JSON.parse(saved);
+            // If we have a plan_id, auto-populate the cart with that tier
+            if (planId && price > 0) {
+                cart = [{
+                    id: planId,
+                    name: decodeURIComponent(name),
+                    price: price,
+                    kr_amount: parseInt(krAmount || '0'),
+                    plan_id: planId
+                }];
+            } else {
+                loadCart();
             }
 
             if (cart.length === 0) {
@@ -939,6 +946,17 @@
             }
 
             renderCartItems();
+            await checkAuth();
+            setupCryptoSelection();
+            updateSummary();
+        }
+
+        // Load cart from localStorage (fallback for non-KR items)
+        function loadCart() {
+            const saved = localStorage.getItem('kr_cart');
+            if (saved) {
+                cart = JSON.parse(saved);
+            }
         }
 
         // Show empty cart message
@@ -1100,7 +1118,7 @@
             }
         }
 
-        // Initiate payment with NOWPayments
+        // Initiate payment via our backend API
         async function initiatePayment() {
             if (!currentUser || cart.length === 0) return;
 
@@ -1109,61 +1127,100 @@
             btn.disabled = true;
 
             try {
-                // Create order in our database first
-                const items = cart.map(item => ({
-                    product_id: item.id,
-                    name: item.name,
-                    slug: item.slug || item.id,
-                    price: item.price,
-                    quantity: 1
-                }));
+                // Get user's auth token from Supabase session
+                const session = await window.KRSupabase.getSession();
+                const accessToken = session?.access_token;
 
-                const orderResult = await window.KRSupabase.createOrder(
-                    currentUser.id,
-                    currentUser.email,
-                    items,
-                    total,
-                    { payment_method: 'crypto', currency: selectedCrypto }
-                );
-
-                if (!orderResult.success) {
-                    throw new Error('Failed to create order');
+                if (!accessToken) {
+                    throw new Error('No auth token — please login first');
                 }
 
-                // Create NOWPayments invoice
-                const paymentResponse = await fetch(`${NOWPAYMENTS_API_URL}/payment`, {
-                    method: 'POST',
-                    headers: {
-                        'x-api-key': NOWPAYMENTS_API_KEY,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        price_amount: total,
-                        price_currency: 'usd',
-                        pay_currency: selectedCrypto,
-                        order_id: orderResult.order.id,
-                        order_description: `KR Digital Store - Order #${orderResult.order.order_number}`,
-                        ipn_callback_url: `${window.location.origin}/api/nowpayments-webhook`,
-                        success_url: `${window.location.origin}/success.html?order=${orderResult.order.id}`,
-                        cancel_url: `${window.location.origin}/checkout.html`
-                    })
-                });
+                if (planId) {
+                    // ── Dominion Tier Purchase ─────────────────────────────
+                    // Call our backend which creates the NowPayments invoice
+                    // Use the constant API URL where your Render backend is hosted so GitHub Pages doesn't fail
+                    const API_URL = "https://kalirootcli.onrender.com";
 
-                if (!paymentResponse.ok) {
-                    throw new Error('Failed to create payment');
+                    const response = await fetch(`${API_URL}/api/payments/create-credits`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${accessToken}`
+                        },
+                        body: JSON.stringify({ plan_id: planId })
+                    });
+
+                    if (!response.ok) {
+                        const err = await response.json().catch(() => ({}));
+                        throw new Error(err.detail || 'Error creating payment');
+                    }
+
+                    const data = await response.json();
+                    const invoiceUrl = data.invoice_url;
+
+                    if (invoiceUrl) {
+                        // Redirect to NowPayments hosted checkout
+                        window.location.href = invoiceUrl;
+                    } else {
+                        throw new Error('No invoice URL received from server');
+                    }
+
+                } else {
+                    // ── Legacy cart checkout (ebooks, bundles) ─────────────
+                    const items = cart.map(item => ({
+                        product_id: item.id,
+                        name: item.name,
+                        slug: item.slug || item.id,
+                        price: item.price,
+                        quantity: 1
+                    }));
+
+                    const orderResult = await window.KRSupabase.createOrder(
+                        currentUser.id,
+                        currentUser.email,
+                        items,
+                        total,
+                        { payment_method: 'crypto', currency: selectedCrypto }
+                    );
+
+                    if (!orderResult.success) {
+                        throw new Error('Failed to create order');
+                    }
+
+                    // Create NOWPayments payment directly for legacy items
+                    const NOWPAYMENTS_API_KEY = (window.CONFIG || {}).NOWPAYMENTS_API_KEY;
+                    const NOWPAYMENTS_API_URL = (window.CONFIG || {}).NOWPAYMENTS_API_URL || 'https://api.nowpayments.io/v1';
+
+                    const paymentResponse = await fetch(`${NOWPAYMENTS_API_URL}/payment`, {
+                        method: 'POST',
+                        headers: {
+                            'x-api-key': NOWPAYMENTS_API_KEY,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            price_amount: total,
+                            price_currency: 'usd',
+                            pay_currency: selectedCrypto,
+                            order_id: orderResult.order.id,
+                            order_description: `KR Digital Store - Order #${orderResult.order.order_number}`,
+                            ipn_callback_url: `${window.location.origin}/api/nowpayments-webhook`,
+                            success_url: `${window.location.origin}/success.html?order=${orderResult.order.id}`,
+                            cancel_url: `${window.location.origin}/checkout.html`
+                        })
+                    });
+
+                    if (!paymentResponse.ok) {
+                        throw new Error('Failed to create payment');
+                    }
+
+                    currentPayment = await paymentResponse.json();
+                    showPaymentModal(currentPayment);
+                    pollPaymentStatus(currentPayment.payment_id);
                 }
-
-                currentPayment = await paymentResponse.json();
-
-                // Show payment modal
-                showPaymentModal(currentPayment);
-
-                // Start polling for payment status
-                pollPaymentStatus(currentPayment.payment_id);
 
             } catch (error) {
                 console.error('Payment error:', error);
-                alert('Error al iniciar el pago. Por favor intenta de nuevo.');
+                alert(`Error al iniciar el pago: ${error.message}`);
             } finally {
                 btn.classList.remove('loading');
                 btn.disabled = false;

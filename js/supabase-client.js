@@ -699,9 +699,18 @@ async function validateCoupon(code, subtotal) {
     return { valid: true, coupon, discount };
 }
 
+// Get supabase client directly
+async function getSupabaseClient() {
+    if (!supabaseClient) {
+        await initSupabase();
+    }
+    return supabaseClient;
+}
+
 // Export for use in other scripts
 window.KRSupabase = {
     init: initSupabase,
+    getSupabaseClient,
     getSession,
     getUserData,
     getUserBalance,

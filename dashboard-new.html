@@ -694,9 +694,12 @@
             try {
                 let profile = null;
 
+                // Get the Supabase client
+                const supabase = await window.KRSupabase.getSupabaseClient();
+
                 // TRY 1: Read from cli_users table (existing table in web)
                 try {
-                    const { data, error } = await window.KRSupabase.supabase
+                    const { data, error } = await supabase
                         .from('cli_users')
                         .select('*')
                         .eq('id', currentUser.id)
@@ -713,13 +716,13 @@
                         };
                     }
                 } catch (e) {
-                    console.log('cli_users not available, trying auth.users...');
+                    console.log('cli_users query failed:', e.message);
                 }
 
                 // TRY 2: If cli_users fails, read from auth.users
                 if (!profile) {
                     try {
-                        const { data, error } = await window.KRSupabase.supabase.auth.getUser();
+                        const { data, error } = await supabase.auth.getUser();
                         if (data?.user) {
                             profile = {
                                 username: data.user.email?.split('@')[0] || 'hacker',
@@ -731,7 +734,7 @@
                             };
                         }
                     } catch (e) {
-                        console.log('auth.users fallback failed');
+                        console.log('auth.users fallback failed:', e.message);
                     }
                 }
 
@@ -803,7 +806,8 @@
         // ============================================
         async function loadConversations() {
             try {
-                const { data } = await window.KRSupabase.supabase
+                const supabase = await window.KRSupabase.getSupabaseClient();
+                const { data } = await supabase
                     .from('cli_chat_history')
                     .select('*')
                     .eq('user_id', currentUser.id)
@@ -1019,7 +1023,8 @@
         async function logoutUser() {
             if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
                 try {
-                    await window.KRSupabase.supabase.auth.signOut();
+                    const supabase = await window.KRSupabase.getSupabaseClient();
+                    await supabase.auth.signOut();
                     window.location.href = 'index.html';
                 } catch (error) {
                     console.error('Error logging out:', error);

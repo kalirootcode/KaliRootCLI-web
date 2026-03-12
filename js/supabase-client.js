@@ -3,6 +3,7 @@
  * Initialize and export Supabase client for web platform
  */
 
+console.log('[supabase-client] script loaded');
 // Check if Supabase JS is loaded
 let supabaseClient = null;
 

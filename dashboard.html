@@ -692,71 +692,22 @@
         // ============================================
         async function loadUserData() {
             try {
-                console.log('[Dashboard] loadUserData started for user:', currentUser.id);
-                let profile = null;
-
-                // Get the Supabase client
-                console.log('[Dashboard] Getting Supabase client...');
-                const supabase = await window.KRSupabase.getSupabaseClient();
-                console.log('[Dashboard] Client obtained:', supabase ? 'SUCCESS' : 'FAILED');
-
-                // TRY 1: Read from cli_users table (existing table in web)
-                try {
-                    console.log('[Dashboard] Querying cli_users table...');
-                    const { data, error } = await supabase
-                        .from('cli_users')
-                        .select('*')
-                        .eq('id', currentUser.id)
-                        .single();
-                    
-                    console.log('[Dashboard] cli_users query result - error:', error, 'data:', data);
-                    
-                    if (data) {
-                        profile = {
-                            username: data.username || currentUser.email?.split('@')[0],
-                            email: data.email || currentUser.email,
-                            kr_balance: data.credit_balance || 50,
-                            total_queries: data.total_queries || 0,
-                            cli_initialized: true,
-                            created_at: data.created_at
-                        };
-                        console.log('[Dashboard] Profile loaded from cli_users:', profile);
-                    }
-                } catch (e) {
-                    console.log('[Dashboard] cli_users query failed:', e.message);
-                }
-
-                // TRY 2: If cli_users fails, read from auth.users
-                if (!profile) {
-                    try {
-                        console.log('[Dashboard] Trying auth.users fallback...');
-                        const { data, error } = await supabase.auth.getUser();
-                        console.log('[Dashboard] auth.users result - error:', error, 'data:', data);
-                        if (data?.user) {
-                            profile = {
-                                username: data.user.email?.split('@')[0] || 'hacker',
-                                email: data.user.email,
-                                kr_balance: 50,
-                                total_queries: 0,
-                                cli_initialized: false,
-                                created_at: data.user.created_at
-                            };
-                            console.log('[Dashboard] Profile loaded from auth.users:', profile);
-                        }
-                    } catch (e) {
-                        console.log('[Dashboard] auth.users fallback failed:', e.message);
-                    }
-                }
+                // Simple approach: just use auth user info
+                const profile = {
+                    username: currentUser.email?.split('@')[0] || 'hacker',
+                    email: currentUser.email,
+                    kr_balance: 50,
+                    total_queries: 0,
+                    cli_initialized: false,
+                    created_at: currentUser.created_at || new Date().toISOString()
+                };
 
                 // TRY 3: Use localStorage cache if nothing worked
                 if (!profile) {
-                    console.log('[Dashboard] Using fallback profile...');
                     const cached = sessionStorage.getItem('user_profile');
                     if (cached) {
                         profile = JSON.parse(cached);
-                        console.log('[Dashboard] Loaded from cache');
                     } else {
-                        // Default mock profile
                         profile = {
                             username: currentUser.email?.split('@')[0] || 'hacker',
                             email: currentUser.email,
@@ -765,11 +716,8 @@
                             cli_initialized: false,
                             created_at: new Date().toISOString()
                         };
-                        console.log('[Dashboard] Using default mock profile');
                     }
                 }
-
-                console.log('[Dashboard] Final profile:', profile);
 
                 // Display username
                 const username = profile.username || currentUser.email?.split('@')[0] || 'Hacker';
@@ -823,23 +771,11 @@
         // ============================================
         async function loadConversations() {
             try {
-                console.log('[Dashboard] loadConversations started');
-                const supabase = await window.KRSupabase.getSupabaseClient();
-                console.log('[Dashboard] Client obtained for conversations');
-                const { data } = await supabase
-                    .from('cli_chat_history')
-                    .select('*')
-                    .eq('user_id', currentUser.id)
-                    .order('created_at', { ascending: false })
-                    .limit(50);
-
-                console.log('[Dashboard] Conversations loaded:', data?.length || 0, 'items');
-                userConversations = data || [];
+                // For now, start with empty conversations
+                userConversations = [];
                 calculateConversationStats();
-
             } catch (error) {
-                console.warn('Could not load conversations:', error.message);
-                // Fallback: use empty array, dashboard still works
+                console.warn('Conversations load error:', error.message);
                 userConversations = [];
                 calculateConversationStats();
             }

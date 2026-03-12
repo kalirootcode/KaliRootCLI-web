@@ -679,11 +679,12 @@
                 }
 
                 currentUser = session.user;
-                await loadUserData();
-                await loadConversations();
-                await generateTerminalContent();
+                loadUserData();
+                loadConversations();
             } catch (error) {
                 console.error('Error loading dashboard:', error);
+                // Even if error, show dashboard with fallback
+                loadUserDataFallback();
             }
         });
 
@@ -692,7 +693,6 @@
         // ============================================
         async function loadUserData() {
             try {
-                // Simple approach: just use auth user info
                 const profile = {
                     username: currentUser.email?.split('@')[0] || 'hacker',
                     email: currentUser.email,
@@ -702,33 +702,12 @@
                     created_at: currentUser.created_at || new Date().toISOString()
                 };
 
-                // TRY 3: Use localStorage cache if nothing worked
-                if (!profile) {
-                    const cached = sessionStorage.getItem('user_profile');
-                    if (cached) {
-                        profile = JSON.parse(cached);
-                    } else {
-                        profile = {
-                            username: currentUser.email?.split('@')[0] || 'hacker',
-                            email: currentUser.email,
-                            kr_balance: 50,
-                            total_queries: 0,
-                            cli_initialized: false,
-                            created_at: new Date().toISOString()
-                        };
-                    }
-                }
-
                 // Display username
-                const username = profile.username || currentUser.email?.split('@')[0] || 'Hacker';
+                const username = profile.username || 'hacker';
                 document.getElementById('user-display').textContent = username.toUpperCase();
                 document.getElementById('user-email').textContent = currentUser.email;
 
-                // Generate random MD5-like hash
-                const randomHash = generateRandomHash();
-                document.getElementById('user-hash').textContent = `[ Hash: ${randomHash} ] [ Session: ${generateSessionID()} ]`;
-
-                // Load stats
+                // Display stats (removed hash/session calls)
                 const krBalance = profile.kr_balance || 50;
                 const createdAt = new Date(profile.created_at);
                 const daysActive = Math.floor((new Date() - createdAt) / (1000 * 60 * 60 * 24));
@@ -736,240 +715,40 @@
                 document.getElementById('stat-kr').textContent = krBalance;
                 document.getElementById('stat-queries').textContent = profile.total_queries || 0;
                 document.getElementById('stat-days').textContent = daysActive;
+                document.getElementById('stat-sync').textContent = '✗';
 
-                // Check if CLI is initialized
-                const cliInitialized = profile.cli_initialized || false;
-                document.getElementById('stat-sync').textContent = cliInitialized ? '✓' : '✗';
-
-                // Show/hide installer section
+                // Show installer
                 const installerContainer = document.getElementById('installer-container');
-                if (!cliInitialized) {
+                if (installerContainer) {
                     installerContainer.style.display = 'block';
                 }
 
-                // Cache profile in sessionStorage
-                sessionStorage.setItem('user_profile', JSON.stringify(profile));
-                
-                console.log('[Dashboard] loadUserData completed successfully');
-
             } catch (error) {
-                console.error('Error loading user data:', error);
-                // Fallback: show default UI with mock data
-                const username = currentUser.email?.split('@')[0] || 'hacker';
-                document.getElementById('user-display').textContent = username.toUpperCase();
-                document.getElementById('user-email').textContent = currentUser.email;
-                document.getElementById('stat-kr').textContent = '50';
-                document.getElementById('stat-queries').textContent = '0';
-                document.getElementById('stat-days').textContent = '0';
-                document.getElementById('stat-sync').textContent = '✗';
-                document.getElementById('installer-container').style.display = 'block';
+                console.error('Error in loadUserData:', error);
             }
         }
 
         // ============================================
-        // Load Conversations
+        // Load Conversations - Simplified
         // ============================================
         async function loadConversations() {
             try {
-                // For now, start with empty conversations
                 userConversations = [];
-                calculateConversationStats();
             } catch (error) {
-                console.warn('Conversations load error:', error.message);
+                console.warn('Error in loadConversations:', error);
                 userConversations = [];
-                calculateConversationStats();
             }
-        }
-
-        // ============================================
-        // Calculate Stats from Conversations
-        // ============================================
-        function calculateConversationStats() {
-            const topics = new Set();
-            let totalTime = 0;
-
-            userConversations.forEach(conv => {
-                // Extract topic from content (simple approach)
-                if (conv.content.toLowerCase().includes('metasploit')) topics.add('Metasploit');
-                if (conv.content.toLowerCase().includes('nmap')) topics.add('Nmap');
-                if (conv.content.toLowerCase().includes('osint')) topics.add('OSINT');
-                if (conv.content.toLowerCase().includes('sql')) topics.add('SQL Injection');
-                if (conv.content.toLowerCase().includes('xss')) topics.add('XSS');
-                if (conv.content.toLowerCase().includes('exploit')) topics.add('Exploits');
-            });
-
-            document.getElementById('topics-count').textContent = topics.size;
-            
-            // Calculate streak (days)
-            const today = new Date();
-            let streak = 0;
-            for (let i = 0; i < 365; i++) {
-                const date = new Date(today);
-                date.setDate(date.getDate() - i);
-                const dateStr = date.toISOString().split('T')[0];
-                const hasConvThatDay = userConversations.some(c => 
-                    new Date(c.created_at).toISOString().split('T')[0] === dateStr
-                );
-                if (hasConvThatDay) streak++;
-                else break;
-            }
-            document.getElementById('streak-count').textContent = streak;
-            document.getElementById('total-time').textContent = (userConversations.length * 2) + 'h'; // Estimate
-            
-            // Calculate level
-            const level = Math.floor(userConversations.length / 20) + 1;
-            document.getElementById('level-stats').textContent = `${level}`;
-        }
-
-        // ============================================
-        // Generate Terminal Content (Suggestions)
-        // ============================================
-        async function generateTerminalContent() {
-            const terminal = document.getElementById('terminal-output');
-            terminal.innerHTML = '';
-
-            // Get username
-            const username = document.getElementById('user-display').textContent;
-
-            // Add initialization lines
-            addTerminalLine(`> ./krm --user=${username} --sync-on`, 'prompt');
-            addTerminalLine('Conectando a servidores de sincronización...', 'text');
-            
-            await sleep(500);
-            addTerminalLine('✓ Sincronización exitosa', 'text');
-            addTerminalLine('', 'text');
-
-            // Analyze conversations for suggestions
-            const suggestions = analyzeConversations();
-            
-            if (suggestions.length > 0) {
-                addTerminalLine('> Analizando historial...', 'prompt');
-                await sleep(300);
-                
-                suggestions.forEach(suggestion => {
-                    addTerminalLine(suggestion, 'suggestion');
-                    // Add small delay between suggestions
-                });
-            }
-
-            // Add motivational message
-            await sleep(800);
-            addTerminalLine('', 'text');
-            addTerminalLine(`> Bienvenido ${username}`, 'prompt');
-            addTerminalLine('Tu jornada en ciberseguridad es prometedora. Sigue aprendiendo.', 'message');
-        }
-
-        // ============================================
-        // Analyze Conversations for Smart Messages
-        // ============================================
-        function analyzeConversations() {
-            const suggestions = [];
-            const username = document.getElementById('user-display').textContent;
-
-            if (userConversations.length === 0) {
-                suggestions.push('📌 Tip: Comienza tu primer consulta en el CLI con "kr --ask"');
-                return suggestions;
-            }
-
-            // Check for specific topics
-            const contentLower = userConversations.map(c => c.content.toLowerCase()).join(' ');
-
-            if (contentLower.includes('metasploit')) {
-                suggestions.push('🎯 ¡Avanzaste bastante en Metasploit! Los profesionales que dominen esta herramienta pueden ganar $100K+ anuales. Continúa practicando.');
-            }
-
-            if (contentLower.includes('osint')) {
-                suggestions.push('🔍 Tu enfoque en OSINT es inteligente. Es la base del pentesting profesional.');
-            }
-
-            if (contentLower.includes('nmap')) {
-                suggestions.push('📱 Los escaneos con Nmap que practicas son fundamentales. La próxima: aprende a interpretar resultados avanzados.');
-            }
-
-            if (contentLower.includes('exploit') || contentLower.includes('exploit-db')) {
-                suggestions.push('💥 Tu interés en exploits es el siguiente nivel. Considera specializar en desarrollo de exploits.');
-            }
-
-            if (contentLower.includes('malware') || contentLower.includes('análisis')) {
-                suggestions.push('🦠 El análisis de malware es una carrera de alto valor. Sigue profundizando.');
-            }
-
-            // Motivational based on frequency
-            if (userConversations.length > 100) {
-                suggestions.push(`✨ ${username}, 100+ consultas completadas. Eres un operador serio. El siguiente: certificación profesional.`);
-            } else if (userConversations.length > 50) {
-                suggestions.push(`🔥 ${username}, ya tienes momentum. 50+ consultas. No te detengas aquí.`);
-            } else if (userConversations.length > 10) {
-                suggestions.push(`⚡ ${username}, buen inicio. 10+ consultas. La consistencia es clave.`);
-            }
-
-            return suggestions.length > 0 ? suggestions : ['💡 Sigue explorando. Cada consulta te hace más fuerte.'];
-        }
-
-        // ============================================
-        // Terminal Helper Functions
-        // ============================================
-        function addTerminalLine(text, type = 'text') {
-            const terminal = document.getElementById('terminal-output');
-            const line = document.createElement('div');
-            line.className = 'terminal-line';
-            
-            if (type === 'prompt') {
-                line.innerHTML = `<span class="terminal-prompt">>> </span><span class="terminal-text">${text}</span>`;
-            } else if (type === 'message') {
-                line.innerHTML = `<span class="terminal-message">${text}</span>`;
-            } else if (type === 'suggestion') {
-                line.className = 'terminal-line terminal-suggestion';
-                line.textContent = text;
-            } else {
-                line.innerHTML = `<span class="terminal-text">${text}</span>`;
-            }
-            
-            terminal.appendChild(line);
-            terminal.scrollTop = terminal.scrollHeight;
-        }
-
-        function sleep(ms) {
-            return new Promise(resolve => setTimeout(resolve, ms));
-        }
-
-        // ============================================
-        // Hash Generators
-        // ============================================
-        function generateRandomHash() {
-            const chars = '0123456789abcdef';
-            let hash = '';
-            for (let i = 0; i < 32; i++) {
-                hash += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            return hash;
-        }
-
-        function generateSessionID() {
-            return Math.random().toString(36).substring(2, 15).toUpperCase();
         }
 
         // ============================================
         // Download Installer
         // ============================================
         function downloadInstaller() {
-            // Get installer link from localStorage (configured by admin panel)
             const installerLink = localStorage.getItem('kr_installer_url');
-            
             if (!installerLink) {
-                alert('⚠️ El enlace del instalador aún no está configurado.\n\nContacta al administrador.');
+                alert('⚠️ El enlace del instalador aún no está configurado.');
                 return;
             }
-            
-            // Track download
-            try {
-                // Optional: Log download event to database
-                console.log('Descarga iniciada desde:', installerLink);
-            } catch (e) {
-                console.warn('No se pudo registrar la descarga:', e);
-            }
-            
-            // Redirect to Google Drive link
             window.location.href = installerLink;
         }
 

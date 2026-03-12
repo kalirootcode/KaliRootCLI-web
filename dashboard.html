@@ -692,44 +692,129 @@
         // ============================================
         async function loadUserData() {
             try {
-                // Get user profile
-                const { data: profile } = await window.KRSupabase.supabase
-                    .from('profiles')
-                    .select('*')
-                    .eq('id', currentUser.id)
-                    .single();
+                console.log('[Dashboard] loadUserData started for user:', currentUser.id);
+                let profile = null;
 
-                if (profile) {
-                    // Display username
-                    const username = profile.username || currentUser.email?.split('@')[0] || 'Hacker';
-                    document.getElementById('user-display').textContent = username.toUpperCase();
-                    document.getElementById('user-email').textContent = currentUser.email;
+                // Get the Supabase client
+                console.log('[Dashboard] Getting Supabase client...');
+                const supabase = await window.KRSupabase.getSupabaseClient();
+                console.log('[Dashboard] Client obtained:', supabase ? 'SUCCESS' : 'FAILED');
 
-                    // Generate random MD5-like hash
-                    const randomHash = generateRandomHash();
-                    document.getElementById('user-hash').textContent = `[ Hash: ${randomHash} ] [ Session: ${generateSessionID()} ]`;
+                // TRY 1: Read from cli_users table (existing table in web)
+                try {
+                    console.log('[Dashboard] Querying cli_users table...');
+                    const { data, error } = await supabase
+                        .from('cli_users')
+                        .select('*')
+                        .eq('id', currentUser.id)
+                        .single();
+                    
+                    console.log('[Dashboard] cli_users query result - error:', error, 'data:', data);
+                    
+                    if (data) {
+                        profile = {
+                            username: data.username || currentUser.email?.split('@')[0],
+                            email: data.email || currentUser.email,
+                            kr_balance: data.credit_balance || 50,
+                            total_queries: data.total_queries || 0,
+                            cli_initialized: true,
+                            created_at: data.created_at
+                        };
+                        console.log('[Dashboard] Profile loaded from cli_users:', profile);
+                    }
+                } catch (e) {
+                    console.log('[Dashboard] cli_users query failed:', e.message);
+                }
 
-                    // Load stats
-                    const krBalance = profile.kr_balance || 50;
-                    const createdAt = new Date(profile.created_at);
-                    const daysActive = Math.floor((new Date() - createdAt) / (1000 * 60 * 60 * 24));
-
-                    document.getElementById('stat-kr').textContent = krBalance;
-                    document.getElementById('stat-queries').textContent = profile.total_queries || 0;
-                    document.getElementById('stat-days').textContent = daysActive;
-
-                    // Check if CLI is initialized
-                    const cliInitialized = profile.cli_initialized || false;
-                    document.getElementById('stat-sync').textContent = cliInitialized ? '✓' : '✗';
-
-                    // Show/hide installer section
-                    const installerContainer = document.getElementById('installer-container');
-                    if (!cliInitialized) {
-                        installerContainer.style.display = 'block';
+                // TRY 2: If cli_users fails, read from auth.users
+                if (!profile) {
+                    try {
+                        console.log('[Dashboard] Trying auth.users fallback...');
+                        const { data, error } = await supabase.auth.getUser();
+                        console.log('[Dashboard] auth.users result - error:', error, 'data:', data);
+                        if (data?.user) {
+                            profile = {
+                                username: data.user.email?.split('@')[0] || 'hacker',
+                                email: data.user.email,
+                                kr_balance: 50,
+                                total_queries: 0,
+                                cli_initialized: false,
+                                created_at: data.user.created_at
+                            };
+                            console.log('[Dashboard] Profile loaded from auth.users:', profile);
+                        }
+                    } catch (e) {
+                        console.log('[Dashboard] auth.users fallback failed:', e.message);
                     }
                 }
+
+                // TRY 3: Use localStorage cache if nothing worked
+                if (!profile) {
+                    console.log('[Dashboard] Using fallback profile...');
+                    const cached = sessionStorage.getItem('user_profile');
+                    if (cached) {
+                        profile = JSON.parse(cached);
+                        console.log('[Dashboard] Loaded from cache');
+                    } else {
+                        // Default mock profile
+                        profile = {
+                            username: currentUser.email?.split('@')[0] || 'hacker',
+                            email: currentUser.email,
+                            kr_balance: 50,
+                            total_queries: 0,
+                            cli_initialized: false,
+                            created_at: new Date().toISOString()
+                        };
+                        console.log('[Dashboard] Using default mock profile');
+                    }
+                }
+
+                console.log('[Dashboard] Final profile:', profile);
+
+                // Display username
+                const username = profile.username || currentUser.email?.split('@')[0] || 'Hacker';
+                document.getElementById('user-display').textContent = username.toUpperCase();
+                document.getElementById('user-email').textContent = currentUser.email;
+
+                // Generate random MD5-like hash
+                const randomHash = generateRandomHash();
+                document.getElementById('user-hash').textContent = `[ Hash: ${randomHash} ] [ Session: ${generateSessionID()} ]`;
+
+                // Load stats
+                const krBalance = profile.kr_balance || 50;
+                const createdAt = new Date(profile.created_at);
+                const daysActive = Math.floor((new Date() - createdAt) / (1000 * 60 * 60 * 24));
+
+                document.getElementById('stat-kr').textContent = krBalance;
+                document.getElementById('stat-queries').textContent = profile.total_queries || 0;
+                document.getElementById('stat-days').textContent = daysActive;
+
+                // Check if CLI is initialized
+                const cliInitialized = profile.cli_initialized || false;
+                document.getElementById('stat-sync').textContent = cliInitialized ? '✓' : '✗';
+
+                // Show/hide installer section
+                const installerContainer = document.getElementById('installer-container');
+                if (!cliInitialized) {
+                    installerContainer.style.display = 'block';
+                }
+
+                // Cache profile in sessionStorage
+                sessionStorage.setItem('user_profile', JSON.stringify(profile));
+                
+                console.log('[Dashboard] loadUserData completed successfully');
+
             } catch (error) {
                 console.error('Error loading user data:', error);
+                // Fallback: show default UI with mock data
+                const username = currentUser.email?.split('@')[0] || 'hacker';
+                document.getElementById('user-display').textContent = username.toUpperCase();
+                document.getElementById('user-email').textContent = currentUser.email;
+                document.getElementById('stat-kr').textContent = '50';
+                document.getElementById('stat-queries').textContent = '0';
+                document.getElementById('stat-days').textContent = '0';
+                document.getElementById('stat-sync').textContent = '✗';
+                document.getElementById('installer-container').style.display = 'block';
             }
         }
 
@@ -738,19 +823,25 @@
         // ============================================
         async function loadConversations() {
             try {
-                const { data } = await window.KRSupabase.supabase
+                console.log('[Dashboard] loadConversations started');
+                const supabase = await window.KRSupabase.getSupabaseClient();
+                console.log('[Dashboard] Client obtained for conversations');
+                const { data } = await supabase
                     .from('cli_chat_history')
                     .select('*')
                     .eq('user_id', currentUser.id)
                     .order('created_at', { ascending: false })
                     .limit(50);
 
+                console.log('[Dashboard] Conversations loaded:', data?.length || 0, 'items');
                 userConversations = data || [];
-
-                // Calculate stats from conversations
                 calculateConversationStats();
+
             } catch (error) {
-                console.error('Error loading conversations:', error);
+                console.warn('Could not load conversations:', error.message);
+                // Fallback: use empty array, dashboard still works
+                userConversations = [];
+                calculateConversationStats();
             }
         }
 
@@ -926,10 +1017,24 @@
         // Download Installer
         // ============================================
         function downloadInstaller() {
-            // This will be configured from admin panel with Google Drive link
-            const driveLink = 'https://your-google-drive-link-here'; // Will be updated by admin
-            alert('El enlace de descarga será configurado desde el panel admin.\n\nPor ahora, usa: kr-cli-installer-v6.3.0.sh');
-            // window.location.href = driveLink;
+            // Get installer link from localStorage (configured by admin panel)
+            const installerLink = localStorage.getItem('kr_installer_url');
+            
+            if (!installerLink) {
+                alert('⚠️ El enlace del instalador aún no está configurado.\n\nContacta al administrador.');
+                return;
+            }
+            
+            // Track download
+            try {
+                // Optional: Log download event to database
+                console.log('Descarga iniciada desde:', installerLink);
+            } catch (e) {
+                console.warn('No se pudo registrar la descarga:', e);
+            }
+            
+            // Redirect to Google Drive link
+            window.location.href = installerLink;
         }
 
         // ============================================
@@ -938,13 +1043,72 @@
         async function logoutUser() {
             if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
                 try {
-                    await window.KRSupabase.supabase.auth.signOut();
+                    const supabase = await window.KRSupabase.getSupabaseClient();
+                    await supabase.auth.signOut();
                     window.location.href = 'index.html';
                 } catch (error) {
                     console.error('Error logging out:', error);
                 }
             }
         }
+    </script>
+
+    <!-- Debug console visible in corner -->
+    <div id="debug-console" style="
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        width: 300px;
+        max-height: 200px;
+        background: rgba(0,0,0,0.9);
+        border: 1px solid #00FF41;
+        color: #00FF41;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+        padding: 10px;
+        overflow-y: auto;
+        z-index: 99999;
+        display: none;
+    ">
+        <div style="margin-bottom: 5px; border-bottom: 1px solid #00FF41; padding-bottom: 5px;">DEBUG LOG</div>
+        <div id="debug-log"></div>
+    </div>
+
+    <script>
+        // Simple debug logger that shows in page
+        window.debugLog = function(msg) {
+            const debugDiv = document.getElementById('debug-log');
+            if (debugDiv) {
+                debugDiv.innerHTML += '<div>' + msg + '</div>';
+                document.getElementById('debug-console').style.display = 'block';
+            }
+            console.log('[DEBUG]', msg);
+        };
+
+        // Override console.log to capture messages
+        const originalLog = console.log;
+        const originalError = console.error;
+        const originalWarn = console.warn;
+
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            const msg = args.join(' ');
+            if (msg.includes('[')) {
+                window.debugLog(msg);
+            }
+        };
+
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            const msg = '❌ ' + args.join(' ');
+            window.debugLog(msg);
+        };
+
+        console.warn = function(...args) {
+            originalWarn.apply(console, args);
+            const msg = '⚠️ ' + args.join(' ');
+            window.debugLog(msg);
+        };
     </script>
 </body>
 </html>

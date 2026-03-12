@@ -692,18 +692,24 @@
         // ============================================
         async function loadUserData() {
             try {
+                console.log('[Dashboard] loadUserData started for user:', currentUser.id);
                 let profile = null;
 
                 // Get the Supabase client
+                console.log('[Dashboard] Getting Supabase client...');
                 const supabase = await window.KRSupabase.getSupabaseClient();
+                console.log('[Dashboard] Client obtained:', supabase ? 'SUCCESS' : 'FAILED');
 
                 // TRY 1: Read from cli_users table (existing table in web)
                 try {
+                    console.log('[Dashboard] Querying cli_users table...');
                     const { data, error } = await supabase
                         .from('cli_users')
                         .select('*')
                         .eq('id', currentUser.id)
                         .single();
+                    
+                    console.log('[Dashboard] cli_users query result - error:', error, 'data:', data);
                     
                     if (data) {
                         profile = {
@@ -714,15 +720,18 @@
                             cli_initialized: true,
                             created_at: data.created_at
                         };
+                        console.log('[Dashboard] Profile loaded from cli_users:', profile);
                     }
                 } catch (e) {
-                    console.log('cli_users query failed:', e.message);
+                    console.log('[Dashboard] cli_users query failed:', e.message);
                 }
 
                 // TRY 2: If cli_users fails, read from auth.users
                 if (!profile) {
                     try {
+                        console.log('[Dashboard] Trying auth.users fallback...');
                         const { data, error } = await supabase.auth.getUser();
+                        console.log('[Dashboard] auth.users result - error:', error, 'data:', data);
                         if (data?.user) {
                             profile = {
                                 username: data.user.email?.split('@')[0] || 'hacker',
@@ -732,17 +741,20 @@
                                 cli_initialized: false,
                                 created_at: data.user.created_at
                             };
+                            console.log('[Dashboard] Profile loaded from auth.users:', profile);
                         }
                     } catch (e) {
-                        console.log('auth.users fallback failed:', e.message);
+                        console.log('[Dashboard] auth.users fallback failed:', e.message);
                     }
                 }
 
                 // TRY 3: Use localStorage cache if nothing worked
                 if (!profile) {
+                    console.log('[Dashboard] Using fallback profile...');
                     const cached = sessionStorage.getItem('user_profile');
                     if (cached) {
                         profile = JSON.parse(cached);
+                        console.log('[Dashboard] Loaded from cache');
                     } else {
                         // Default mock profile
                         profile = {
@@ -753,8 +765,11 @@
                             cli_initialized: false,
                             created_at: new Date().toISOString()
                         };
+                        console.log('[Dashboard] Using default mock profile');
                     }
                 }
+
+                console.log('[Dashboard] Final profile:', profile);
 
                 // Display username
                 const username = profile.username || currentUser.email?.split('@')[0] || 'Hacker';
@@ -786,6 +801,8 @@
 
                 // Cache profile in sessionStorage
                 sessionStorage.setItem('user_profile', JSON.stringify(profile));
+                
+                console.log('[Dashboard] loadUserData completed successfully');
 
             } catch (error) {
                 console.error('Error loading user data:', error);
@@ -806,7 +823,9 @@
         // ============================================
         async function loadConversations() {
             try {
+                console.log('[Dashboard] loadConversations started');
                 const supabase = await window.KRSupabase.getSupabaseClient();
+                console.log('[Dashboard] Client obtained for conversations');
                 const { data } = await supabase
                     .from('cli_chat_history')
                     .select('*')
@@ -814,6 +833,7 @@
                     .order('created_at', { ascending: false })
                     .limit(50);
 
+                console.log('[Dashboard] Conversations loaded:', data?.length || 0, 'items');
                 userConversations = data || [];
                 calculateConversationStats();
 
@@ -1031,6 +1051,64 @@
                 }
             }
         }
+    </script>
+
+    <!-- Debug console visible in corner -->
+    <div id="debug-console" style="
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        width: 300px;
+        max-height: 200px;
+        background: rgba(0,0,0,0.9);
+        border: 1px solid #00FF41;
+        color: #00FF41;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+        padding: 10px;
+        overflow-y: auto;
+        z-index: 99999;
+        display: none;
+    ">
+        <div style="margin-bottom: 5px; border-bottom: 1px solid #00FF41; padding-bottom: 5px;">DEBUG LOG</div>
+        <div id="debug-log"></div>
+    </div>
+
+    <script>
+        // Simple debug logger that shows in page
+        window.debugLog = function(msg) {
+            const debugDiv = document.getElementById('debug-log');
+            if (debugDiv) {
+                debugDiv.innerHTML += '<div>' + msg + '</div>';
+                document.getElementById('debug-console').style.display = 'block';
+            }
+            console.log('[DEBUG]', msg);
+        };
+
+        // Override console.log to capture messages
+        const originalLog = console.log;
+        const originalError = console.error;
+        const originalWarn = console.warn;
+
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            const msg = args.join(' ');
+            if (msg.includes('[')) {
+                window.debugLog(msg);
+            }
+        };
+
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            const msg = '❌ ' + args.join(' ');
+            window.debugLog(msg);
+        };
+
+        console.warn = function(...args) {
+            originalWarn.apply(console, args);
+            const msg = '⚠️ ' + args.join(' ');
+            window.debugLog(msg);
+        };
     </script>
 </body>
 </html>

@@ -10,7 +10,11 @@ let supabaseClient = null;
  * Initialize Supabase client
  */
 async function initSupabase() {
-    if (supabaseClient) return supabaseClient;
+    console.log('[initSupabase] Starting initialization...');
+    if (supabaseClient) {
+        console.log('[initSupabase] Client already exists, returning');
+        return supabaseClient;
+    }
 
     try {
         // Load Supabase from CDN if not already loaded
@@ -18,6 +22,8 @@ async function initSupabase() {
             console.log('[Supabase] Loading Supabase SDK from CDN...');
             await loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2');
             console.log('[Supabase] SDK loaded successfully');
+        } else {
+            console.log('[Supabase] SDK already loaded in global scope');
         }
 
         // Verify supabase is now available
@@ -33,13 +39,18 @@ async function initSupabase() {
         }
 
         if (!CONFIG.SUPABASE_URL || !CONFIG.SUPABASE_ANON_KEY) {
-            console.error('[Supabase] Missing credentials in CONFIG');
+            console.error('[Supabase] Missing credentials in CONFIG', {
+                url: CONFIG.SUPABASE_URL ? 'EXISTS' : 'MISSING',
+                key: CONFIG.SUPABASE_ANON_KEY ? 'EXISTS' : 'MISSING'
+            });
             throw new Error('Credenciales de Supabase no configuradas');
         }
 
         console.log('[Supabase] Creating client with URL:', CONFIG.SUPABASE_URL.substring(0, 30) + '...');
         supabaseClient = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
         console.log('[Supabase] Client created successfully');
+        console.log('[Supabase] Client type:', typeof supabaseClient);
+        console.log('[Supabase] Client has .from?', typeof supabaseClient?.from === 'function');
         return supabaseClient;
     } catch (error) {
         console.error('[Supabase] Init error:', error);
@@ -701,9 +712,16 @@ async function validateCoupon(code, subtotal) {
 
 // Get supabase client directly
 async function getSupabaseClient() {
+    console.log('[KRSupabase] getSupabaseClient called, supabaseClient is:', supabaseClient ? 'EXISTS' : 'NULL');
     if (!supabaseClient) {
+        console.log('[KRSupabase] Initializing Supabase...');
         await initSupabase();
+        console.log('[KRSupabase] Initialization complete, client is now:', supabaseClient ? 'EXISTS' : 'NULL');
     }
+    if (!supabaseClient) {
+        throw new Error('[KRSupabase] Client initialization failed');
+    }
+    console.log('[KRSupabase] Returning client');
     return supabaseClient;
 }
 

@@ -697,31 +697,70 @@
         // ============================================
         async function loadUserData() {
             try {
-                const profile = {
-                    username: currentUser.email?.split('@')[0] || 'hacker',
-                    email: currentUser.email,
-                    kr_balance: 50,
-                    total_queries: 0,
-                    cli_initialized: false,
-                    created_at: currentUser.created_at || new Date().toISOString()
-                };
+                const supabase = await window.KRSupabase.getSupabaseClient();
+                let profile = null;
+
+                // attempt to read from cli_users table (legacy CLI users)
+                try {
+                    const { data, error } = await supabase
+                        .from('cli_users')
+                        .select('id, email, username, credit_balance, created_at')
+                        .eq('id', currentUser.id)
+                        .single();
+
+                    if (error) {
+                        // table may not exist or other error; if it's relation-not-found just ignore
+                        if (error.message && error.message.includes('does not exist')) {
+                            console.warn('cli_users table not found, falling back to default profile');
+                        } else {
+                            throw error;
+                        }
+                    } else if (data) {
+                        profile = data;
+                        // query total queries from history
+                        try {
+                            const { count, error: qerr } = await supabase
+                                .from('cli_chat_history')
+                                .select('id', { count: 'exact', head: true })
+                                .eq('user_id', currentUser.id);
+                            profile.total_queries = count || 0;
+                        } catch (e) {
+                            console.warn('Could not count chat history:', e);
+                            profile.total_queries = 0;
+                        }
+                    }
+                } catch (e) {
+                    console.warn('Error fetching cli_users:', e);
+                }
+
+                // if no profile from DB, fall back to mock info
+                if (!profile) {
+                    profile = {
+                        username: currentUser.email?.split('@')[0] || 'hacker',
+                        email: currentUser.email,
+                        kr_balance: 50,
+                        total_queries: 0,
+                        cli_initialized: false,
+                        created_at: currentUser.created_at || new Date().toISOString()
+                    };
+                }
 
                 // Display username
-                const username = profile.username || 'hacker';
+                const username = profile.username || profile.email?.split('@')[0] || 'hacker';
                 document.getElementById('user-display').textContent = username.toUpperCase();
-                document.getElementById('user-email').textContent = currentUser.email;
+                document.getElementById('user-email').textContent = profile.email || currentUser.email;
 
-                // Display stats (removed hash/session calls)
-                const krBalance = profile.kr_balance || 50;
+                const krBalance = profile.credit_balance ?? profile.kr_balance ?? 50;
                 const createdAt = new Date(profile.created_at);
                 const daysActive = Math.floor((new Date() - createdAt) / (1000 * 60 * 60 * 24));
 
                 document.getElementById('stat-kr').textContent = krBalance;
                 document.getElementById('stat-queries').textContent = profile.total_queries || 0;
                 document.getElementById('stat-days').textContent = daysActive;
-                document.getElementById('stat-sync').textContent = '✗';
+                // mark sync as yes when we pulled from cli_users
+                document.getElementById('stat-sync').textContent = profile.id ? '✓' : '✗';
 
-                // Show installer
+                // Show installer always if not CLI-initialized
                 const installerContainer = document.getElementById('installer-container');
                 if (installerContainer) {
                     installerContainer.style.display = 'block';
@@ -733,11 +772,25 @@
         }
 
         // ============================================
-        // Load Conversations - Simplified
+        // Load Conversations - try query cli_chat_history
         // ============================================
         async function loadConversations() {
             try {
-                userConversations = [];
+                const supabase = await window.KRSupabase.getSupabaseClient();
+                const { data, error } = await supabase
+                    .from('cli_chat_history')
+                    .select('role,content')
+                    .eq('user_id', currentUser.id)
+                    .order('created_at', { ascending: false })
+                    .limit(20);
+
+                if (error) {
+                    // ignore if table missing or other
+                    console.warn('Could not load chat history:', error.message);
+                    userConversations = [];
+                } else {
+                    userConversations = data || [];
+                }
             } catch (error) {
                 console.warn('Error in loadConversations:', error);
                 userConversations = [];

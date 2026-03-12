@@ -926,10 +926,24 @@
         // Download Installer
         // ============================================
         function downloadInstaller() {
-            // This will be configured from admin panel with Google Drive link
-            const driveLink = 'https://your-google-drive-link-here'; // Will be updated by admin
-            alert('El enlace de descarga será configurado desde el panel admin.\n\nPor ahora, usa: kr-cli-installer-v6.3.0.sh');
-            // window.location.href = driveLink;
+            // Get installer link from localStorage (configured by admin panel)
+            const installerLink = localStorage.getItem('kr_installer_url');
+            
+            if (!installerLink) {
+                alert('⚠️ El enlace del instalador aún no está configurado.\n\nContacta al administrador.');
+                return;
+            }
+            
+            // Track download
+            try {
+                // Optional: Log download event to database
+                console.log('Descarga iniciada desde:', installerLink);
+            } catch (e) {
+                console.warn('No se pudo registrar la descarga:', e);
+            }
+            
+            // Redirect to Google Drive link
+            window.location.href = installerLink;
         }
 
         // ============================================

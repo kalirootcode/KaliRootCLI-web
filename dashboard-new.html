@@ -694,19 +694,48 @@
             try {
                 let profile = null;
 
-                // TRY 1: Read from profiles table
+                // TRY 1: Read from cli_users table (existing table in web)
                 try {
-                    const { data } = await window.KRSupabase.supabase
-                        .from('profiles')
+                    const { data, error } = await window.KRSupabase.supabase
+                        .from('cli_users')
                         .select('*')
                         .eq('id', currentUser.id)
                         .single();
-                    profile = data;
+                    
+                    if (data) {
+                        profile = {
+                            username: data.username || currentUser.email?.split('@')[0],
+                            email: data.email || currentUser.email,
+                            kr_balance: data.credit_balance || 50,
+                            total_queries: data.total_queries || 0,
+                            cli_initialized: true,
+                            created_at: data.created_at
+                        };
+                    }
                 } catch (e) {
-                    console.log('profiles table not available, trying fallback...');
+                    console.log('cli_users not available, trying auth.users...');
                 }
 
-                // TRY 2: If profiles fails, use localStorage mock
+                // TRY 2: If cli_users fails, read from auth.users
+                if (!profile) {
+                    try {
+                        const { data, error } = await window.KRSupabase.supabase.auth.getUser();
+                        if (data?.user) {
+                            profile = {
+                                username: data.user.email?.split('@')[0] || 'hacker',
+                                email: data.user.email,
+                                kr_balance: 50,
+                                total_queries: 0,
+                                cli_initialized: false,
+                                created_at: data.user.created_at
+                            };
+                        }
+                    } catch (e) {
+                        console.log('auth.users fallback failed');
+                    }
+                }
+
+                // TRY 3: Use localStorage cache if nothing worked
                 if (!profile) {
                     const cached = sessionStorage.getItem('user_profile');
                     if (cached) {
@@ -715,6 +744,7 @@
                         // Default mock profile
                         profile = {
                             username: currentUser.email?.split('@')[0] || 'hacker',
+                            email: currentUser.email,
                             kr_balance: 50,
                             total_queries: 0,
                             cli_initialized: false,

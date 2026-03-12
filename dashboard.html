@@ -674,13 +674,16 @@
             try {
                 await window.KRSupabase.init();
                 const session = await window.KRSupabase.getSession();
+                console.log('[dashboard] session fetched', session);
 
                 if (!session?.user) {
+                    console.warn('[dashboard] no session user, redirecting');
                     window.location.href = 'login.html';
                     return;
                 }
 
                 currentUser = session.user;
+                console.log('[dashboard] currentUser', currentUser);
                 loadUserData();
                 loadConversations();
             } catch (error) {

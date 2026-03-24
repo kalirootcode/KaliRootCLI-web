@@ -3,884 +3,416 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="noindex, nofollow">
-    <title>Dashboard | KR-CLI DOMINION</title>
-
+    <title>Mi Dashboard | KR-CLIDN Tienda</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/cyber-menu.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/shared.css?v=2.1">
-    <link rel="stylesheet" href="css/cyber-menu.css?v=2.1">
-
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Orbitron:wght@700;900&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    
     <style>
         :root {
             --primary: #0066FF;
-            --secondary: #00FFFF;
-            --success: #00FF88;
-            --neon: #00ff41;
-            --bg-dark: #000000;
-            --bg-card: #0a0a0a;
+            --primary-light: #3399FF;
+            --accent-green: #00FF88;
+            --bg-dark: #050505;
+            --bg-card: #111111;
             --text-primary: #FFFFFF;
-            --text-secondary: rgba(255, 255, 255, 0.7);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
+            --text-secondary: #A0A0A0;
+            --border: #333;
         }
 
         body {
-            font-family: 'JetBrains Mono', monospace;
-            background: var(--bg-dark);
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
             color: var(--text-primary);
-            overflow-x: hidden;
+            min-height: 100vh;
         }
 
-        /* ============================================
-           NAVBAR
-        ============================================ */
+        /* Navbar */
         .navbar {
-            position: fixed;
+            background: rgba(0,0,0,0.95);
+            border-bottom: 1px solid var(--border);
+            padding: 15px 0;
+            position: sticky;
             top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            padding: 0;
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(0, 255, 255, 0.15);
+            z-index: 100;
+            backdrop-filter: blur(10px);
         }
 
-        .nav-container {
-            max-width: 1400px;
+        .container {
+            max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            height: 60px;
         }
 
-        .nav-logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 1.4rem;
+            color: var(--text-primary);
             text-decoration: none;
         }
+        .logo span { color: var(--accent-green); }
 
-        .nav-logo img {
-            width: 32px;
-            height: 32px;
-        }
-
-        .nav-brand {
-            font-weight: 700;
-            letter-spacing: 1px;
-            color: var(--secondary);
-        }
-
-        .nav-right {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .user-status {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 16px;
-            background: rgba(0, 255, 136, 0.1);
-            border: 1px solid rgba(0, 255, 136, 0.3);
-            border-radius: 6px;
-            font-size: 0.85rem;
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #00ff41;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        .btn-logout {
-            padding: 8px 16px;
-            background: transparent;
-            border: 1px solid rgba(255, 95, 86, 0.3);
-            color: rgba(255, 95, 86, 0.8);
-            border-radius: 6px;
-            cursor: pointer;
-            font-family: inherit;
-            font-size: 0.8rem;
-            transition: all 0.3s;
-        }
-
-        .btn-logout:hover {
-            background: rgba(255, 95, 86, 0.15);
-            border-color: rgba(255, 95, 86, 0.6);
-        }
-
-        /* ============================================
-           CONTENT
-        ============================================ */
-        .content {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 100px 30px 40px;
-        }
-
-        /* ============================================
-           USER PROFILE SECTION - Terminal Style
-        ============================================ */
-        .profile-header {
-            margin-bottom: 50px;
-        }
-
-        .profile-terminal {
-            background: linear-gradient(135deg, rgba(0, 255, 65, 0.08), rgba(0, 102, 255, 0.04));
-            border: 2px solid rgba(0, 255, 65, 0.3);
-            border-radius: 12px;
-            padding: 40px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .profile-terminal::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #00ff41, transparent);
-            animation: scan-line 3s linear infinite;
-        }
-
-        @keyframes scan-line {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-
-        .terminal-header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 24px;
-            font-size: 0.75rem;
-            color: rgba(0, 255, 136, 0.7);
-            letter-spacing: 2px;
-        }
-
-        .terminal-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #00ff41;
-        }
-
-        .user-name-huge {
-            font-family: 'Orbitron', sans-serif;
-            font-size: clamp(2rem, 6vw, 3.5rem);
-            font-weight: 900;
-            margin-bottom: 16px;
-            background: linear-gradient(90deg, #00FFFF, #00FF88, #00FFFF);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: glow-text 3s ease-in-out infinite;
-        }
-
-        @keyframes glow-text {
-            0%, 100% {
-                text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
-            }
-            50% {
-                text-shadow: 0 0 20px rgba(0, 255, 136, 0.6);
-            }
-        }
-
-        .user-hash {
-            font-size: 0.85rem;
-            color: rgba(0, 255, 136, 0.5);
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-            font-family: 'JetBrains Mono', monospace;
-            word-break: break-all;
-            max-width: 600px;
-        }
-
-        .profile-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 16px;
-            margin-top: 32px;
-        }
-
-        .stat-box {
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(0, 255, 136, 0.2);
-            padding: 16px;
-            border-radius: 8px;
-            text-align: center;
-        }
-
-        .stat-value {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.8rem;
-            font-weight: 900;
-            color: #00ff41;
-            margin-bottom: 4px;
-        }
-
-        .stat-label {
-            font-size: 0.75rem;
+        .nav-links a {
             color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* ============================================
-           INSTALLER SECTION (Condicional)
-        ============================================ */
-        .installer-section {
-            background: linear-gradient(135deg, rgba(0, 102, 255, 0.1), rgba(0, 255, 136, 0.05));
-            border: 2px solid rgba(0, 102, 255, 0.3);
-            border-radius: 12px;
-            padding: 40px;
-            margin-bottom: 50px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .installer-section::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200px;
-            height: 200px;
-            background: radial-gradient(circle, rgba(0, 102, 255, 0.1), transparent);
-            animation: float 6s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0); }
-            50% { transform: translate(30px, -30px); }
-        }
-
-        .installer-content {
-            position: relative;
-            z-index: 1;
-        }
-
-        .installer-badge {
-            display: inline-block;
-            padding: 8px 16px;
-            background: rgba(0, 255, 136, 0.15);
-            border: 1px solid rgba(0, 255, 136, 0.4);
-            border-radius: 6px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: #00ff41;
-            margin-bottom: 16px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .installer-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.8rem;
-            font-weight: 900;
-            margin-bottom: 16px;
-        }
-
-        .installer-text {
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-            line-height: 1.7;
-            margin-bottom: 24px;
-            max-width: 700px;
-        }
-
-        .installer-steps {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-
-        .step {
-            display: flex;
-            gap: 12px;
-        }
-
-        .step-number {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: rgba(0, 255, 136, 0.2);
-            border: 1px solid rgba(0, 255, 136, 0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            color: #00ff41;
-            flex-shrink: 0;
-        }
-
-        .step-text {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            line-height: 1.6;
-        }
-
-        .btn-install {
-            display: inline-block;
-            padding: 16px 40px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: #000;
-            border: none;
-            border-radius: 8px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9rem;
-            font-weight: 700;
             text-decoration: none;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 0 20px rgba(0, 102, 255, 0.4);
-        }
-
-        .btn-install:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0 40px rgba(0, 102, 255, 0.6);
-        }
-
-        /* ============================================
-           TERMINAL/CHAT SECTION
-        ============================================ */
-        .terminal-section {
-            background: linear-gradient(135deg, rgba(10, 10, 10, 0.9), rgba(18, 18, 18, 0.7));
-            border: 1px solid rgba(0, 255, 136, 0.2);
-            border-radius: 12px;
-            overflow: hidden;
-            margin-bottom: 50px;
-        }
-
-        .terminal-header-bar {
-            background: rgba(0, 255, 136, 0.1);
-            border-bottom: 1px solid rgba(0, 255, 136, 0.2);
-            padding: 12px 20px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.8rem;
-            color: rgba(0, 255, 136, 0.7);
-            letter-spacing: 1px;
-        }
-
-        .terminal-dot-active {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: #00ff41;
-            animation: blink 1.5s infinite;
-        }
-
-        @keyframes blink {
-            0%, 49%, 100% { opacity: 1; }
-            50%, 99% { opacity: 0.3; }
-        }
-
-        .terminal-output {
-            padding: 24px;
-            height: 400px;
-            overflow-y: auto;
-            font-size: 0.9rem;
-            line-height: 1.8;
-        }
-
-        .terminal-line {
-            margin-bottom: 12px;
-            animation: typewriter 0.5s ease-out forwards;
-        }
-
-        @keyframes typewriter {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .terminal-prompt {
-            color: #00ff41;
-            font-weight: 700;
-        }
-
-        .terminal-text {
-            color: var(--text-secondary);
-        }
-
-        .terminal-message {
-            color: var(--secondary);
-        }
-
-        .terminal-suggestion {
-            color: var(--success);
+            margin-left: 30px;
             font-weight: 600;
-            margin: 16px 0;
-            padding: 12px;
-            background: rgba(0, 255, 136, 0.1);
-            border-left: 3px solid #00ff41;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover { color: var(--text-primary); }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
 
-        /* ============================================
-           QUICK STATS
-        ============================================ */
-        .quick-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
+        .btn {
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 0.9rem;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+        }
+        .btn-outline:hover { border-color: var(--text-primary); }
+
+        .btn-primary {
+            background: var(--accent-green);
+            color: #000;
+        }
+        .btn-primary:hover { box-shadow: 0 0 15px rgba(0, 255, 136, 0.4); }
+
+        /* Main Content */
+        main {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        .page-header {
             margin-bottom: 50px;
         }
-
-        .stat-card {
-            background: linear-gradient(135deg, rgba(0, 255, 65, 0.08), rgba(0, 102, 255, 0.04));
-            border: 1px solid rgba(0, 255, 136, 0.2);
-            border-radius: 12px;
-            padding: 24px;
-            transition: all 0.3s;
+        
+        .page-header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
         }
 
-        .stat-card:hover {
-            border-color: rgba(0, 255, 136, 0.5);
-            box-shadow: 0 8px 24px rgba(0, 255, 136, 0.1);
-        }
-
-        .stat-card-label {
-            font-size: 0.75rem;
+        .page-header p {
             color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* Filters */
+        .filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .filter-btn.active, .filter-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Products Grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .product-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            z-index: 10;
+            text-transform: uppercase;
+        }
+
+        .badge.premium {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+        }
+
+        .badge.free {
+            background: linear-gradient(135deg, var(--accent-green), #00cc6a);
+            color: #000;
+        }
+
+        .product-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            background-color: #1a1a1a;
+        }
+
+        .product-content {
+            padding: 25px;
+        }
+
+        .product-category {
+            color: var(--primary-light);
+            font-size: 0.8rem;
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
             margin-bottom: 8px;
         }
 
-        .stat-card-value {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2rem;
-            font-weight: 900;
-            color: #00ff41;
+        .product-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            line-height: 1.3;
         }
 
-        /* ============================================
-           RESPONSIVE
-        ============================================ */
-        @media (max-width: 768px) {
-            .content {
-                padding: 80px 20px 30px;
-            }
-
-            .profile-terminal {
-                padding: 24px;
-            }
-
-            .user-name-huge {
-                font-size: clamp(1.5rem, 4vw, 2rem);
-            }
-
-            .terminal-output {
-                height: 300px;
-                font-size: 0.8rem;
-            }
-
-            .installer-steps {
-                grid-template-columns: 1fr;
-            }
+        .product-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
-        /* Scroll bar styling */
-        .terminal-output::-webkit-scrollbar {
-            width: 8px;
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 20px;
+            border-top: 1px solid #222;
         }
 
-        .terminal-output::-webkit-scrollbar-track {
-            background: rgba(0, 255, 136, 0.05);
+        .price {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+        .price span { font-size: 0.8rem; color: var(--text-secondary); font-weight: 400; }
+
+        .btn-buy {
+            padding: 10px 25px;
+            background: transparent;
+            border: 1px solid var(--accent-green);
+            color: var(--accent-green);
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            font-size: 0.85rem;
         }
 
-        .terminal-output::-webkit-scrollbar-thumb {
-            background: rgba(0, 255, 136, 0.3);
-            border-radius: 4px;
+        .btn-buy:hover {
+            background: var(--accent-green);
+            color: #000;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
         }
 
-        .terminal-output::-webkit-scrollbar-thumb:hover {
-            background: rgba(0, 255, 136, 0.5);
+        .btn-download {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
         }
+        .btn-download:hover {
+            background: var(--primary-light);
+            border-color: var(--primary-light);
+            box-shadow: 0 0 15px rgba(0, 102, 255, 0.3);
+        }
+
     </style>
 </head>
 <body>
+
     <!-- Navbar -->
     <nav class="navbar">
-        <div class="nav-container">
-            <a href="index.html" class="nav-logo">
-                <img src="assets/logo.png" alt="KR-CLIDN">
-                <span class="nav-brand">KR-CLIDN</span>
-            </a>
-            <div class="nav-right">
-                <div class="user-status">
-                    <div class="status-dot"></div>
-                    <span id="user-email">Conectado</span>
-                </div>
-                <button class="btn-logout" onclick="logoutUser()">Cerrar Sesión</button>
+        <div class="container">
+            <a href="dashboard.html" class="logo">KR<span>-CLIDN</span> STORE</a>
+            <div class="nav-links">
+                <a href="#">Inicio</a>
+                <a href="#">Mis Compras</a>
+                <a href="#">Soporte</a>
+            </div>
+            <div class="user-menu">
+                <span>Hola, <strong>Usuario</strong></span>
+                <a href="index.html" class="btn btn-outline">Cerrar Sesión</a>
             </div>
         </div>
     </nav>
 
-    <!-- Content -->
-    <div class="content">
-        <!-- PROFILE SECTION -->
-        <div class="profile-header">
-            <div class="profile-terminal">
-                <div class="terminal-header">
-                    <div class="terminal-dot"></div>
-                    <span>> ./profile --load --sync</span>
-                </div>
-
-                <div class="user-name-huge" id="user-display">Cargando...</div>
-                <div class="user-hash" id="user-hash">Generando hash de sesión...</div>
-
-                <div class="profile-stats">
-                    <div class="stat-box">
-                        <div class="stat-value" id="stat-kr">0</div>
-                        <div class="stat-label">KR Balance</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-value" id="stat-queries">0</div>
-                        <div class="stat-label">AI Queries</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-value" id="stat-days">0</div>
-                        <div class="stat-label">Días Activo</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-value" id="stat-sync">✓</div>
-                        <div class="stat-label">CLI Sync</div>
-                    </div>
-                </div>
-            </div>
+    <!-- Main Content -->
+    <main>
+        <div class="page-header">
+            <h1>El Arsenal Digital</h1>
+            <p>Explora nuestro catálogo de herramientas, cursos y recursos de ciberseguridad de élite.</p>
         </div>
 
-        <!-- INSTALLER SECTION (Condicional) -->
-        <div id="installer-container" style="display: none;">
-            <div class="installer-section">
-                <div class="installer-content">
-                    <div class="installer-badge">⬇️ ACCIÓN RECOMENDADA</div>
-                    <h2 class="installer-title">Descarga e Instala KR-CLIDN</h2>
-                    <p class="installer-text">
-                        El verdadero poder de esta plataforma está en tu terminal. 
-                        Descargar el programa y sincroniza tu cuenta para acceso completo a todas las herramientas de pentesting con IA.
-                    </p>
+        <!-- Filters -->
+        <div class="filters">
+            <button class="filter-btn active">Todos</button>
+            <button class="filter-btn">Cursos</button>
+            <button class="filter-btn">Ebooks</button>
+            <button class="filter-btn">Software</button>
+            <button class="filter-btn">Gratuitos</button>
+        </div>
 
-                    <div class="installer-steps">
-                        <div class="step">
-                            <div class="step-number">1</div>
-                            <div class="step-text"><strong>Descarga</strong> el instalador desde el botón abajo</div>
-                        </div>
-                        <div class="step">
-                            <div class="step-number">2</div>
-                            <div class="step-text"><strong>Ejecuta</strong>: <code>bash install.sh</code></div>
-                        </div>
-                        <div class="step">
-                            <div class="step-number">3</div>
-                            <div class="step-text"><strong>Inicia sesión</strong> con tus credenciales</div>
-                        </div>
-                        <div class="step">
-                            <div class="step-number">4</div>
-                            <div class="step-text"><strong>Sincronización</strong> automática con tu cuenta web</div>
-                        </div>
-                    </div>
+        <!-- Products Grid -->
+        <div class="products-grid">
 
-                    <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
-                        <a href="#" id="btn-download-installer" class="btn-install" onclick="downloadInstaller(); return false;">
-                            📥 DESCARGAR INSTALADOR
-                        </a>
-                        <span style="font-size: 0.85rem; color: var(--text-secondary);">
-                            Compatible: Linux • Kali • Debian • Termux
-                        </span>
+            <!-- Producto 1 -->
+            <article class="product-card">
+                <span class="badge premium">Curso</span>
+                <div class="product-image" style="background-image: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80');"></div>
+                <div class="product-content">
+                    <div class="product-category">Seguridad Ofensiva</div>
+                    <h3 class="product-title">Hacking Ético Masterclass</h3>
+                    <p class="product-desc">Domina el arte del penetration testing. Aprende Metasploit, Burp Suite y técnicas avanzadas de acceso.</p>
+                    <div class="product-footer">
+                        <div class="price">$49.99 <span>USD</span></div>
+                        <button class="btn-buy" onclick="alert('Ir a pago con PayPal')">COMPRAR</button>
                     </div>
                 </div>
-            </div>
-        </div>
+            </article>
 
-        <!-- TERMINAL SECTION -->
-        <div class="terminal-section">
-            <div class="terminal-header-bar">
-                <div class="terminal-dot-active"></div>
-                <span>> kr-terminal --connected --sync-mode</span>
-            </div>
-            <div class="terminal-output" id="terminal-output">
-                <div class="terminal-line">
-                    <span class="terminal-prompt">krCLI » </span>
-                    <span class="terminal-text">Inicializando dashboard sincronizado...</span>
+            <!-- Producto 2 -->
+            <article class="product-card">
+                <span class="badge free">Gratis</span>
+                <div class="product-image" style="background-image: url('https://images.unsplash.com/photo-1516110833967-0b5716ca1387?auto=format&fit=crop&w=800&q=80');"></div>
+                <div class="product-content">
+                    <div class="product-category">Programación</div>
+                    <h3 class="product-title">Python para Security</h3>
+                    <p class="product-desc">Scripting básico para automatizar ataques y crear tus propias herramientas de seguridad.</p>
+                    <div class="product-footer">
+                        <div class="price">$0.00</div>
+                        <button class="btn-buy btn-download" onclick="alert('Descargando...')">DESCARGAR</button>
+                    </div>
                 </div>
-            </div>
-        </div>
+            </article>
 
-        <!-- QUICK STATS -->
-        <div style="margin-bottom: 40px;">
-            <h3 style="margin-bottom: 20px; font-family: 'Orbitron'; font-size: 1.2rem;">Estadísticas Rápidas</h3>
-            <div class="quick-stats">
-                <div class="stat-card">
-                    <div class="stat-card-label">📚 Temas Estudiados</div>
-                    <div class="stat-card-value" id="topics-count">0</div>
+            <!-- Producto 3 -->
+            <article class="product-card">
+                <span class="badge premium">Software</span>
+                <div class="product-image" style="background-image: url('https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80');"></div>
+                <div class="product-content">
+                    <div class="product-category">Herramientas</div>
+                    <h3 class="product-title">KR-Scanner Pro</h3>
+                    <p class="product-desc">Escáner de vulnerabilidades con IA. Detecta fallos en tu infraestructura automáticamente.</p>
+                    <div class="product-footer">
+                        <div class="price">$99.99 <span>USD</span></div>
+                        <button class="btn-buy" onclick="alert('Ir a pago con PayPal')">COMPRAR</button>
+                    </div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-card-label">⏱️ Tiempo Total</div>
-                    <div class="stat-card-value" id="total-time">0h</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-card-label">🎯 Streak Actual</div>
-                    <div class="stat-card-value" id="streak-count">0</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-card-label">🏆 Nivel</div>
-                    <div class="stat-card-value" id="level-stats">1</div>
-                </div>
-            </div>
-        </div>
-    </div>
+            </article>
 
-    <!-- Scripts -->
-    <script src="js/config.js"></script>
-    <script src="js/supabase-client.js"></script>
+            <!-- Producto 4 -->
+            <article class="product-card">
+                <span class="badge premium">Ebook</span>
+                <div class="product-image" style="background-image: url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=800&q=80');"></div>
+                <div class="product-content">
+                    <div class="product-category">Análisis</div>
+                    <h3 class="product-title">Ingeniería Inversa</h3>
+                    <p class="product-desc">Aprende a analizar malware, desensamblar binarios y entender el comportamiento de virus.</p>
+                    <div class="product-footer">
+                        <div class="price">$29.99 <span>USD</span></div>
+                        <button class="btn-buy" onclick="alert('Ir a pago con PayPal')">COMPRAR</button>
+                    </div>
+                </div>
+            </article>
+
+             <!-- Producto 5 -->
+             <article class="product-card">
+                <span class="badge premium">Curso</span>
+                <div class="product-image" style="background-image: url('https://images.unsplash.com/photo-1592478411213-61535f944806?auto=format&fit=crop&w=800&q=80');"></div>
+                <div class="product-content">
+                    <div class="product-category">Redes</div>
+                    <h3 class="product-title">Ataques WiFi Avanzados</h3>
+                    <p class="product-desc">Técnicas de captura de handshake y cracking de claves WPA2/WPA3.</p>
+                    <div class="product-footer">
+                        <div class="price">$39.99 <span>USD</span></div>
+                        <button class="btn-buy" onclick="alert('Ir a pago con PayPal')">COMPRAR</button>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Producto 6 -->
+            <article class="product-card">
+                <span class="badge free">Tool</span>
+                <div class="product-image" style="background-image: url('https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?auto=format&fit=crop&w=800&q=80');"></div>
+                <div class="product-content">
+                    <div class="product-category">Script</div>
+                    <h3 class="product-title">AutoRecon CLI</h3>
+                    <p class="product-desc">Script automatizado para reconocimiento de puertos y servicios.</p>
+                    <div class="product-footer">
+                        <div class="price">$0.00</div>
+                        <button class="btn-buy btn-download" onclick="alert('Descargando...')">DESCARGAR</button>
+                    </div>
+                </div>
+            </article>
+
+        </div>
+    </main>
+
     <script>
-        console.log('[dashboard] inline script executing');
-        // ============================================
-        // Initialize Dashboard
-        // ============================================
-        let currentUser = null;
-        let userConversations = [];
-
-        window.addEventListener('load', async () => {
-            try {
-                await window.KRSupabase.init();
-                const session = await window.KRSupabase.getSession();
-                console.log('[dashboard] session fetched', session);
-
-                if (!session?.user) {
-                    console.warn('[dashboard] no session user, redirecting');
-                    window.location.href = 'login.html';
-                    return;
-                }
-
-                currentUser = session.user;
-                console.log('[dashboard] currentUser', currentUser);
-                loadUserData();
-                loadConversations();
-            } catch (error) {
-                console.error('Error loading dashboard:', error);
-                // Even if error, show dashboard with fallback
-                loadUserDataFallback();
-            }
+        // Simple filter logic
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                // Here you would filter the products-grid
+            });
         });
-
-        // ============================================
-        // Load User Data
-        // ============================================
-        async function loadUserData() {
-            try {
-                const supabase = await window.KRSupabase.getSupabaseClient();
-                let profile = null;
-
-                // attempt to read from cli_users table (legacy CLI users)
-                try {
-                    const { data, error } = await supabase
-                        .from('cli_users')
-                        .select('id, email, username, credit_balance, created_at')
-                        .eq('id', currentUser.id)
-                        .single();
-
-                    if (error) {
-                        // table may not exist or other error; if it's relation-not-found just ignore
-                        if (error.message && error.message.includes('does not exist')) {
-                            console.warn('cli_users table not found, falling back to default profile');
-                        } else {
-                            throw error;
-                        }
-                    } else if (data) {
-                        profile = data;
-                        // query total queries from history
-                        try {
-                            const { count, error: qerr } = await supabase
-                                .from('cli_chat_history')
-                                .select('id', { count: 'exact', head: true })
-                                .eq('user_id', currentUser.id);
-                            profile.total_queries = count || 0;
-                        } catch (e) {
-                            console.warn('Could not count chat history:', e);
-                            profile.total_queries = 0;
-                        }
-                    }
-                } catch (e) {
-                    console.warn('Error fetching cli_users:', e);
-                }
-
-                // if no profile from DB, fall back to mock info
-                if (!profile) {
-                    profile = {
-                        username: currentUser.email?.split('@')[0] || 'hacker',
-                        email: currentUser.email,
-                        kr_balance: 50,
-                        total_queries: 0,
-                        cli_initialized: false,
-                        created_at: currentUser.created_at || new Date().toISOString()
-                    };
-                }
-
-                // Display username
-                const username = profile.username || profile.email?.split('@')[0] || 'hacker';
-                document.getElementById('user-display').textContent = username.toUpperCase();
-                document.getElementById('user-email').textContent = profile.email || currentUser.email;
-
-                const krBalance = profile.credit_balance ?? profile.kr_balance ?? 50;
-                const createdAt = new Date(profile.created_at);
-                const daysActive = Math.floor((new Date() - createdAt) / (1000 * 60 * 60 * 24));
-
-                document.getElementById('stat-kr').textContent = krBalance;
-                document.getElementById('stat-queries').textContent = profile.total_queries || 0;
-                document.getElementById('stat-days').textContent = daysActive;
-                // mark sync as yes when we pulled from cli_users
-                document.getElementById('stat-sync').textContent = profile.id ? '✓' : '✗';
-
-                // Show installer always if not CLI-initialized
-                const installerContainer = document.getElementById('installer-container');
-                if (installerContainer) {
-                    installerContainer.style.display = 'block';
-                }
-
-            } catch (error) {
-                console.error('Error in loadUserData:', error);
-            }
-        }
-
-        // ============================================
-        // Load Conversations - try query cli_chat_history
-        // ============================================
-        async function loadConversations() {
-            try {
-                const supabase = await window.KRSupabase.getSupabaseClient();
-                const { data, error } = await supabase
-                    .from('cli_chat_history')
-                    .select('role,content')
-                    .eq('user_id', currentUser.id)
-                    .order('created_at', { ascending: false })
-                    .limit(20);
-
-                if (error) {
-                    // ignore if table missing or other
-                    console.warn('Could not load chat history:', error.message);
-                    userConversations = [];
-                } else {
-                    userConversations = data || [];
-                }
-            } catch (error) {
-                console.warn('Error in loadConversations:', error);
-                userConversations = [];
-            }
-        }
-
-        // ============================================
-        // Download Installer
-        // ============================================
-        function downloadInstaller() {
-            const installerLink = localStorage.getItem('kr_installer_url');
-            if (!installerLink) {
-                alert('⚠️ El enlace del instalador aún no está configurado.');
-                return;
-            }
-            window.location.href = installerLink;
-        }
-
-        // ============================================
-        // Logout
-        // ============================================
-        async function logoutUser() {
-            if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
-                try {
-                    const supabase = await window.KRSupabase.getSupabaseClient();
-                    await supabase.auth.signOut();
-                    window.location.href = 'index.html';
-                } catch (error) {
-                    console.error('Error logging out:', error);
-                }
-            }
-        }
-    </script>
-
-    <!-- Debug console visible in corner -->
-    <div id="debug-console" style="
-        position: fixed;
-        bottom: 10px;
-        right: 10px;
-        width: 300px;
-        max-height: 200px;
-        background: rgba(0,0,0,0.9);
-        border: 1px solid #00FF41;
-        color: #00FF41;
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 10px;
-        padding: 10px;
-        overflow-y: auto;
-        z-index: 99999;
-        display: none;
-    ">
-        <div style="margin-bottom: 5px; border-bottom: 1px solid #00FF41; padding-bottom: 5px;">DEBUG LOG</div>
-        <div id="debug-log"></div>
-    </div>
-
-    <script>
-        // Simple debug logger that shows in page
-        window.debugLog = function(msg) {
-            const debugDiv = document.getElementById('debug-log');
-            if (debugDiv) {
-                debugDiv.innerHTML += '<div>' + msg + '</div>';
-                document.getElementById('debug-console').style.display = 'block';
-            }
-            console.log('[DEBUG]', msg);
-        };
-
-        // Override console.log to capture messages
-        const originalLog = console.log;
-        const originalError = console.error;
-        const originalWarn = console.warn;
-
-        console.log = function(...args) {
-            originalLog.apply(console, args);
-            const msg = args.join(' ');
-            if (msg.includes('[')) {
-                window.debugLog(msg);
-            }
-        };
-
-        console.error = function(...args) {
-            originalError.apply(console, args);
-            const msg = '❌ ' + args.join(' ');
-            window.debugLog(msg);
-        };
-
-        console.warn = function(...args) {
-            originalWarn.apply(console, args);
-            const msg = '⚠️ ' + args.join(' ');
-            window.debugLog(msg);
-        };
     </script>
 </body>
 </html>

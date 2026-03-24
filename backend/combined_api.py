@@ -393,6 +393,10 @@ def create_paypal_order():
         product_id = data.get("product_id")
         user_id = data.get("user_id")
 
+        print(
+            f"🔔 PayPal create-order called - PAYPAL_CLIENT_ID set: {bool(PAYPAL_CLIENT_ID)}, PAYPAL_CLIENT_SECRET set: {bool(PAYPAL_CLIENT_SECRET)}"
+        )
+
         products_db = {
             "curso-python": {
                 "name": "Curso de Pentesting con Python",
@@ -405,7 +409,6 @@ def create_paypal_order():
             "kr-scanner": {"name": "KR-Scanner Pro", "price": "99.99"},
         }
 
-        # Dynamic products from cart
         cart_items = data.get("cart_items", [])
 
         if cart_items:
@@ -424,7 +427,12 @@ def create_paypal_order():
 
         access_token = get_paypal_access_token()
         if not access_token:
-            return jsonify({"error": "No se pudo autenticar con PayPal"}), 500
+            print(
+                "❌ PayPal access token failed - check PAYPAL_CLIENT_ID and PAYPAL_CLIENT_SECRET in Render"
+            )
+            return jsonify(
+                {"error": "PayPal no configurado. Contacta al administrador."}
+            ), 500
 
         headers = {
             "Content-Type": "application/json",

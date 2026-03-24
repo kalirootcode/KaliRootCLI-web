@@ -519,6 +519,18 @@
 </head>
 
 <body>
+    <!-- Auth Loader -->
+    <div id="auth-loader" style="
+        position: fixed; inset: 0; background: #050505; z-index: 9999;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        transition: opacity 0.3s ease;">
+        <div style="text-align: center;">
+            <i class="fas fa-shield-alt" style="font-size: 3rem; color: #0066FF; margin-bottom: 20px; animation: pulse 1.5s infinite;"></i>
+            <div style="font-family: 'Orbitron'; font-size: 1.5rem; color: #0066FF; margin-bottom: 10px;">KR-CLIDN</div>
+            <div style="color: #666; font-size: 0.9rem;">Verificando sesión...</div>
+        </div>
+    </div>
+
     <div class="bg-gradient"></div>
     <div class="floating-shapes">
         <div class="shape shape-1"></div>
@@ -594,14 +606,26 @@
     <script src="js/config.js"></script>
     <script src="js/supabase-client.js"></script>
     <script>
+        const authLoader = document.getElementById('auth-loader');
+
+        function hideLoader() {
+            if (authLoader) {
+                authLoader.style.opacity = '0';
+                setTimeout(() => {
+                    authLoader.style.display = 'none';
+                }, 300);
+            }
+        }
+
         // Check if user is already logged in - redirect to dashboard
-        // Only redirect AFTER the page is fully loaded to avoid flashing
         document.addEventListener('DOMContentLoaded', async function() {
             try {
                 // Check localStorage first (faster)
                 const storedUser = localStorage.getItem('kr_user') || sessionStorage.getItem('kr_user');
                 if (storedUser) {
                     console.log("User found in storage, redirecting...");
+                    // Pequeño delay para que se vea el loader
+                    await new Promise(r => setTimeout(r, 500));
                     window.location.href = 'dashboard.html';
                     return;
                 }
@@ -612,16 +636,21 @@
                     const session = await window.KRSupabase.getSession();
                     if (session?.user) {
                         console.log("User found in session, redirecting...");
+                        await new Promise(r => setTimeout(r, 500));
                         window.location.href = 'dashboard.html';
                         return;
                     }
                 } catch (supabaseErr) {
-                    console.log("Supabase check failed or not configured, allowing login");
+                    console.log("Supabase check failed, allowing login");
                 }
                 
+                // No session - mostrar formulario
                 console.log("No active session, showing login form");
+                hideLoader();
+                
             } catch (e) {
-                console.log('No active session, showing login form');
+                console.log('Error checking session:', e);
+                hideLoader();
             }
         });
 

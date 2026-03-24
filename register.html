@@ -563,8 +563,20 @@
         }
     </style>
 </head>
-
 <body>
+
+    <!-- Auth Loader -->
+    <div id="auth-loader" style="
+        position: fixed; inset: 0; background: #050505; z-index: 9999;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        transition: opacity 0.3s ease;">
+        <div style="text-align: center;">
+            <i class="fas fa-shield-alt" style="font-size: 3rem; color: #0066FF; margin-bottom: 20px; animation: pulse 1.5s infinite;"></i>
+            <div style="font-family: 'Orbitron'; font-size: 1.5rem; color: #0066FF; margin-bottom: 10px;">KR-CLIDN</div>
+            <div style="color: #666; font-size: 0.9rem;">Verificando sesión...</div>
+        </div>
+    </div>
+
     <div class="bg-gradient"></div>
     <div class="floating-shapes">
         <div class="shape shape-1"></div>
@@ -666,24 +678,45 @@
     <script src="js/config.js"></script>
     <script src="js/supabase-client.js"></script>
     <script>
+        const authLoader = document.getElementById('auth-loader');
+
+        function hideLoader() {
+            if (authLoader) {
+                authLoader.style.opacity = '0';
+                setTimeout(() => {
+                    authLoader.style.display = 'none';
+                }, 300);
+            }
+        }
+
         // Check if user is already logged in - redirect to dashboard
-        (async function checkExistingSession() {
+        document.addEventListener('DOMContentLoaded', async function() {
             try {
                 const storedUser = localStorage.getItem('kr_user') || sessionStorage.getItem('kr_user');
                 if (storedUser) {
+                    await new Promise(r => setTimeout(r, 500));
                     window.location.href = 'dashboard.html';
                     return;
                 }
-                await window.KRSupabase.init();
-                const session = await window.KRSupabase.getSession();
-                if (session?.user) {
-                    window.location.href = 'dashboard.html';
-                    return;
+                
+                try {
+                    await window.KRSupabase.init();
+                    const session = await window.KRSupabase.getSession();
+                    if (session?.user) {
+                        await new Promise(r => setTimeout(r, 500));
+                        window.location.href = 'dashboard.html';
+                        return;
+                    }
+                } catch(e) {
+                    console.log('Supabase check failed');
                 }
+
+                hideLoader();
             } catch (e) {
                 console.log('No active session');
+                hideLoader();
             }
-        })();
+        });
 
         // Form elements
         const form = document.getElementById('register-form');

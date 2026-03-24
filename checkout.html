@@ -1325,7 +1325,11 @@
                     throw new Error('No auth token — please login first');
                 }
 
-                const API_URL = "https://kalirootcli.onrender.com";
+                // Get API URL from config
+                const API_URL = (window.CONFIG?.RENDER_API_URL) || 'https://kalirootcli.onrender.com';
+                console.log('API_URL:', API_URL);
+                console.log('CONFIG:', window.CONFIG);
+                console.log('Payment method:', selectedPaymentMethod);
 
                 if (planId) {
                     // ── Dominion Tier Purchase ─────────────────────────────
@@ -1400,6 +1404,10 @@
                         
                     } else {
                         // ── CRYPTO CHECKOUT (NOWPayments) ───────────────────
+                        console.log('Starting crypto checkout...');
+                        console.log('Cart:', cart);
+                        console.log('Total:', total);
+                        
                         const orderResult = await window.KRSupabase.createOrder(
                             currentUser.id,
                             currentUser.email,
@@ -1407,17 +1415,23 @@
                             total,
                             { payment_method: 'crypto', currency: selectedCrypto }
                         );
+                        
+                        console.log('Order result:', orderResult);
 
                         if (!orderResult.success) {
-                            throw new Error('Failed to create order');
+                            throw new Error('Failed to create order: ' + (orderResult.error || 'Unknown error'));
                         }
 
                         const NOWPAYMENTS_API_KEY = (window.CONFIG || {}).NOWPAYMENTS_API_KEY;
                         const NOWPAYMENTS_API_URL = (window.CONFIG || {}).NOWPAYMENTS_API_URL || 'https://api.nowpayments.io/v1';
                         
+                        console.log('NOWPAYMENTS_API_KEY:', NOWPAYMENTS_API_KEY ? 'SET' : 'NOT SET');
+
                         // URL del backend de Render (configurable en secrets)
                         const API_URL = (window.CONFIG || {}).RENDER_API_URL || 'https://kalirootcli.onrender.com';
 
+                        console.log('Creating NOWPayments payment...');
+                        
                         const paymentResponse = await fetch(`${NOWPAYMENTS_API_URL}/payment`, {
                             method: 'POST',
                             headers: {
@@ -1436,11 +1450,15 @@
                             })
                         });
 
+                        console.log('NOWPayments response:', paymentResponse.status);
+
                         if (!paymentResponse.ok) {
-                            throw new Error('Failed to create payment');
+                            const errText = await paymentResponse.text();
+                            throw new Error('Failed to create payment: ' + errText);
                         }
 
                         currentPayment = await paymentResponse.json();
+                        console.log('Payment created:', currentPayment);
                         showPaymentModal(currentPayment);
                         pollPaymentStatus(currentPayment.payment_id);
                     }

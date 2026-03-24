@@ -1054,6 +1054,10 @@
         // API base URL for backend calls
         const API_BASE = window.CONFIG?.API_BASE_URL || '';
 
+        // Payment config from window.CONFIG
+        const NOWPAYMENTS_API_KEY = (window.CONFIG || {}).NOWPAYMENTS_API_KEY || '';
+        const NOWPAYMENTS_API_URL = (window.CONFIG || {}).NOWPAYMENTS_API_URL || 'https://api.nowpayments.io/v1';
+        
         // State
         let cart = [];
         let currentUser = null;

@@ -7,10 +7,9 @@
     <title>KR-CLIDN | Dominio del CyberEspacio</title>
 
     <link rel="icon" type="image/png" href="assets/favicon.png">
-    <link rel="stylesheet" href="css/main.css?v=3.0">
-    <link rel="stylesheet" href="css/cyber-menu.css?v=3.0">
+    <link rel="stylesheet" href="css/main.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Orbitron:wght@700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Orbitron:wght@700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
         :root {
@@ -18,11 +17,9 @@
             --primary-dim: #008F11;
             --secondary: #00FFFF;
             --bg-dark: #050505;
-            --bg-panel: #0a0a0a;
             --text-main: #e0e0e0;
             --text-muted: #888;
             --accent-purple: #9d00ff;
-            --danger: #ff3333;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -35,190 +32,237 @@
         }
 
         h1, h2, h3 { font-family: 'Orbitron', sans-serif; }
-        
         a { text-decoration: none; color: inherit; }
 
-        /* --- Animations --- */
-        @keyframes blink { 50% { opacity: 0; } }
+        /* Animations */
         @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
-        .animate-on-scroll { opacity: 0; transition: all 0.8s ease-out; }
-        .animate-on-scroll.visible { opacity: 1; transform: translateY(0); }
-
-        /* --- Navbar --- */
+        /* Navbar */
         .navbar {
             position: fixed; top: 0; width: 100%; z-index: 1000;
-            background: rgba(5, 5, 5, 0.9); backdrop-filter: blur(10px);
-            border-bottom: 1px solid #333;
+            background: rgba(5, 5, 5, 0.95); backdrop-filter: blur(10px);
+            border-bottom: 1px solid #222;
             padding: 15px 0;
         }
+
         .nav-container {
-            max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px;
+            max-width: 1200px; margin: 0 auto; padding: 0 20px;
+            display: flex; justify-content: space-between; align-items: center;
         }
-        .logo { font-family: 'Orbitron'; font-weight: 900; font-size: 1.5rem; color: var(--primary); letter-spacing: 2px; }
+
+        .logo {
+            font-family: 'Orbitron'; font-weight: 900; font-size: 1.5rem;
+            color: var(--primary); letter-spacing: 2px;
+        }
         .logo span { color: #fff; }
         
         .nav-links { display: flex; gap: 30px; }
-        .nav-links a { font-size: 0.9rem; font-weight: 600; transition: color 0.3s; }
+        .nav-links a { font-size: 0.9rem; font-weight: 600; transition: color 0.3s; color: var(--text-muted); }
         .nav-links a:hover { color: var(--primary); }
-        
-        .btn-login {
-            padding: 8px 20px; border: 1px solid var(--primary); color: var(--primary);
-            border-radius: 4px; font-weight: 700; transition: all 0.3s;
-        }
-        .btn-login:hover { background: var(--primary); color: #000; box-shadow: 0 0 15px var(--primary-dim); }
-        
-        .btn-register {
-            padding: 8px 20px; background: var(--primary); color: #000;
-            border-radius: 4px; font-weight: 700; transition: all 0.3s;
-        }
-        .btn-register:hover { box-shadow: 0 0 15px var(--primary-dim); transform: scale(1.05); }
 
-        /* --- Hero Section --- */
+        .btn {
+            padding: 8px 20px; border-radius: 4px; font-weight: 700;
+            text-decoration: none; cursor: pointer; transition: all 0.3s;
+            font-size: 0.9rem; display: inline-block;
+        }
+
+        .btn-login { border: 1px solid var(--primary); color: var(--primary); }
+        .btn-login:hover { background: var(--primary); color: #000; }
+
+        .btn-register { background: var(--primary); color: #000; }
+        .btn-register:hover { box-shadow: 0 0 15px var(--primary-dim); }
+
+        /* Hero Section */
         .hero {
-            padding: 160px 20px 100px;
-            background: radial-gradient(circle at center, #111 0%, #050505 100%);
+            padding: 180px 20px 100px;
+            background: radial-gradient(circle at center top, #111 0%, #050505 70%);
             text-align: center;
             position: relative;
-            overflow: hidden;
-        }
-        
-        .hero::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 255, 65, 0.03) 3px);
-            pointer-events: none;
+            min-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         .hero h1 {
-            font-size: 3.5rem; margin-bottom: 20px; line-height: 1.1;
-            background: linear-gradient(90deg, #fff, var(--primary));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            margin-bottom: 20px;
+            line-height: 1.1;
+            background: linear-gradient(135deg, #fff 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             animation: slideUp 0.8s ease-out;
         }
-        
+
         .hero p {
-            font-size: 1.2rem; color: var(--text-muted); max-width: 700px; margin: 0 auto 40px;
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto 40px;
+            line-height: 1.7;
             animation: slideUp 1s ease-out;
         }
 
-        .hero-btns { display: flex; gap: 20px; justify-content: center; animation: slideUp 1.2s ease-out; }
-        
+        .hero-btns {
+            display: flex; gap: 20px; justify-content: center;
+            animation: slideUp 1.2s ease-out;
+            flex-wrap: wrap;
+        }
+
         .btn-cta {
-            padding: 15px 40px; font-size: 1.1rem; font-weight: 800; border-radius: 5px;
-            text-transform: uppercase; cursor: pointer; border: none;
+            padding: 16px 45px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            border-radius: 8px;
+            text-transform: uppercase;
+            cursor: pointer;
+            border: none;
         }
-        .btn-primary { background: var(--primary); color: #000; }
-        .btn-secondary { background: transparent; border: 2px solid var(--text-muted); color: #fff; }
 
-        /* --- Terminal Component --- */
-        .terminal-wrapper {
-            max-width: 900px; margin: 60px auto 0; background: #000; border-radius: 10px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8); border: 1px solid #333;
-            overflow: hidden; animation: fadeIn 1.5s ease;
+        .btn-primary {
+            background: var(--primary);
+            color: #000;
         }
-        .terminal-header {
-            background: #1a1a1a; padding: 10px 15px; display: flex; gap: 8px;
-        }
-        .term-dot { width: 12px; height: 12px; border-radius: 50%; }
-        .red { background: #ff5f56; } .yellow { background: #ffbd2e; } .green { background: #27c93f; }
-        
-        .terminal-body {
-            padding: 20px; font-family: 'JetBrains Mono', monospace; color: var(--primary);
-            min-height: 300px; position: relative;
-        }
-        
-        .code-line { margin-bottom: 10px; display: block; opacity: 0.9; }
-        .prompt { color: var(--secondary); margin-right: 10px; }
-        .cmd { color: #fff; }
-        .output { color: var(--text-muted); display: block; margin-bottom: 15px; font-size: 0.9rem; }
-        .cursor { display: inline-block; width: 10px; height: 18px; background: var(--primary); animation: blink 1s infinite; vertical-align: middle; }
+        .btn-primary:hover { box-shadow: 0 0 30px var(--primary-dim); transform: translateY(-2px); }
 
-        /* --- Stats Section --- */
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid #444;
+            color: #fff;
+        }
+        .btn-secondary:hover { border-color: var(--primary); color: var(--primary); }
+
+        /* Stats Section */
         .stats-section {
-            padding: 80px 20px; background: #0f0f0f; border-top: 1px solid #222; border-bottom: 1px solid #222;
+            padding: 80px 20px;
+            background: #0a0a0a;
+            border-top: 1px solid #1a1a1a;
+            border-bottom: 1px solid #1a1a1a;
         }
+
         .stats-grid {
-            max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; text-align: center;
+            max-width: 1200px; margin: 0 auto;
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px;
+            text-align: center;
         }
-        .stat-item h3 { font-size: 3rem; color: var(--primary); margin-bottom: 10px; }
+
+        .stat-item h3 {
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            color: var(--primary); margin-bottom: 10px;
+        }
         .stat-item p { color: var(--text-muted); font-size: 1.1rem; }
 
-        /* --- About / Mission --- */
-        .about-section { padding: 100px 20px; max-width: 900px; margin: 0 auto; text-align: center; }
+        /* About Section */
+        .about-section {
+            padding: 100px 20px;
+            max-width: 900px; margin: 0 auto;
+            text-align: center;
+        }
+
         .about-section h2 { font-size: 2.5rem; margin-bottom: 30px; }
-        .about-section p { font-size: 1.1rem; line-height: 1.8; color: #ccc; margin-bottom: 20px; }
+        
+        .about-section p {
+            font-size: 1.1rem; line-height: 1.8; color: #bbb; margin-bottom: 20px;
+        }
+
         .highlight { color: var(--primary); font-weight: 700; }
 
-        /* --- Products Grid --- */
-        .products-section { padding: 80px 20px 120px; max-width: 1200px; margin: 0 auto; }
-        .section-title { text-align: center; font-size: 2.5rem; margin-bottom: 60px; }
-        
+        /* Products Grid */
+        .products-section { padding: 80px 20px; max-width: 1200px; margin: 0 auto; }
+        .section-title { text-align: center; font-size: 2.5rem; margin-bottom: 50px; }
+
         .products-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
         }
-        
+
         .product-card {
-            background: #0a0a0a; border: 1px solid #333; border-radius: 12px; overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s; position: relative;
+            background: #0f0f0f;
+            border: 1px solid #222;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s;
         }
-        
+
         .product-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 30px rgba(0, 255, 65, 0.1);
+            transform: translateY(-8px);
             border-color: var(--primary);
+            box-shadow: 0 15px 40px rgba(0, 255, 65, 0.1);
         }
-        
+
         .card-img {
-            height: 200px; width: 100%; background-size: cover; background-position: center;
-            position: relative;
+            height: 200px; width: 100%;
+            background-size: cover; background-position: center;
+            background-color: #1a1a1a;
         }
-        
+
         .card-badge {
-            position: absolute; top: 15px; right: 15px; padding: 5px 10px;
-            background: var(--primary); color: #000; font-weight: 800; font-size: 0.8rem;
-            border-radius: 3px; text-transform: uppercase;
+            position: absolute; top: 15px; right: 15px;
+            padding: 5px 10px;
+            background: var(--primary); color: #000;
+            font-weight: 800; font-size: 0.75rem;
+            border-radius: 4px; text-transform: uppercase;
         }
-        
-        .card-badge.free { background: var(--secondary); color: #000; }
-        
-        .card-content { padding: 25px; }
-        .card-title { font-size: 1.4rem; margin-bottom: 10px; font-weight: 700; }
-        .card-desc { color: #aaa; font-size: 0.95rem; line-height: 1.6; margin-bottom: 20px; height: 60px; overflow: hidden; }
-        
+
+        .card-badge.free { background: var(--secondary); }
+
+        .card-content { padding: 25px; position: relative; }
+
+        .card-title { font-size: 1.3rem; margin-bottom: 10px; font-weight: 700; }
+
+        .card-desc {
+            color: #888; font-size: 0.9rem;
+            line-height: 1.6; margin-bottom: 20px;
+            height: 50px; overflow: hidden;
+        }
+
         .card-footer {
             display: flex; justify-content: space-between; align-items: center;
-            padding-top: 20px; border-top: 1px solid #222;
+            padding-top: 15px; border-top: 1px solid #222;
         }
-        
-        .price { font-size: 1.5rem; font-weight: 800; color: #fff; }
-        .price span { font-size: 0.9rem; color: var(--text-muted); font-weight: 400; }
-        
-        .btn-buy {
-            padding: 10px 25px; background: transparent; border: 1px solid var(--primary);
-            color: var(--primary); border-radius: 5px; font-weight: 700; cursor: pointer;
-            transition: all 0.3s; text-transform: uppercase; font-size: 0.9rem;
-        }
-        
-        .btn-buy:hover { background: var(--primary); color: #000; box-shadow: 0 0 15px var(--primary-dim); }
-        
-        .btn-download {
-            padding: 10px 25px; background: var(--secondary); border: none;
-            color: #000; border-radius: 5px; font-weight: 700; cursor: pointer;
-            transition: all 0.3s; text-transform: uppercase; font-size: 0.9rem;
-        }
-        
-        .btn-download:hover { box-shadow: 0 0 15px var(--secondary); }
 
-        /* --- Footer --- */
-        footer { background: #000; padding: 60px 20px 20px; border-top: 1px solid #222; text-align: center; color: #666; }
+        .price { font-size: 1.5rem; font-weight: 800; color: #fff; }
+        .price span { font-size: 0.8rem; color: #666; font-weight: 400; }
+
+        .btn-buy {
+            padding: 10px 25px;
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+
+        .btn-buy:hover {
+            background: var(--primary); color: #000;
+            box-shadow: 0 0 15px var(--primary-dim);
+        }
+
+        .btn-download {
+            background: var(--secondary); border-color: var(--secondary); color: #000;
+        }
+        .btn-download:hover { background: #00cccc; }
+
+        /* Footer */
+        footer {
+            background: #000; padding: 60px 20px 20px;
+            border-top: 1px solid #222; text-align: center;
+            color: #555;
+        }
+
         .footer-links { margin-bottom: 30px; display: flex; justify-content: center; gap: 20px; }
         .footer-links a:hover { color: #fff; }
 
         @media (max-width: 768px) {
-            .hero h1 { font-size: 2.5rem; }
+            .hero { padding: 140px 20px 60px; }
             .stats-grid { grid-template-columns: 1fr; }
-            .nav-links { display: none; } /* Simple mobile hide for now */
+            .nav-links { display: none; }
         }
     </style>
 </head>
@@ -227,15 +271,14 @@
     <!-- Navbar -->
     <nav class="navbar">
         <div class="nav-container">
-            <div class="logo">KR<span>-CLIDN</span></div>
+            <a href="index.html" class="logo">KR<span>-CLIDN</span></a>
             <div class="nav-links">
                 <a href="#cursos">CURSOS</a>
-                <a href="#metodologia">METODOLOGÍA</a>
-                <a href="#sobre">SOBRE NOSOTROS</a>
+                <a href="#metodologia">SOBRE</a>
             </div>
             <div>
-                <a href="login.html" class="btn-login">LOGIN</a>
-                <a href="registro.html" class="btn-register">REGISTRARSE</a>
+                <a href="login.html" class="btn btn-login">LOGIN</a>
+                <a href="register.html" class="btn btn-register">REGISTRARSE</a>
             </div>
         </div>
     </nav>
@@ -243,126 +286,110 @@
     <!-- Hero Section -->
     <section class="hero">
         <h1>DOMINA EL CYBERESPACIO</h1>
-        <p>La información más poderosa del mundo ya no es oro negro. Es código. Únete a la élite de profesionales que protegen el futuro.</p>
+        <p>
+            La información más poderosa del mundo ya no es oro negro. Es código.<br>
+            Únete a la élite de profesionales que protegen el futuro.
+        </p>
         
         <div class="hero-btns">
-            <button class="btn-cta btn-primary" onclick="window.location.href='registro.html'">EMPEZAR AHORA</button>
-            <button class="btn-cta btn-secondary" onclick="document.getElementById('cursos').scrollIntoView({behavior: 'smooth'})">VER ARSENAL</button>
-        </div>
-
-        <!-- Animated Terminal -->
-        <div class="terminal-wrapper">
-            <div class="terminal-header">
-                <div class="term-dot red"></div>
-                <div class="term-dot yellow"></div>
-                <div class="term-dot green"></div>
-            </div>
-            <div class="terminal-body" id="terminal">
-                <span class="code-line"><span class="prompt">root@kr-clidn:~#</span> <span class="cmd">./init_protocol.sh --upgrade-mind</span></span>
-                <span class="output">[+] Loading neural_paths... OK</span>
-                <span class="output">[+] Connecting to threat_intel_db... OK</span>
-                <span class="output">[+] Access Granted. Welcome, Agent.</span>
-                <span class="output">[>] Initiating course modules: [Metasploit] [Python] [Reverse Engineering]</span>
-                <span class="code-line"><span class="prompt">root@kr-clidn:~#</span> <span class="cursor"></span></span>
-            </div>
+            <a href="register.html" class="btn-cta btn-primary">EMPEZAR AHORA</a>
+            <a href="#cursos" class="btn-cta btn-secondary">VER ARSENAL</a>
         </div>
     </section>
 
     <!-- Stats Section -->
     <section class="stats-section">
         <div class="stats-grid">
-            <div class="stat-item animate-on-scroll">
-                <h3 data-target="3500000">0</h3>
+            <div class="stat-item">
+                <h3>3.5M+</h3>
                 <p>Vacantes Ciberseguridad (2025)</p>
             </div>
-            <div class="stat-item animate-on-scroll">
-                <h3 data-target="6">0</h3>
-                <p>Billones $ Costos Crimen Cibernético</p>
+            <div class="stat-item">
+                <h3>$6T</h3>
+                <p>Costo Crimen Cibernético</p>
             </div>
-            <div class="stat-item animate-on-scroll">
-                <h3 data-target="100">0</h3>
-                <p>% Práctica en Entornos Reales</p>
+            <div class="stat-item">
+                <h3>100%</h3>
+                <p>Práctica Real</p>
             </div>
         </div>
     </section>
 
     <!-- About Section -->
-    <section class="about-section" id="sobre">
-        <h2 class="animate-on-scroll">NO APRENDAS TEORÍA. APRENDE A PENETRAR.</h2>
-        <p class="animate-on-scroll">
-            En <span class="highlight">KR-CLIDN</span> creemos que la mejor defensa es el ataque controlado. 
-            Mientras las empresas tradicionales enseñan a instalar antivirus, nosotros enseñamos a encontrar vulnerabilidades 
-            que ni siquiera existen públicamente.
+    <section class="about-section" id="metodologia">
+        <h2>APRENDE A PENETRAR</h2>
+        <p>
+            En <span class="highlight">KR-CLIDN</span> creemos que la mejor defensa es el ataque controlado.
+            Mientras las empresas enseñan a instalar antivirus, nosotros enseñamos a encontrar vulnerabilidades.
         </p>
-        <p class="animate-on-scroll">
-            Nuestros instructores son <span class="highlight">hackers éticos certificados</span> con años de experiencia en 
-            pentesting para grandes corporaciones. Aquí no hay simulaciones vacías. 
-            <span class="highlight">Aquí te enseñamos el código que usan los malos para que puedas detenerlos.</span>
+        <p>
+            Nuestros instructores son <span class="highlight">hackers éticos certificados</span>.
+            Aquí te enseñamos el código que usan los malos para que puedas detenerlos.
         </p>
     </section>
 
-    <!-- Products / Courses Section -->
+    <!-- Products Section -->
     <section class="products-section" id="cursos">
         <h2 class="section-title">EL ARSENAL DIGITAL</h2>
         
         <div class="products-grid">
             
-            <!-- Producto 1: Paid -->
-            <div class="product-card animate-on-scroll">
+            <!-- Producto 1: Curso -->
+            <div class="product-card">
                 <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80');">
-                    <div class="card-badge">Premium</div>
+                    <div class="card-badge">Curso</div>
                 </div>
                 <div class="card-content">
                     <h3 class="card-title">Hacking Ético Masterclass</h3>
-                    <p class="card-desc">De cero a experto en Penetration Testing. Aprende a usar Metasploit, Burp Suite y técnicas avanzadas de acceso.</p>
+                    <p class="card-desc">Domina el penetration testing. Aprende Metasploit, Burp Suite y técnicas avanzadas.</p>
                     <div class="card-footer">
-                        <div class="price">$49.99 <span>+ Certificación</span></div>
-                        <button class="btn-buy" onclick="window.location.href='registro.html'">COMPRAR</button>
+                        <div class="price">$49.99</div>
+                        <button class="btn-buy" onclick="window.location.href='register.html'">COMPRAR</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Producto 2: Free -->
-            <div class="product-card animate-on-scroll">
+            <!-- Producto 2: Gratis -->
+            <div class="product-card">
                 <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1516110833967-0b5716ca1387?auto=format&fit=crop&w=800&q=80');">
                     <div class="card-badge free">GRATIS</div>
                 </div>
                 <div class="card-content">
                     <h3 class="card-title">Python para Security</h3>
-                    <p class="card-desc">Scripting básico para automatizar ataques y crear tus propias herramientas de seguridad.</p>
+                    <p class="card-desc">Scripting básico para automatizar ataques y crear tus propias herramientas.</p>
                     <div class="card-footer">
                         <div class="price">$0.00</div>
-                        <button class="btn-download" onclick="window.location.href='registro.html'">DESCARGAR</button>
+                        <button class="btn-buy btn-download" onclick="window.location.href='register.html'">DESCARGAR</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Producto 3: Paid -->
-            <div class="product-card animate-on-scroll">
+            <!-- Producto 3: Software -->
+            <div class="product-card">
                 <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80');">
-                    <div class="card-badge">Nuevo</div>
+                    <div class="card-badge">Software</div>
                 </div>
                 <div class="card-content">
-                    <h3 class="card-title">Ingeniería Inversa & Malware</h3>
-                    <p class="card-desc">Análisis de malware real. Desensambla ransomware y troyanos para entender su comportamiento.</p>
+                    <h3 class="card-title">KR-Scanner Pro</h3>
+                    <p class="card-desc">Escáner de vulnerabilidades con IA. Detecta fallos automáticamente.</p>
                     <div class="card-footer">
-                        <div class="price">$89.99 <span>+ Certificación</span></div>
-                        <button class="btn-buy" onclick="window.location.href='registro.html'">COMPRAR</button>
+                        <div class="price">$99.99</div>
+                        <button class="btn-buy" onclick="window.location.href='register.html'">COMPRAR</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Producto 4: Video -->
-            <div class="product-card animate-on-scroll">
-                <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1592478411213-61535f944806?auto=format&fit=crop&w=800&q=80');">
-                    <div class="card-badge">VIP</div>
+            <!-- Producto 4: Ebook -->
+            <div class="product-card">
+                <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=800&q=80');">
+                    <div class="card-badge">Ebook</div>
                 </div>
                 <div class="card-content">
-                    <h3 class="card-title">Ataques a Redes WiFi</h3>
-                    <p class="card-desc">Curso en video. Técnicas avanzadas de captura de handshake y cracking de claves.</p>
+                    <h3 class="card-title">Ingeniería Inversa</h3>
+                    <p class="card-desc">Aprende a analizar malware y desensamblar binarios.</p>
                     <div class="card-footer">
-                        <div class="price">$39.99</div>
-                        <button class="btn-buy" onclick="window.location.href='registro.html'">VER VIDEO</button>
+                        <div class="price">$29.99</div>
+                        <button class="btn-buy" onclick="window.location.href='register.html'">COMPRAR</button>
                     </div>
                 </div>
             </div>
@@ -373,76 +400,30 @@
     <!-- Footer -->
     <footer>
         <div class="footer-links">
-            <a href="#">Términos de Servicio</a>
-            <a href="#">Política de Privacidad</a>
+            <a href="#">Términos</a>
+            <a href="#">Privacidad</a>
             <a href="#">Soporte</a>
-            <a href="#">Comunidad</a>
         </div>
-        <p>&copy; 2026 KR-CLIDN. Todos los derechos reservados. Educación en Seguridad Offensive.</p>
+        <p>&copy; 2026 KR-CLIDN. Educación en Seguridad Offensive.</p>
     </footer>
 
     <script src="js/config.js"></script>
-    <script src="js/supabase-client.js"></script>
     <script>
-        // --- Animations ---
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, { threshold: 0.1 });
-
-        document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
-
-        // --- Stats Counter ---
-        const statsObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const target = +entry.target.getAttribute('data-target');
-                    const obj = { val: 0 };
-                    // Simple counter animation
-                    let current = 0;
-                    const inc = target / 100;
-                    const timer = setInterval(() => {
-                        current += inc;
-                        if (current >= target) {
-                            entry.target.innerText = target.toLocaleString();
-                            clearInterval(timer);
-                        } else {
-                            entry.target.innerText = Math.floor(current).toLocaleString();
-                        }
-                    }, 20);
-                    statsObserver.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.5 });
-
-        document.querySelectorAll('.stat-item h3').forEach(el => statsObserver.observe(el));
-
-        // --- Auth Check (Redirect to Store if logged in) ---
+        // Redirect logged in users to dashboard
         async function checkAuth() {
             try {
-                await window.KRSupabase.init();
-                const session = await window.KRSupabase.getSession();
-                if (session?.user) {
-                    // If logged in, go to the store/dashboard
-                    // Since we moved the store to index before, let's make a dashboard.html or redirect to tienda logic
-                    // For now, let's assume dashboard.html exists or create a redirect
-                    console.log("User logged in, redirecting to dashboard...");
-                    // window.location.href = 'dashboard.html'; // Uncomment if dashboard.html exists
+                if (window.KRSupabase) {
+                    await window.KRSupabase.init();
+                    const session = await window.KRSupabase.getSession();
+                    if (session?.user) {
+                        window.location.href = 'dashboard.html';
+                    }
                 }
             } catch (e) {
-                console.log("Not logged in, showing landing page");
+                console.log("Guest mode");
             }
         }
-
-        // --- Terminal Typing Effect ---
-        const terminal = document.getElementById('terminal');
-        // Basic blink cursor effect logic is handled by CSS
-        
         checkAuth();
-
     </script>
 </body>
 </html>

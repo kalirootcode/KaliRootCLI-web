@@ -595,32 +595,40 @@
     <script src="js/supabase-client.js"></script>
     <script>
         // Check if user is already logged in - redirect to dashboard
-        (async function checkExistingSession() {
+        // Only redirect AFTER the page is fully loaded to avoid flashing
+        document.addEventListener('DOMContentLoaded', async function() {
             try {
                 // Check localStorage first (faster)
                 const storedUser = localStorage.getItem('kr_user') || sessionStorage.getItem('kr_user');
                 if (storedUser) {
+                    console.log("User found in storage, redirecting...");
                     window.location.href = 'dashboard.html';
                     return;
                 }
 
                 // Check Supabase session
-                await window.KRSupabase.init();
-                const session = await window.KRSupabase.getSession();
-                if (session?.user) {
-                    window.location.href = 'dashboard.html';
-                    return;
+                try {
+                    await window.KRSupabase.init();
+                    const session = await window.KRSupabase.getSession();
+                    if (session?.user) {
+                        console.log("User found in session, redirecting...");
+                        window.location.href = 'dashboard.html';
+                        return;
+                    }
+                } catch (supabaseErr) {
+                    console.log("Supabase check failed or not configured, allowing login");
                 }
+                
+                console.log("No active session, showing login form");
             } catch (e) {
-                console.log('No active session');
+                console.log('No active session, showing login form');
             }
-        })();
+        });
 
         // Check for registration redirect
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('registered') === 'true') {
             document.getElementById('welcome-message').classList.add('show');
-            // Clean URL
             window.history.replaceState({}, document.title, window.location.pathname);
         }
 

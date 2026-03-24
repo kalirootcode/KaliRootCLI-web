@@ -697,6 +697,137 @@
 
         .empty-cart p {
             color: var(--text-muted);
+        }
+
+        /* Payment Method Selection */
+        .payment-methods-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .payment-method-option {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 20px;
+            background: var(--bg-input);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .payment-method-option:hover {
+            border-color: var(--primary-light);
+        }
+
+        .payment-method-option.selected {
+            border-color: var(--primary);
+            background: rgba(124, 58, 237, 0.1);
+        }
+
+        .payment-method-option input {
+            display: none;
+        }
+
+        .method-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .method-icon.crypto-icon {
+            background: linear-gradient(135deg, #F7931A, #E8770E);
+            color: white;
+        }
+
+        .method-icon.paypal-icon {
+            background: linear-gradient(135deg, #003087, #009cde);
+            color: white;
+        }
+
+        .method-info {
+            flex: 1;
+        }
+
+        .method-name {
+            display: block;
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 3px;
+        }
+
+        .method-desc {
+            display: block;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .method-check {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: transparent;
+            transition: 0.3s;
+        }
+
+        .payment-method-option.selected .method-check {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .crypto-options {
+            display: none;
+        }
+
+        .crypto-options.show {
+            display: block;
+        }
+
+        .options-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .crypto-options .crypto-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        @media (max-width: 600px) {
+            .payment-methods-grid {
+                grid-template-columns: 1fr;
+            }
+            .crypto-options .crypto-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .empty-cart .icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        .empty-cart h3 {
+            margin-bottom: 10px;
+        }
+
+        .empty-cart p {
+            color: var(--text-muted);
             margin-bottom: 20px;
         }
 
@@ -749,65 +880,81 @@
             <section class="checkout-section">
                 <div class="section-header">
                     <span class="section-number">2</span>
-                    <h2 class="section-title">Elige tu Criptomoneda</h2>
+                    <h2 class="section-title">Método de Pago</h2>
                 </div>
 
-                <div class="crypto-grid" id="crypto-grid">
-                    <label class="crypto-option selected">
-                        <input type="radio" name="crypto" value="btc" checked>
-                        <div class="crypto-icon btc">₿</div>
-                        <span class="crypto-name">Bitcoin</span>
-                        <span class="crypto-symbol">BTC</span>
+                <div class="payment-methods-grid">
+                    <label class="payment-method-option selected" id="crypto-option">
+                        <input type="radio" name="payment_method" value="crypto" checked>
+                        <div class="method-icon crypto-icon">
+                            <i class="fab fa-bitcoin"></i>
+                        </div>
+                        <div class="method-info">
+                            <span class="method-name">Criptomoneda</span>
+                            <span class="method-desc">BTC, ETH, USDT, etc.</span>
+                        </div>
+                        <div class="method-check"><i class="fas fa-check"></i></div>
                     </label>
 
-                    <label class="crypto-option">
-                        <input type="radio" name="crypto" value="eth">
-                        <div class="crypto-icon eth">Ξ</div>
-                        <span class="crypto-name">Ethereum</span>
-                        <span class="crypto-symbol">ETH</span>
+                    <label class="payment-method-option" id="paypal-option">
+                        <input type="radio" name="payment_method" value="paypal">
+                        <div class="method-icon paypal-icon">
+                            <i class="fab fa-paypal"></i>
+                        </div>
+                        <div class="method-info">
+                            <span class="method-name">PayPal</span>
+                            <span class="method-desc">Pago rápido y seguro</span>
+                        </div>
+                        <div class="method-check"><i class="fas fa-check"></i></div>
                     </label>
+                </div>
 
-                    <label class="crypto-option">
-                        <input type="radio" name="crypto" value="usdttrc20">
-                        <div class="crypto-icon usdt">₮</div>
-                        <span class="crypto-name">Tether</span>
-                        <span class="crypto-symbol">USDT TRC20</span>
-                    </label>
+                <!-- Crypto options (shown when crypto is selected) -->
+                <div class="crypto-options" id="crypto-options">
+                    <p class="options-label">Elige tu criptomoneda:</p>
+                    <div class="crypto-grid" id="crypto-grid">
+                        <label class="crypto-option selected">
+                            <input type="radio" name="crypto" value="btc" checked>
+                            <div class="crypto-icon btc">₿</div>
+                            <span class="crypto-name">Bitcoin</span>
+                            <span class="crypto-symbol">BTC</span>
+                        </label>
 
-                    <label class="crypto-option">
-                        <input type="radio" name="crypto" value="usdterc20">
-                        <div class="crypto-icon usdt">₮</div>
-                        <span class="crypto-name">Tether</span>
-                        <span class="crypto-symbol">USDT ERC20</span>
-                    </label>
+                        <label class="crypto-option">
+                            <input type="radio" name="crypto" value="eth">
+                            <div class="crypto-icon eth">Ξ</div>
+                            <span class="crypto-name">Ethereum</span>
+                            <span class="crypto-symbol">ETH</span>
+                        </label>
 
-                    <label class="crypto-option">
-                        <input type="radio" name="crypto" value="ltc">
-                        <div class="crypto-icon ltc">Ł</div>
-                        <span class="crypto-name">Litecoin</span>
-                        <span class="crypto-symbol">LTC</span>
-                    </label>
+                        <label class="crypto-option">
+                            <input type="radio" name="crypto" value="usdttrc20">
+                            <div class="crypto-icon usdt">₮</div>
+                            <span class="crypto-name">Tether</span>
+                            <span class="crypto-symbol">USDT TRC20</span>
+                        </label>
 
-                    <label class="crypto-option">
-                        <input type="radio" name="crypto" value="sol">
-                        <div class="crypto-icon sol">◎</div>
-                        <span class="crypto-name">Solana</span>
-                        <span class="crypto-symbol">SOL</span>
-                    </label>
+                        <label class="crypto-option">
+                            <input type="radio" name="crypto" value="ltc">
+                            <div class="crypto-icon ltc">Ł</div>
+                            <span class="crypto-name">Litecoin</span>
+                            <span class="crypto-symbol">LTC</span>
+                        </label>
 
-                    <label class="crypto-option">
-                        <input type="radio" name="crypto" value="trx">
-                        <div class="crypto-icon trx">T</div>
-                        <span class="crypto-name">Tron</span>
-                        <span class="crypto-symbol">TRX</span>
-                    </label>
+                        <label class="crypto-option">
+                            <input type="radio" name="crypto" value="sol">
+                            <div class="crypto-icon sol">◎</div>
+                            <span class="crypto-name">Solana</span>
+                            <span class="crypto-symbol">SOL</span>
+                        </label>
 
-                    <label class="crypto-option">
-                        <input type="radio" name="crypto" value="bnbbsc">
-                        <div class="crypto-icon bnb">B</div>
-                        <span class="crypto-name">BNB</span>
-                        <span class="crypto-symbol">BSC</span>
-                    </label>
+                        <label class="crypto-option">
+                            <input type="radio" name="crypto" value="trx">
+                            <div class="crypto-icon trx">T</div>
+                            <span class="crypto-name">Tron</span>
+                            <span class="crypto-symbol">TRX</span>
+                        </label>
+                    </div>
                 </div>
             </section>
 
@@ -860,7 +1007,7 @@
                     <div class="spinner"></div>
                 </button>
 
-                <p class="payment-note">
+                <p class="payment-note" id="payment-note">
                     Procesado por <a href="https://nowpayments.io" target="_blank">NOWPayments</a>
                 </p>
             </div>
@@ -911,6 +1058,49 @@
         let cart = [];
         let currentUser = null;
         let selectedCrypto = 'btc';
+        let selectedPaymentMethod = 'crypto';
+
+        // Payment method selection
+        document.querySelectorAll('.payment-method-option').forEach(option => {
+            option.addEventListener('click', () => {
+                document.querySelectorAll('.payment-method-option').forEach(o => o.classList.remove('selected'));
+                option.classList.add('selected');
+                selectedPaymentMethod = option.querySelector('input').value;
+                
+                // Show/hide crypto options
+                const cryptoOptions = document.getElementById('crypto-options');
+                if (selectedPaymentMethod === 'crypto') {
+                    cryptoOptions.classList.add('show');
+                } else {
+                    cryptoOptions.classList.remove('show');
+                }
+                
+                updatePayButton();
+            });
+        });
+
+        // Crypto selection
+        document.querySelectorAll('.crypto-option').forEach(option => {
+            option.addEventListener('click', () => {
+                document.querySelectorAll('.crypto-option').forEach(o => o.classList.remove('selected'));
+                option.classList.add('selected');
+                selectedCrypto = option.querySelector('input').value;
+            });
+        });
+
+        // Update pay button text based on payment method
+        function updatePayButton() {
+            const btn = document.getElementById('btn-pay');
+            const note = document.getElementById('payment-note');
+            
+            if (selectedPaymentMethod === 'paypal') {
+                btn.querySelector('.btn-text').textContent = '💳 Pagar con PayPal';
+                note.innerHTML = 'Procesado por <a href="https://www.paypal.com" target="_blank">PayPal</a>';
+            } else {
+                btn.querySelector('.btn-text').textContent = '🔐 Pagar con Crypto';
+                note.innerHTML = 'Procesado por <a href="https://nowpayments.io" target="_blank">NOWPayments</a>';
+            }
+        }
         let subtotal = 0;
         let discount = 0;
         let total = 0;
@@ -1135,12 +1325,10 @@
                     throw new Error('No auth token — please login first');
                 }
 
+                const API_URL = "https://kalirootcli.onrender.com";
+
                 if (planId) {
                     // ── Dominion Tier Purchase ─────────────────────────────
-                    // Call our backend which creates the NowPayments invoice
-                    // Use the constant API URL where your Render backend is hosted so GitHub Pages doesn't fail
-                    const API_URL = "https://kalirootcli.onrender.com";
-
                     const response = await fetch(`${API_URL}/api/payments/create-credits`, {
                         method: 'POST',
                         headers: {
@@ -1159,7 +1347,6 @@
                     const invoiceUrl = data.invoice_url;
 
                     if (invoiceUrl) {
-                        // Redirect to NowPayments hosted checkout
                         window.location.href = invoiceUrl;
                     } else {
                         throw new Error('No invoice URL received from server');
@@ -1175,47 +1362,88 @@
                         quantity: 1
                     }));
 
-                    const orderResult = await window.KRSupabase.createOrder(
-                        currentUser.id,
-                        currentUser.email,
-                        items,
-                        total,
-                        { payment_method: 'crypto', currency: selectedCrypto }
-                    );
+                    // ── PAYPAL CHECKOUT ─────────────────────────────────────
+                    if (selectedPaymentMethod === 'paypal') {
+                        console.log('Initiating PayPal checkout...');
+                        
+                        const paypalResponse = await fetch(`${API_URL}/api/paypal/create-order`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                user_id: currentUser.id,
+                                cart_items: cart.map(item => ({
+                                    id: item.id,
+                                    name: item.name,
+                                    price: item.price
+                                }))
+                            })
+                        });
 
-                    if (!orderResult.success) {
-                        throw new Error('Failed to create order');
+                        if (!paypalResponse.ok) {
+                            const err = await paypalResponse.json().catch(() => ({}));
+                            throw new Error(err.error || 'Error creating PayPal order');
+                        }
+
+                        const paypalData = await paypalResponse.json();
+                        const paypalOrderId = paypalData.orderID;
+                        const supabaseOrderId = paypalData.supabase_order_id;
+
+                        // Redirect to PayPal for approval
+                        // Using PayPal SDK will be handled below with the script
+                        window.PAYPAL_ORDER_ID = paypalOrderId;
+                        window.SUPABASE_ORDER_ID = supabaseOrderId;
+                        
+                        // Show PayPal approval
+                        await window.paypalAuthenticate(paypalOrderId);
+                        
+                    } else {
+                        // ── CRYPTO CHECKOUT (NOWPayments) ───────────────────
+                        const orderResult = await window.KRSupabase.createOrder(
+                            currentUser.id,
+                            currentUser.email,
+                            items,
+                            total,
+                            { payment_method: 'crypto', currency: selectedCrypto }
+                        );
+
+                        if (!orderResult.success) {
+                            throw new Error('Failed to create order');
+                        }
+
+                        const NOWPAYMENTS_API_KEY = (window.CONFIG || {}).NOWPAYMENTS_API_KEY;
+                        const NOWPAYMENTS_API_URL = (window.CONFIG || {}).NOWPAYMENTS_API_URL || 'https://api.nowpayments.io/v1';
+                        
+                        // URL del backend de Render (configurable en secrets)
+                        const API_URL = (window.CONFIG || {}).RENDER_API_URL || 'https://kalirootcli.onrender.com';
+
+                        const paymentResponse = await fetch(`${NOWPAYMENTS_API_URL}/payment`, {
+                            method: 'POST',
+                            headers: {
+                                'x-api-key': NOWPAYMENTS_API_KEY,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                price_amount: total,
+                                price_currency: 'usd',
+                                pay_currency: selectedCrypto,
+                                order_id: orderResult.order.id,
+                                order_description: `KR Digital Store - Order #${orderResult.order.order_number}`,
+                                ipn_callback_url: `${API_URL}/api/nowpayments-webhook`,
+                                success_url: `${window.location.origin}/success.html?order=${orderResult.order.id}`,
+                                cancel_url: `${window.location.origin}/checkout.html`
+                            })
+                        });
+
+                        if (!paymentResponse.ok) {
+                            throw new Error('Failed to create payment');
+                        }
+
+                        currentPayment = await paymentResponse.json();
+                        showPaymentModal(currentPayment);
+                        pollPaymentStatus(currentPayment.payment_id);
                     }
-
-                    // Create NOWPayments payment directly for legacy items
-                    const NOWPAYMENTS_API_KEY = (window.CONFIG || {}).NOWPAYMENTS_API_KEY;
-                    const NOWPAYMENTS_API_URL = (window.CONFIG || {}).NOWPAYMENTS_API_URL || 'https://api.nowpayments.io/v1';
-
-                    const paymentResponse = await fetch(`${NOWPAYMENTS_API_URL}/payment`, {
-                        method: 'POST',
-                        headers: {
-                            'x-api-key': NOWPAYMENTS_API_KEY,
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            price_amount: total,
-                            price_currency: 'usd',
-                            pay_currency: selectedCrypto,
-                            order_id: orderResult.order.id,
-                            order_description: `KR Digital Store - Order #${orderResult.order.order_number}`,
-                            ipn_callback_url: `${window.location.origin}/api/nowpayments-webhook`,
-                            success_url: `${window.location.origin}/success.html?order=${orderResult.order.id}`,
-                            cancel_url: `${window.location.origin}/checkout.html`
-                        })
-                    });
-
-                    if (!paymentResponse.ok) {
-                        throw new Error('Failed to create payment');
-                    }
-
-                    currentPayment = await paymentResponse.json();
-                    showPaymentModal(currentPayment);
-                    pollPaymentStatus(currentPayment.payment_id);
                 }
 
             } catch (error) {
@@ -1225,6 +1453,81 @@
                 btn.classList.remove('loading');
                 btn.disabled = false;
             }
+        }
+
+        // PayPal authentication/approval
+        async function paypalAuthenticate(orderId) {
+            // Load PayPal SDK if not loaded
+            if (!window.paypal) {
+                await new Promise((resolve, reject) => {
+                    const script = document.createElement('script');
+                    script.src = 'https://www.paypal.com/sdk/js?client-id=' + ((window.CONFIG || {}).PAYPAL_CLIENT_ID || 'test');
+                    script.onload = resolve;
+                    script.onerror = reject;
+                    document.head.appendChild(script);
+                });
+            }
+
+            // Render PayPal button
+            const container = document.createElement('div');
+            container.id = 'paypal-container';
+            container.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:10000;display:flex;align-items:center;justify-content:center;';
+            
+            const modal = document.createElement('div');
+            modal.style.cssText = 'background:#1a1a2e;border-radius:20px;padding:30px;max-width:500px;width:90%;text-align:center;';
+            modal.innerHTML = '<h2 style="color:#fff;margin-bottom:20px;">💳 Finalizar con PayPal</h2><div id="paypal-button-container"></div><button onclick="this.closest(\'[id^=paypal-\]\').remove()" style="margin-top:15px;background:transparent;border:1px solid #666;color:#666;padding:10px 20px;border-radius:8px;cursor:pointer;">Cancelar</button>';
+            
+            container.appendChild(modal);
+            document.body.appendChild(container);
+
+            // PayPal Button
+            window.paypal.Buttons({
+                style: {
+                    layout: 'vertical',
+                    color: 'blue',
+                    shape: 'rect',
+                    label: 'paypal'
+                },
+                createOrder: function(data, actions) {
+                    return orderId;
+                },
+                onApprove: async function(data, actions) {
+                    try {
+                        const captureResponse = await fetch(`${API_URL}/api/paypal/capture-order`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                orderID: data.orderID,
+                                supabase_order_id: window.SUPABASE_ORDER_ID,
+                                user_id: currentUser.id,
+                                cart_items: cart.map(item => ({ id: item.id, name: item.name, price: item.price }))
+                            })
+                        });
+
+                        const result = await captureResponse.json();
+                        
+                        if (result.status === 'success') {
+                            // Clear cart and redirect
+                            localStorage.removeItem('kr_cart');
+                            window.location.href = 'success.html?order=' + (window.SUPABASE_ORDER_ID || '');
+                        } else {
+                            alert('Error al completar el pago: ' + result.message);
+                        }
+                    } catch (err) {
+                        alert('Error al procesar el pago');
+                    }
+                    
+                    container.remove();
+                },
+                onError: function(err) {
+                    console.error('PayPal error:', err);
+                    alert('Error en PayPal. Intenta de nuevo.');
+                    container.remove();
+                },
+                onCancel: function() {
+                    container.remove();
+                }
+            }).render('#paypal-button-container');
         }
 
         // Show payment modal

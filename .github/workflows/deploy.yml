@@ -29,9 +29,23 @@ jobs:
            * Auto-generated from GitHub Secrets
            */
           const CONFIG = {
+              // Supabase
               SUPABASE_URL: '${{ secrets.SUPABASE_URL }}',
-              SUPABASE_ANON_KEY: '${{ secrets.SUPABASE_ANON_KEY }}'
+              SUPABASE_ANON_KEY: '${{ secrets.SUPABASE_ANON_KEY }}',
+              
+              // NOWPayments
+              NOWPAYMENTS_API_KEY: '${{ secrets.NOWPAYMENTS_API_KEY }}',
+              NOWPAYMENTS_IPN_SECRET: '${{ secrets.IPN_SECRET_KEY }}',
+              NOWPAYMENTS_API_URL: 'https://api.nowpayments.io/v1',
+              
+              // PayPal
+              PAYPAL_CLIENT_ID: '${{ secrets.PAYPAL_CLIENT_ID }}',
+              
+              // Backend API URL (Render)
+              RENDER_API_URL: '${{ secrets.RENDER_API_URL }}'
           };
+          
+          window.CONFIG = CONFIG;
           EOF
 
       - name: Setup Pages

@@ -32,7 +32,7 @@ PAYPAL_API_BASE = (
 # Supabase config (re-defined here for clarity with PayPal section)
 SUPABASE_URL = os.environ.get("SUPABASE_URL", "")
 SUPABASE_KEY = os.environ.get("SUPABASE_SERVICE_KEY", "")
-NOWPAYMENTS_IPN_SECRET = os.environ.get("NOWPAYMENTS_IPN_SECRET", "")
+IPN_SECRET_KEY = os.environ.get("IPN_SECRET_KEY", "")
 
 # Create combined app
 app = Flask(__name__)
@@ -119,14 +119,14 @@ def root():
 
 def verify_nowpayments_signature(payload, signature):
     """Verify IPN callback signature from NOWPayments"""
-    if not NOWPAYMENTS_IPN_SECRET:
+    if not IPN_SECRET_KEY:
         return False
 
     sorted_payload = dict(sorted(payload.items()))
     payload_string = json.dumps(sorted_payload, separators=(",", ":"))
 
     calculated_sig = hmac.new(
-        NOWPAYMENTS_IPN_SECRET.encode(), payload_string.encode(), hashlib.sha512
+        IPN_SECRET_KEY.encode(), payload_string.encode(), hashlib.sha512
     ).hexdigest()
 
     return hmac.compare_digest(calculated_sig, signature)
@@ -295,7 +295,7 @@ def nowpayments_webhook():
         if not payload:
             return {"error": "No payload"}, 400
 
-        if NOWPAYMENTS_IPN_SECRET and signature:
+        if IPN_SECRET_KEY and signature:
             if not verify_nowpayments_signature(payload, signature):
                 print("⚠️ Invalid NOWPayments signature")
                 return {"error": "Invalid signature"}, 401
@@ -391,6 +391,7 @@ def create_paypal_order():
     try:
         data = request.get_json()
         product_id = data.get("product_id")
+        user_id = data.get("user_id")
 
         products_db = {
             "curso-python": {
@@ -403,7 +404,21 @@ def create_paypal_order():
             },
             "kr-scanner": {"name": "KR-Scanner Pro", "price": "99.99"},
         }
-        product = products_db.get(product_id)
+
+        # Dynamic products from cart
+        cart_items = data.get("cart_items", [])
+
+        if cart_items:
+            total = sum(item.get("price", 0) for item in cart_items)
+            description = ", ".join(
+                [item.get("name", "Producto") for item in cart_items]
+            )
+            product = {"name": description, "price": f"{total:.2f}"}
+        elif product_id:
+            product = products_db.get(product_id)
+        else:
+            return jsonify({"error": "Producto no encontrado"}), 404
+
         if not product:
             return jsonify({"error": "Producto no encontrado"}), 404
 
@@ -421,7 +436,7 @@ def create_paypal_order():
             "purchase_units": [
                 {
                     "amount": {"currency_code": "USD", "value": product["price"]},
-                    "description": product["name"],
+                    "description": product["name"][:127],
                 }
             ],
         }
@@ -431,8 +446,58 @@ def create_paypal_order():
         )
         response.raise_for_status()
 
-        order = response.json()
-        return jsonify({"orderID": order["id"]})
+        paypal_order = response.json()
+        paypal_order_id = paypal_order["id"]
+
+        # Create order in Supabase
+        if SUPABASE_URL and SUPABASE_KEY and user_id:
+            try:
+                headers_db = {
+                    "apikey": SUPABASE_KEY,
+                    "Authorization": f"Bearer {SUPABASE_KEY}",
+                    "Content-Type": "application/json",
+                }
+
+                order_data = {
+                    "user_id": user_id,
+                    "total_amount": float(product["price"]),
+                    "currency": "USD",
+                    "status": "pending",
+                    "payment_method": "paypal",
+                    "payment_id": paypal_order_id,
+                    "payment_details": {
+                        "paypal_order_id": paypal_order_id,
+                        "cart_items": cart_items,
+                        "product_id": product_id,
+                    },
+                }
+
+                resp = requests.post(
+                    f"{SUPABASE_URL}/rest/v1/orders",
+                    headers=headers_db,
+                    json=order_data,
+                )
+
+                if resp.status_code in [200, 201]:
+                    supabase_order = resp.json()
+                    supabase_order_id = (
+                        supabase_order[0].get("id")
+                        if isinstance(supabase_order, list)
+                        else supabase_order.get("id")
+                    )
+                    print(f"✅ Order created in Supabase: {supabase_order_id}")
+                else:
+                    print(f"⚠️ Could not create order in Supabase: {resp.status_code}")
+                    supabase_order_id = None
+            except Exception as e:
+                print(f"⚠️ Error creating order in Supabase: {e}")
+                supabase_order_id = None
+        else:
+            supabase_order_id = None
+
+        return jsonify(
+            {"orderID": paypal_order_id, "supabase_order_id": supabase_order_id}
+        )
 
     except requests.exceptions.HTTPError as err:
         print(f"❌ PayPal create order error: {err.response.text}")
@@ -448,8 +513,12 @@ def capture_paypal_order():
     try:
         data = request.get_json()
         order_id = data.get("orderID")
-        user_id = "USER_ID_PLACEHOLDER"  # Replace with actual user ID retrieval
-        product_id = "PRODUCT_ID_PLACEHOLDER"  # You'd pass this from the frontend
+        supabase_order_id = data.get("supabase_order_id")
+        user_id = data.get("user_id")
+        cart_items = data.get("cart_items", [])
+
+        if not order_id:
+            return jsonify({"error": "Order ID requerido"}), 400
 
         access_token = get_paypal_access_token()
         if not access_token:
@@ -469,10 +538,63 @@ def capture_paypal_order():
         if capture_data.get("status") == "COMPLETED":
             print(f"✅ Pago de PayPal completado: {order_id}")
 
-            if "kr" in product_id:
-                pass  # Add logic for KR credits
-            else:
-                pass  # Add logic for ebooks/software
+            # Update order in Supabase
+            if SUPABASE_URL and SUPABASE_KEY and supabase_order_id:
+                try:
+                    headers_db = {
+                        "apikey": SUPABASE_KEY,
+                        "Authorization": f"Bearer {SUPABASE_KEY}",
+                        "Content-Type": "application/json",
+                    }
+
+                    # Get order to find user_id
+                    get_resp = requests.get(
+                        f"{SUPABASE_URL}/rest/v1/orders?id=eq.{supabase_order_id}&select=user_id,payment_details",
+                        headers=headers_db,
+                    )
+
+                    if get_resp.status_code == 200 and get_resp.json():
+                        order_data = get_resp.json()[0]
+                        user_id = user_id or order_data.get("user_id")
+                        payment_details = order_data.get("payment_details", {})
+                        cart_items = cart_items or payment_details.get("cart_items", [])
+
+                    # Update order status
+                    update_resp = requests.patch(
+                        f"{SUPABASE_URL}/rest/v1/orders?id=eq.{supabase_order_id}",
+                        headers=headers_db,
+                        json={
+                            "status": "completed",
+                            "completed_at": datetime.utcnow().isoformat(),
+                        },
+                    )
+
+                    # Create user downloads for each product
+                    if user_id:
+                        for item in cart_items:
+                            download_entry = {
+                                "user_id": user_id,
+                                "product_id": item.get("id"),
+                                "order_id": supabase_order_id,
+                                "expires_at": (
+                                    datetime.utcnow() + timedelta(days=365)
+                                ).isoformat(),
+                            }
+                            requests.post(
+                                f"{SUPABASE_URL}/rest/v1/user_downloads",
+                                headers={
+                                    **headers_db,
+                                    "Prefer": "resolution=merge-duplicates",
+                                },
+                                json=download_entry,
+                            )
+
+                        print(f"✅ Descargas creadas para usuario {user_id}")
+
+                    print(f"✅ Orden {supabase_order_id} marcada como completada")
+
+                except Exception as e:
+                    print(f"⚠️ Error actualizando orden en Supabase: {e}")
 
             return jsonify({"status": "success", "capture_data": capture_data})
         else:

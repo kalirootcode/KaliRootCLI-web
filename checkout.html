@@ -1457,11 +1457,14 @@
 
         // PayPal authentication/approval
         async function paypalAuthenticate(orderId) {
+            const API_URL = (window.CONFIG || {}).RENDER_API_URL || 'https://kalirootcli.onrender.com';
+            const clientId = (window.CONFIG || {}).PAYPAL_CLIENT_ID || 'test';
+            
             // Load PayPal SDK if not loaded
             if (!window.paypal) {
                 await new Promise((resolve, reject) => {
                     const script = document.createElement('script');
-                    script.src = 'https://www.paypal.com/sdk/js?client-id=' + ((window.CONFIG || {}).PAYPAL_CLIENT_ID || 'test');
+                    script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`;
                     script.onload = resolve;
                     script.onerror = reject;
                     document.head.appendChild(script);

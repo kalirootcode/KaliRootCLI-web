@@ -143,6 +143,24 @@
                     <div class="nav-title">TIENDA DE INFOPRODUCTOS</div>
                 </div>
             </a>
+            <div class="nav-right">
+                <div class="cyber-menu-wrapper">
+                    <button class="cyber-menu-btn" id="cyber-menu-btn" onclick="toggleCyberMenu()">
+                        <div class="cyber-menu-icon">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </button>
+                    <div class="cyber-dropdown" id="cyber-dropdown">
+                        <a href="dashboard.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">🏠 Dashboard</a>
+                        <a href="educacion.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">📚 Educación</a>
+                        <a href="index.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">🛒 Tienda</a>
+                        <a href="cuenta.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">👤 Mi Cuenta</a>
+                        <a href="soporte.html" class="cyber-dropdown-item" onclick="closeCyberMenu()">💬 Soporte</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </nav>
 
@@ -204,6 +222,7 @@
         <p style="color: var(--text-secondary); font-size: 0.9rem;">© 2026 KR-CLIDN. Todos los derechos reservados.</p>
     </footer>
 
+    <script src="js/cyber-menu.js"></script>
     <script src="https://www.paypal.com/sdk/js?client-id=YOUR_CLIENT_ID&currency=USD"></script>
     <script>
         function handlePurchase(productId) {

@@ -1404,6 +1404,7 @@
                         window.SUPABASE_ORDER_ID = supabaseOrderId;
                         
                         // Show PayPal approval
+                        console.log("Showing PayPal modal for order ID:", paypalOrderId);
                         await window.paypalAuthenticate(paypalOrderId);
                         
                     } else {
@@ -1479,21 +1480,31 @@
 
         // PayPal authentication/approval
         async function paypalAuthenticate(orderId) {
+            console.log("paypalAuthenticate called with orderId:", orderId);
             const API_URL = (window.CONFIG || {}).RENDER_API_URL || 'https://kalirootcli.onrender.com';
             const clientId = (window.CONFIG || {}).PAYPAL_CLIENT_ID || 'test';
+            console.log("Using PayPal client ID:", clientId);
             
             // Load PayPal SDK if not loaded
             if (!window.paypal) {
+                console.log("Loading PayPal SDK...");
                 await new Promise((resolve, reject) => {
                     const script = document.createElement('script');
                     script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`;
-                    script.onload = resolve;
-                    script.onerror = reject;
+                    script.onload = () => {
+                        console.log("PayPal SDK loaded.");
+                        resolve();
+                    };
+                    script.onerror = (err) => {
+                        console.error("PayPal SDK failed to load:", err);
+                        reject(err);
+                    };
                     document.head.appendChild(script);
                 });
             }
 
             // Render PayPal button
+            console.log("Rendering PayPal button...");
             const container = document.createElement('div');
             container.id = 'paypal-container';
             container.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:10000;display:flex;align-items:center;justify-content:center;';

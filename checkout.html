@@ -1269,8 +1269,9 @@
 
                 if (response.ok) {
                     const data = await response.json();
+                    const amount = parseFloat(data.estimated_amount);
                     document.getElementById('crypto-amount').textContent =
-                        `~ ${data.estimated_amount.toFixed(8)} ${cryptoNames[selectedCrypto]}`;
+                        `~ ${amount.toFixed(8)} ${cryptoNames[selectedCrypto]}`;
                 } else {
                     // Fallback estimation
                     document.getElementById('crypto-amount').textContent =
